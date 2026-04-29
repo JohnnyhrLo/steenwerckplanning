@@ -1,0 +1,322 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans,sans-serif);font-size:14px;color:var(--color-text-primary)}
+.tabs{display:flex;gap:4px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:20px;padding:12px 16px 0}
+.tab{padding:8px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:500;color:var(--color-text-secondary);border:0.5px solid transparent;border-bottom:none;background:transparent;transition:all .15s}
+.tab.active{background:var(--color-background-primary);border-color:var(--color-border-tertiary);color:var(--color-text-primary);margin-bottom:-0.5px}
+.panel{display:none;padding:0 16px 16px}.panel.active{display:block}
+label{font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:4px;margin-top:12px}
+input[type=time],input[type=number]{width:100%;font-size:14px}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.metric{background:var(--color-background-secondary);border-radius:8px;padding:12px 14px}
+.metric .val{font-size:22px;font-weight:500;margin-top:4px}
+.metric .lbl{font-size:11px;color:var(--color-text-secondary)}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+th{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-align:left;padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+td{padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+.b1{background:#E1F5EE;color:#085041}.b2{background:#FAEEDA;color:#633806}.b3{background:#E6F1FB;color:#0C447C}
+@media(prefers-color-scheme:dark){.b1{background:#085041;color:#9FE1CB}.b2{background:#412402;color:#FAC775}.b3{background:#042C53;color:#85B7EB}}
+input[type=range]{width:100%;margin:8px 0;accent-color:#1D9E75}
+.tooltip-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:6px 10px;font-size:12px;position:absolute;top:-44px;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
+.section-title{font-size:15px;font-weight:500;margin:16px 0 4px}
+.nutri-card{background:var(--color-background-secondary);border-radius:10px;padding:14px;margin-bottom:10px}
+.nutri-card h4{font-size:13px;font-weight:500;margin-bottom:8px}
+.nutri-item{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.nutri-item:last-child{border:none}
+.crossover-row{background:#EEEDFE}
+@media(prefers-color-scheme:dark){.crossover-row{background:#26215C}}
+.preset-btn{font-size:12px;padding:4px 12px;border-radius:6px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-primary);transition:all .15s}
+.preset-btn:hover{background:var(--color-background-secondary)}
+.preset-btn.active-preset{background:var(--color-background-secondary);border-color:var(--color-border-primary);font-weight:500}
+#track-svg{width:100%;display:block;margin:8px 0}
+</style>
+
+<div style="padding:16px 16px 0">
+  <div style="font-size:18px;font-weight:500;margin-bottom:2px">100 km de Steenwerck</div>
+  <div style="font-size:12px;color:var(--color-text-secondary)">13–14 mai 2026 · 3 boucles · 18 ravitaillements</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('chrono',event)">Chrono</button>
+  <button class="tab" onclick="showTab('carte',event)">Carte interactive</button>
+  <button class="tab" onclick="showTab('nutrition',event)">Nutrition</button>
+</div>
+
+<!-- CHRONO -->
+<div id="tab-chrono" class="panel active">
+  <div class="row">
+    <div><label>Heure de départ</label><input type="time" id="start-time" value="05:00"></div>
+    <div><label>Allure (min/km)</label><input type="number" id="pace" min="3" max="20" step="0.01" value="4.583"></div>
+    <div><label>Ralentissement (%)</label><input type="number" id="fade" min="0" max="30" step="1" value="10"></div>
+  </div>
+
+  <div style="display:flex;gap:6px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+    <span style="font-size:12px;color:var(--color-text-secondary);margin-right:2px">Preset :</span>
+    <button class="preset-btn" onclick="setPace(4.5,'4:30')">4:30</button>
+    <button class="preset-btn active-preset" onclick="setPace(4.583,'4:35')">4:35</button>
+    <button class="preset-btn" onclick="setPace(4.667,'4:40')">4:40</button>
+    <button class="preset-btn" onclick="setPace(4.75,'4:45')">4:45</button>
+    <button class="preset-btn" onclick="setPace(4.833,'4:50')">4:50</button>
+    <button class="preset-btn" onclick="setPace(5,'5:00')">5:00</button>
+  </div>
+
+  <div class="row">
+    <div class="metric"><div class="lbl">Temps estimé</div><div class="val" id="s-time">-</div></div>
+    <div class="metric"><div class="lbl">Allure effective</div><div class="val" id="s-pace">-</div></div>
+    <div class="metric"><div class="lbl">Arrivée prévue</div><div class="val" id="s-finish">-</div></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Ravitaillement</th><th>Km</th><th>Temps cumulé</th><th>Heure passage</th><th>Allure locale</th></tr></thead>
+    <tbody id="passage-body"></tbody>
+  </table>
+</div>
+
+<!-- CARTE -->
+<div id="tab-carte" class="panel">
+  <div style="margin-bottom:4px">
+    <label>Votre position sur le parcours</label>
+    <div style="position:relative;margin:20px 0 4px">
+      <div id="tooltip-km" class="tooltip-box" style="left:0%">km 0</div>
+      <input type="range" id="km-slider" min="0" max="100" step="0.1" value="0" oninput="updateSlider()">
+    </div>
+  </div>
+  <svg id="track-svg" viewBox="0 0 640 70" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="row" style="margin-top:8px">
+    <div class="metric"><div class="lbl">Position</div><div class="val" id="sl-km">km 0</div></div>
+    <div class="metric"><div class="lbl">Heure estimée</div><div class="val" id="sl-time">-</div></div>
+    <div class="metric"><div class="lbl">Prochain ravit.</div><div class="val" id="sl-next" style="font-size:13px;margin-top:6px">-</div></div>
+  </div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;margin:12px 0 4px;align-items:center">
+    <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1D9E75"></span>Boucle 1</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#EF9F27"></span>Boucle 2</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#378ADD"></span>Départ / Arrivée</span>
+    <span style="display:flex;align-items:center;gap:5px"><svg width="11" height="11" viewBox="0 0 11 11"><polygon points="5.5,0.5 10.5,10.5 0.5,10.5" fill="#7F77DD"/></svg>Croisement boucles</span>
+  </div>
+  <table>
+    <thead><tr><th>Point</th><th>Km</th><th>Type</th><th>Heure</th><th>Δ préc.</th></tr></thead>
+    <tbody id="map-body"></tbody>
+  </table>
+</div>
+
+<!-- NUTRITION -->
+<div id="tab-nutrition" class="panel">
+  <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:12px;line-height:1.6">
+    Plan nutrition basé sur votre allure configurée dans l'onglet Chrono.
+  </div>
+  <div class="section-title">Besoins estimés</div>
+  <div class="row2">
+    <div class="metric"><div class="lbl">Calories totales</div><div class="val">~7 000 kcal</div></div>
+    <div class="metric"><div class="lbl">Hydratation cible</div><div class="val">~700 ml/h</div></div>
+  </div>
+  <div class="section-title" style="margin-top:16px">Stratégie par phase</div>
+  <div class="nutri-card">
+    <h4>🟢 Phase 1 — km 0 à 35 (conservateur)</h4>
+    <div class="nutri-item"><span>Glucides</span><span>60–70 g/h</span></div>
+    <div class="nutri-item"><span>Eau</span><span>500–600 ml/h</span></div>
+    <div class="nutri-item"><span>Sodium</span><span>500 mg/h</span></div>
+    <div class="nutri-item"><span>Sources</span><span>Gels (1/45min), bananes, oranges</span></div>
+  </div>
+  <div class="nutri-card">
+    <h4>🟠 Phase 2 — km 35 à 68 (maintien)</h4>
+    <div class="nutri-item"><span>Glucides</span><span>50–60 g/h</span></div>
+    <div class="nutri-item"><span>Eau + électrolytes</span><span>600–700 ml/h</span></div>
+    <div class="nutri-item"><span>Caféine</span><span>Dès km 50 → 1 gel caféiné/h</span></div>
+    <div class="nutri-item"><span>Solide</span><span>Soupe chaude aux ravits</span></div>
+  </div>
+  <div class="nutri-card">
+    <h4>🔵 Phase 3 — km 68 à 100 (fin de course)</h4>
+    <div class="nutri-item"><span>Glucides</span><span>40–50 g/h (appétit réduit)</span></div>
+    <div class="nutri-item"><span>Caféine</span><span>Café + cola disponible aux ravits</span></div>
+    <div class="nutri-item"><span>Sodium</span><span>800–1000 mg/h (crampes)</span></div>
+    <div class="nutri-item"><span>Solide léger</span><span>Fruits secs, banane, chocolat chaud</span></div>
+  </div>
+  <div class="section-title" style="margin-top:16px">Plan détaillé par ravitaillement</div>
+  <table>
+    <thead><tr><th>Ravit.</th><th>Km</th><th>Heure</th><th>À faire / prendre</th></tr></thead>
+    <tbody id="nutri-body"></tbody>
+  </table>
+</div>
+
+<script>
+const ALL_POINTS=[
+  {name:"L'Hallobeau",       km:8.262,  loop:"B1",tour:1,color:"#1D9E75",isCross:false},
+  {name:"La Croix-du-Bac",   km:12.895, loop:"B1",tour:1,color:"#1D9E75",isCross:false},
+  {name:"École Jean Monnet", km:19.047, loop:"B1",tour:1,color:"#7F77DD",isCross:true},
+  {name:"Le Doulieu",        km:25.857, loop:"B2",tour:1,color:"#EF9F27",isCross:false},
+  {name:"La Blanche",        km:29.988, loop:"B2",tour:1,color:"#EF9F27",isCross:false},
+  {name:"Salle des Sports",  km:35.719, loop:"B2",tour:1,color:"#7F77DD",isCross:true},
+  {name:"L'Hallobeau",       km:40.403, loop:"B1",tour:2,color:"#1D9E75",isCross:false},
+  {name:"La Croix-du-Bac",   km:45.035, loop:"B1",tour:2,color:"#1D9E75",isCross:false},
+  {name:"École Jean Monnet", km:51.187, loop:"B1",tour:2,color:"#7F77DD",isCross:true},
+  {name:"Le Doulieu",        km:57.998, loop:"B2",tour:2,color:"#EF9F27",isCross:false},
+  {name:"La Blanche",        km:62.128, loop:"B2",tour:2,color:"#EF9F27",isCross:false},
+  {name:"Salle des Sports",  km:67.859, loop:"B2",tour:2,color:"#7F77DD",isCross:true},
+  {name:"L'Hallobeau",       km:72.543, loop:"B1",tour:3,color:"#1D9E75",isCross:false},
+  {name:"La Croix-du-Bac",   km:77.176, loop:"B1",tour:3,color:"#1D9E75",isCross:false},
+  {name:"École Jean Monnet", km:83.328, loop:"B1",tour:3,color:"#7F77DD",isCross:true},
+  {name:"Le Doulieu",        km:90.138, loop:"B2",tour:3,color:"#EF9F27",isCross:false},
+  {name:"La Blanche",        km:94.269, loop:"B2",tour:3,color:"#EF9F27",isCross:false},
+  {name:"ARRIVÉE",           km:100.0,  loop:"Fin",tour:3,color:"#378ADD",isCross:false},
+];
+const NUTRI_NOTES=[
+  "Gel + eau. Pas de solide encore.",
+  "Banane ou orange. Bien boire.",
+  "🔀 Croisement B1→B2. 1er gel caféiné si nuit.",
+  "Soupe ou solide léger. Vérif chaussures.",
+  "Eau + électrolytes. Rythme stable.",
+  "🔀 Croisement B2→B1 — Ravit. principal T1. Manger solide.",
+  "Gel + eau. Surveiller crampes.",
+  "Cola ou jus d'orange.",
+  "🔀 Croisement B1→B2. Mi-course ! Solide + caféine.",
+  "Électrolytes renforcés. Soupe si froid.",
+  "Gel caféiné. Rester concentré.",
+  "🔀 Croisement B2→B1 — Ravit. principal T2. Contrôle pieds.",
+  "Dernier tour ! Moral au beau fixe.",
+  "Cola + café si somnolence.",
+  "🔀 Croisement B1→B2. km 83 — plus que 17 km !",
+  "Sodium prioritaire. Crampes à risque.",
+  "Eau et concentration. Finish en vue.",
+  "🏁 Arrivée !",
+];
+
+const PRESETS=[
+  {val:4.5,   label:"4:30"},
+  {val:4.583, label:"4:35"},
+  {val:4.667, label:"4:40"},
+  {val:4.75,  label:"4:45"},
+  {val:4.833, label:"4:50"},
+  {val:5.0,   label:"5:00"},
+];
+
+function timeToMin(t){const[h,m]=t.split(':').map(Number);return h*60+m}
+function minToTime(m){const d=((m%1440)+1440)%1440;return String(Math.floor(d/60)).padStart(2,'0')+':'+String(Math.round(d%60)).padStart(2,'0')}
+function fmtDur(m){const h=Math.floor(m/60);const mn=Math.round(m%60);return h+'h'+String(mn).padStart(2,'0')}
+function fmtPace(p){const mn=Math.floor(p);const s=Math.round((p-mn)*60);return mn+"'"+String(s).padStart(2,'0')+'"'}
+function calcPassage(km,pace,fade){const f=fade/100;return pace*(km+f*km*km/200)}
+function getTimings(){return{start:timeToMin(document.getElementById('start-time').value),pace:parseFloat(document.getElementById('pace').value)||4.583,fade:parseFloat(document.getElementById('fade').value)||10}}
+
+function highlightPreset(val){
+  document.querySelectorAll('.preset-btn').forEach((btn,i)=>{
+    btn.classList.toggle('active-preset', Math.abs(PRESETS[i].val - val) < 0.001);
+  });
+}
+
+function setPace(v,label){
+  document.getElementById('pace').value=v;
+  highlightPreset(v);
+  compute();
+}
+
+function drawTrack(){
+  const svg=document.getElementById('track-svg');svg.innerHTML='';
+  const py=38,x1=10,x2=630;
+  const mkLine=(xa,xb,stroke,sw,id)=>{const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',xa);l.setAttribute('x2',xb);l.setAttribute('y1',py);l.setAttribute('y2',py);l.setAttribute('stroke',stroke);l.setAttribute('stroke-width',sw);l.setAttribute('stroke-linecap','round');if(id)l.setAttribute('id',id);svg.appendChild(l);};
+  mkLine(x1,x2,'var(--color-border-secondary)',4,null);
+  const km=parseFloat(document.getElementById('km-slider').value);
+  const cx=x1+(x2-x1)*km/100;
+  mkLine(x1,cx,'#1D9E75',4,'prog-line');
+  [0,25,50,75,100].forEach(k=>{
+    const x=x1+(x2-x1)*k/100;
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',x);t.setAttribute('y',62);t.setAttribute('text-anchor','middle');t.setAttribute('font-size','9');t.setAttribute('fill','var(--color-text-secondary)');t.textContent=k+'km';svg.appendChild(t);
+  });
+  ALL_POINTS.forEach(r=>{
+    const x=x1+(x2-x1)*r.km/100;
+    if(r.isCross){
+      const s=7;
+      const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+      poly.setAttribute('points',`${x},${py-s-2} ${x+s},${py+s-2} ${x-s},${py+s-2}`);
+      poly.setAttribute('fill','#7F77DD');poly.setAttribute('stroke','#534AB7');poly.setAttribute('stroke-width','0.5');svg.appendChild(poly);
+      const tl=document.createElementNS('http://www.w3.org/2000/svg','text');
+      tl.setAttribute('x',x);tl.setAttribute('y',py-s-5);tl.setAttribute('text-anchor','middle');tl.setAttribute('font-size','7.5');tl.setAttribute('fill','#534AB7');tl.setAttribute('font-weight','500');tl.textContent=r.km.toFixed(1);svg.appendChild(tl);
+    } else {
+      const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',x);c.setAttribute('cy',py);c.setAttribute('r',r.km===100?6:4);c.setAttribute('fill',r.color);svg.appendChild(c);
+    }
+  });
+  const pos=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  pos.setAttribute('id','pos-dot');pos.setAttribute('cx',cx);pos.setAttribute('cy',py);pos.setAttribute('r','7');pos.setAttribute('fill','white');pos.setAttribute('stroke','#1D9E75');pos.setAttribute('stroke-width','2');svg.appendChild(pos);
+}
+
+function compute(){
+  const{start,pace,fade}=getTimings();
+  const totalMin=calcPassage(100,pace,fade);
+  document.getElementById('s-time').textContent=fmtDur(totalMin);
+  document.getElementById('s-pace').textContent=fmtPace(totalMin/100)+'/km';
+  document.getElementById('s-finish').textContent=minToTime(start+totalMin);
+  highlightPreset(pace);
+
+  const tbody=document.getElementById('passage-body');tbody.innerHTML='';
+  let prevKm=0,prevMin=0;
+  ALL_POINTS.forEach((r,i)=>{
+    const cumMin=calcPassage(r.km,pace,fade);
+    const segKm=r.km-prevKm;const segMin=cumMin-prevMin;const segP=segKm>0?segMin/segKm:0;
+    const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
+    const tri=r.isCross?`<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`:'';
+    tbody.innerHTML+=`<tr class="${r.isCross?'crossover-row':''}"><td>${tri}<span class="badge ${lc}">${r.loop} T${r.tour}</span> ${r.name}</td><td>${r.km.toFixed(1)}</td><td>${fmtDur(cumMin)}</td><td style="font-weight:500">${minToTime(start+cumMin)}</td><td style="color:var(--color-text-secondary)">${fmtPace(segP)}</td></tr>`;
+    prevKm=r.km;prevMin=cumMin;
+  });
+  updateMapTable();updateNutriTable();drawTrack();updateSlider();
+}
+
+function updateMapTable(){
+  const{start,pace,fade}=getTimings();
+  const tbody=document.getElementById('map-body');tbody.innerHTML='';
+  let prevMin=0;
+  ALL_POINTS.forEach((r,i)=>{
+    const cumMin=calcPassage(r.km,pace,fade);const delta=cumMin-prevMin;
+    const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
+    const typecell=r.isCross?`<span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg><span style="font-size:11px;color:#534AB7;font-weight:500">Croisement</span></span>`:`<span class="badge ${lc}">${r.loop}</span>`;
+    tbody.innerHTML+=`<tr class="${r.isCross?'crossover-row':''}"><td>${r.name}</td><td>${r.km.toFixed(1)}</td><td>${typecell}</td><td style="font-weight:500">${minToTime(start+cumMin)}</td><td style="color:var(--color-text-secondary)">+${fmtDur(delta)}</td></tr>`;
+    prevMin=cumMin;
+  });
+}
+
+function updateNutriTable(){
+  const{start,pace,fade}=getTimings();
+  const tbody=document.getElementById('nutri-body');tbody.innerHTML='';
+  ALL_POINTS.forEach((r,i)=>{
+    const cumMin=calcPassage(r.km,pace,fade);
+    tbody.innerHTML+=`<tr class="${r.isCross?'crossover-row':''}"><td style="font-size:12px">${r.isCross?'🔀 ':''}${r.name}</td><td>${r.km.toFixed(1)}</td><td style="font-weight:500">${minToTime(start+cumMin)}</td><td style="font-size:12px;color:var(--color-text-secondary)">${NUTRI_NOTES[i]}</td></tr>`;
+  });
+}
+
+function updateSlider(){
+  const km=parseFloat(document.getElementById('km-slider').value);
+  const{start,pace,fade}=getTimings();
+  const cumMin=calcPassage(km,pace,fade);
+  const arr=minToTime(start+cumMin);
+  document.getElementById('sl-km').textContent='km '+km.toFixed(1);
+  document.getElementById('sl-time').textContent=arr;
+  const pct=km/100*100;
+  const tt=document.getElementById('tooltip-km');
+  tt.textContent='km '+km.toFixed(1)+' → '+arr;
+  tt.style.left=Math.max(5,Math.min(93,pct))+'%';
+  const next=ALL_POINTS.find(r=>r.km>=km);
+  document.getElementById('sl-next').textContent=next?(next.isCross?'🔀 ':'')+next.name+' (km '+next.km.toFixed(1)+')':'Arrivée !';
+  const svg=document.getElementById('track-svg');
+  const x1=10,x2=630;
+  const cx=x1+(x2-x1)*km/100;
+  const pl=svg.querySelector('#prog-line');const pd=svg.querySelector('#pos-dot');
+  if(pl)pl.setAttribute('x2',cx);
+  if(pd)pd.setAttribute('cx',cx);
+}
+
+function showTab(name,event){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(event&&event.target)event.target.classList.add('active');
+}
+
+document.getElementById('start-time').oninput=compute;
+document.getElementById('pace').oninput=()=>{highlightPreset(parseFloat(document.getElementById('pace').value));compute();}
+document.getElementById('fade').oninput=compute;
+
+compute();
+</script>
