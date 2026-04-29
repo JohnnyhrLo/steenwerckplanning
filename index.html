@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>100 km de Steenwerck — Planificateur</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:#1a1a1a;background:#f0f0f0;padding:16px}
@@ -35,11 +37,11 @@ input[type=range]{width:100%;margin:8px 0;accent-color:#1D9E75}
 .preset-btn.active-preset{background:#1D9E75;border-color:#1D9E75;color:#fff}
 .fade-info{font-size:12px;color:#666;background:#f7f7f7;border:1px solid #eaeaea;border-radius:7px;padding:8px 11px;margin:8px 0 4px;line-height:1.5}
 table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
-th{font-size:11px;font-weight:600;color:#999;text-align:left;padding:7px 9px;border-bottom:1px solid #eee;background:#fafafa;letter-spacing:.02em}
+th{font-size:11px;font-weight:600;color:#999;text-align:left;padding:7px 9px;border-bottom:1px solid #eee;background:#fafafa}
 td{padding:7px 9px;border-bottom:1px solid #f2f2f2}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
-.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;letter-spacing:.01em}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
 .b0{background:#f0f0f0;color:#555}
 .b1{background:#E1F5EE;color:#085041}
 .b2{background:#FAEEDA;color:#633806}
@@ -57,7 +59,13 @@ tr:hover td{background:#fafafa}
 .nutri-item:last-child{border:none}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;margin:10px 0 6px;align-items:center;color:#666}
 .legend span{display:flex;align-items:center;gap:5px}
-#track-svg{width:100%;display:block;margin:6px 0}
+#parcours-map{height:340px;border-radius:10px;overflow:hidden;border:1px solid #e5e5e5;margin-bottom:14px}
+.map-controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.map-ctrl-btn{font-size:11px;font-weight:500;padding:4px 10px;border-radius:14px;cursor:pointer;border:1.5px solid;background:#fff;transition:all .15s}
+.map-ctrl-btn.active{color:#fff}
+.map-ctrl-btn.b-depart{border-color:#888;color:#888}.map-ctrl-btn.b-depart.active{background:#888}
+.map-ctrl-btn.b-verte{border-color:#1D9E75;color:#1D9E75}.map-ctrl-btn.b-verte.active{background:#1D9E75}
+.map-ctrl-btn.b-orange{border-color:#EF9F27;color:#EF9F27}.map-ctrl-btn.b-orange.active{background:#EF9F27}
 </style>
 </head>
 <body>
@@ -69,17 +77,14 @@ tr:hover td{background:#fafafa}
 
   <div class="tabs">
     <button class="tab active" onclick="showTab('chrono',event)">⏱ Chrono</button>
-    <button class="tab" onclick="showTab('carte',event)">🗺 Carte interactive</button>
+    <button class="tab" onclick="showTab('carte',event)">🗺 Carte</button>
     <button class="tab" onclick="showTab('nutrition',event)">🍌 Nutrition</button>
   </div>
 
   <!-- CHRONO -->
   <div id="tab-chrono" class="panel active">
     <div class="row2">
-      <div>
-        <label>Heure de départ</label>
-        <input type="time" id="start-time" value="05:00">
-      </div>
+      <div><label>Heure de départ</label><input type="time" id="start-time" value="05:00"></div>
       <div>
         <label>Allure (min:sec / km)</label>
         <div class="pace-wrap">
@@ -91,14 +96,8 @@ tr:hover td{background:#fafafa}
       </div>
     </div>
     <div class="row2">
-      <div>
-        <label>Ralentissement (%)</label>
-        <input type="number" id="fade" min="0" max="30" step="1" value="10">
-      </div>
-      <div>
-        <label>Début ralentissement (km)</label>
-        <input type="number" id="fade-start" min="0" max="90" step="1" value="60">
-      </div>
+      <div><label>Ralentissement (%)</label><input type="number" id="fade" min="0" max="30" step="1" value="10"></div>
+      <div><label>Début ralentissement (km)</label><input type="number" id="fade-start" min="0" max="90" step="1" value="60"></div>
     </div>
     <div class="presets">
       <span class="preset-lbl">Preset :</span>
@@ -116,72 +115,72 @@ tr:hover td{background:#fafafa}
       <div class="metric"><div class="lbl">Arrivée prévue</div><div class="val" id="s-finish">-</div></div>
     </div>
     <table>
-      <thead>
-        <tr><th>Point</th><th>Km</th><th>Temps cumulé</th><th>Heure passage</th><th>Allure locale</th></tr>
-      </thead>
+      <thead><tr><th>Point</th><th>Km</th><th>Temps cumulé</th><th>Heure passage</th><th>Allure locale</th></tr></thead>
       <tbody id="passage-body"></tbody>
     </table>
   </div>
 
   <!-- CARTE -->
   <div id="tab-carte" class="panel">
+    <div class="map-controls">
+      <button class="map-ctrl-btn b-depart active" onclick="toggleLayer('depart',this)">Circuit départ</button>
+      <button class="map-ctrl-btn b-verte  active" onclick="toggleLayer('verte',this)">Boucle 1 verte</button>
+      <button class="map-ctrl-btn b-orange active" onclick="toggleLayer('orange',this)">Boucle 2 orange</button>
+      <button style="font-size:11px;padding:4px 10px;border-radius:14px;cursor:pointer;border:1px solid #ddd;background:#fff;margin-left:auto" onclick="fitAll()">🗺 Recentrer</button>
+    </div>
+    <div id="parcours-map"></div>
+
     <label style="margin-top:4px">Votre position sur le parcours</label>
-    <div style="position:relative;margin:22px 0 4px">
+    <div style="position:relative;margin:20px 0 4px">
       <div id="tooltip-km" class="tooltip-box" style="left:0%">km 0</div>
       <input type="range" id="km-slider" min="0" max="100" step="0.1" value="0" oninput="updateSlider()">
     </div>
-    <svg id="track-svg" viewBox="0 0 640 80" xmlns="http://www.w3.org/2000/svg"></svg>
+
     <div class="row3" style="margin-top:8px">
       <div class="metric"><div class="lbl">Position</div><div class="val" id="sl-km">km 0</div></div>
       <div class="metric"><div class="lbl">Heure estimée</div><div class="val" id="sl-time">-</div></div>
       <div class="metric"><div class="lbl">Prochain point</div><div class="val" id="sl-next" style="font-size:12px;margin-top:6px">-</div></div>
     </div>
-    <div class="legend">
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#555"></span>Départ / repère</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1D9E75"></span>Boucle 1</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#EF9F27"></span>Boucle 2</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#378ADD"></span>Arrivée</span>
+
+    <div class="legend" style="margin-top:12px">
+      <span><span style="display:inline-block;width:18px;height:2px;border-top:2px dashed #999"></span>Circuit départ</span>
+      <span><span style="display:inline-block;width:18px;height:3px;background:#1D9E75;border-radius:2px"></span>Boucle 1 verte</span>
+      <span><span style="display:inline-block;width:18px;height:3px;background:#EF9F27;border-radius:2px"></span>Boucle 2 orange</span>
       <span><svg width="11" height="11" viewBox="0 0 11 11"><polygon points="5.5,0.5 10.5,10.5 0.5,10.5" fill="#7F77DD"/></svg>Croisement boucles</span>
-      <span>🚲 Vélos autorisés dès ici</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e63946;border:2px solid white;box-shadow:0 0 0 1px #e63946"></span>Votre position</span>
     </div>
-    <table>
-      <thead>
-        <tr><th>Point</th><th>Km</th><th>Type</th><th>Heure estimée</th><th>Δ préc.</th></tr>
-      </thead>
+
+    <table style="margin-top:12px">
+      <thead><tr><th>Point</th><th>Km</th><th>Type</th><th>Heure</th><th>Δ préc.</th></tr></thead>
       <tbody id="map-body"></tbody>
     </table>
   </div>
 
   <!-- NUTRITION -->
   <div id="tab-nutrition" class="panel">
-    <div style="font-size:12px;color:#888;margin-bottom:12px;line-height:1.6">
-      Plan nutrition basé sur votre allure configurée dans l'onglet Chrono.
-    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:12px;line-height:1.6">Plan nutrition basé sur votre allure configurée dans l'onglet Chrono.</div>
     <div class="section-title">Besoins estimés</div>
     <div class="row2">
       <div class="metric"><div class="lbl">Calories totales</div><div class="val">~7 000 kcal</div></div>
       <div class="metric"><div class="lbl">Hydratation cible</div><div class="val">~700 ml/h</div></div>
     </div>
     <div class="section-title">Stratégie par phase</div>
-    <div class="nutri-card">
-      <h4>🟢 Phase 1 — km 0 à 35 (conservateur)</h4>
+    <div class="nutri-card"><h4>🟢 Phase 1 — km 0 à 35 (conservateur)</h4>
       <div class="nutri-item"><span>Glucides</span><span>60–70 g/h</span></div>
       <div class="nutri-item"><span>Eau</span><span>500–600 ml/h</span></div>
       <div class="nutri-item"><span>Sodium</span><span>500 mg/h</span></div>
       <div class="nutri-item"><span>Sources</span><span>Gels (1/45 min), bananes, oranges</span></div>
     </div>
-    <div class="nutri-card">
-      <h4>🟠 Phase 2 — km 35 à 68 (maintien)</h4>
+    <div class="nutri-card"><h4>🟠 Phase 2 — km 35 à 68 (maintien)</h4>
       <div class="nutri-item"><span>Glucides</span><span>50–60 g/h</span></div>
       <div class="nutri-item"><span>Eau + électrolytes</span><span>600–700 ml/h</span></div>
       <div class="nutri-item"><span>Caféine</span><span>Dès km 50 → 1 gel caféiné/h</span></div>
       <div class="nutri-item"><span>Solide</span><span>Soupe chaude aux ravits</span></div>
     </div>
-    <div class="nutri-card">
-      <h4>🔵 Phase 3 — km 68 à 100 (fin de course)</h4>
-      <div class="nutri-item"><span>Glucides</span><span>40–50 g/h (appétit réduit)</span></div>
+    <div class="nutri-card"><h4>🔵 Phase 3 — km 68 à 100 (fin de course)</h4>
+      <div class="nutri-item"><span>Glucides</span><span>40–50 g/h</span></div>
       <div class="nutri-item"><span>Caféine</span><span>Café + cola disponible aux ravits</span></div>
-      <div class="nutri-item"><span>Sodium</span><span>800–1 000 mg/h (crampes)</span></div>
+      <div class="nutri-item"><span>Sodium</span><span>800–1 000 mg/h</span></div>
       <div class="nutri-item"><span>Solide léger</span><span>Fruits secs, banane, chocolat chaud</span></div>
     </div>
     <div class="section-title">Plan détaillé par ravitaillement</div>
@@ -193,11 +192,59 @@ tr:hover td{background:#fafafa}
 </div>
 
 <script>
-// type: 'start'=départ/repère circuit, 'velo'=repère vélos, 'ravi'=ravitaillement, 'cross'=croisement, 'finish'=arrivée
+// ============================================================
+// GPX DATA
+// ============================================================
+const GPX_DEPART = [[50.70065,2.77803],[50.70016,2.77764],[50.70018,2.77754],[50.70037,2.77681],[50.7004,2.77658],[50.70051,2.7758],[50.70066,2.77502],[50.70069,2.77503],[50.70037,2.77475],[50.69983,2.77436],[50.69919,2.77362],[50.69854,2.77293],[50.69763,2.77179],[50.69583,2.77007],[50.69505,2.76928],[50.69469,2.76908],[50.69498,2.76802],[50.69521,2.76736],[50.6954,2.76691],[50.69557,2.76637],[50.69585,2.7653],[50.69648,2.76422],[50.69664,2.76404],[50.69701,2.76345],[50.6982,2.76183],[50.69853,2.76467],[50.6991,2.76842],[50.69952,2.76856],[50.69971,2.76859],[50.69981,2.76874],[50.69988,2.76906],[50.69997,2.76914],[50.70051,2.76951],[50.70053,2.76979],[50.70051,2.76992],[50.70056,2.77021],[50.70062,2.77031],[50.70115,2.77076],[50.70109,2.77101],[50.70038,2.77377],[50.70033,2.7738],[50.70039,2.7742],[50.70041,2.77453],[50.70037,2.77475],[50.70066,2.77502],[50.70081,2.77512],[50.70083,2.77507],[50.70087,2.77493],[50.70091,2.77479],[50.70095,2.77462],[50.70115,2.77374],[50.70118,2.77372],[50.70189,2.77402],[50.70214,2.77361],[50.70252,2.77339],[50.70259,2.77341],[50.70286,2.77373],[50.70298,2.77387],[50.70234,2.77483],[50.70222,2.77516],[50.7021,2.77583],[50.70198,2.77663],[50.70194,2.77701],[50.70192,2.77746],[50.70191,2.77758],[50.70187,2.77789],[50.70166,2.77842],[50.70145,2.77868],[50.70142,2.7788],[50.70095,2.77918],[50.70083,2.77939]];
+
+const GPX_VERTE = [[50.70071,2.77959],[50.70033,2.78012],[50.70033,2.78003],[50.70042,2.78006],[50.701,2.78044],[50.70102,2.78038],[50.70161,2.78072],[50.70176,2.78012],[50.70346,2.78137],[50.70379,2.78012],[50.70425,2.78023],[50.70451,2.77925],[50.70462,2.77905],[50.70474,2.77888],[50.7049,2.77874],[50.70507,2.77868],[50.70548,2.77864],[50.70591,2.77866],[50.70618,2.7787],[50.70685,2.77895],[50.70725,2.77916],[50.70773,2.77957],[50.70851,2.78054],[50.70973,2.78227],[50.71105,2.78432],[50.71226,2.78646],[50.7121,2.78658],[50.71165,2.78661],[50.71107,2.78668],[50.70951,2.78699],[50.70892,2.78714],[50.70849,2.78737],[50.70768,2.78804],[50.70747,2.78826],[50.70686,2.78879],[50.70431,2.79134],[50.70396,2.79172],[50.70293,2.79316],[50.7026,2.79377],[50.70246,2.79392],[50.70229,2.79393],[50.7022,2.79404],[50.70178,2.79492],[50.70159,2.79524],[50.70149,2.79537],[50.70134,2.79548],[50.70129,2.79557],[50.70127,2.79576],[50.70132,2.79592],[50.70155,2.79652],[50.70178,2.79701],[50.70179,2.79719],[50.70176,2.79729],[50.70105,2.79577],[50.70013,2.79365],[50.69997,2.7931],[50.69988,2.79252],[50.69964,2.79256],[50.69941,2.79273],[50.69928,2.79296],[50.69911,2.79319],[50.69867,2.79357],[50.69824,2.794],[50.69794,2.79438],[50.69762,2.79525],[50.69711,2.79629],[50.69698,2.79653],[50.69678,2.79672],[50.69662,2.79691],[50.69648,2.79721],[50.69643,2.79756],[50.69639,2.79826],[50.69621,2.79857],[50.69582,2.79985],[50.69575,2.79999],[50.69566,2.79997],[50.69548,2.79979],[50.69532,2.79976],[50.69511,2.79981],[50.69479,2.79993],[50.69431,2.80022],[50.69344,2.80062],[50.69145,2.80119],[50.69057,2.80171],[50.68922,2.80245],[50.68889,2.80258],[50.6883,2.80269],[50.68676,2.80337],[50.68594,2.8037],[50.68551,2.80169],[50.68542,2.80072],[50.68541,2.8003],[50.68586,2.7977],[50.68642,2.79745],[50.68666,2.79743],[50.68698,2.79752],[50.68729,2.79753],[50.68782,2.79728],[50.68841,2.79688],[50.68921,2.79629],[50.68988,2.79529],[50.69072,2.79427],[50.69095,2.7939],[50.69115,2.79353],[50.69143,2.79282],[50.69163,2.79251],[50.69259,2.79156],[50.69239,2.7912],[50.69217,2.79091],[50.69183,2.79037],[50.69166,2.79019],[50.69155,2.78997],[50.69145,2.78963],[50.69097,2.7886],[50.69011,2.78732],[50.68999,2.78718],[50.68987,2.78715],[50.68958,2.7872],[50.68921,2.78664],[50.68872,2.78583],[50.68909,2.78556],[50.68917,2.78544],[50.68919,2.78512],[50.68809,2.78603],[50.68793,2.78612],[50.68755,2.78626],[50.6871,2.7863],[50.68571,2.78619],[50.68482,2.78623],[50.6839,2.78639],[50.6836,2.78647],[50.68294,2.78651],[50.68262,2.78637],[50.68211,2.78601],[50.68157,2.78528],[50.68099,2.78431],[50.68059,2.78384],[50.68031,2.78363],[50.67994,2.78349],[50.67907,2.78515],[50.6783,2.78633],[50.67805,2.78677],[50.678,2.78698],[50.67794,2.78775],[50.67788,2.78802],[50.6778,2.7882],[50.67762,2.78844],[50.67699,2.78907],[50.67636,2.78955],[50.67572,2.79001],[50.67598,2.7906],[50.67588,2.79073],[50.67598,2.7906],[50.67572,2.79001],[50.67636,2.78955],[50.67699,2.78907],[50.67762,2.78844],[50.6778,2.7882],[50.67788,2.78802],[50.67794,2.78775],[50.678,2.78698],[50.67805,2.78677],[50.6783,2.78633],[50.67907,2.78515],[50.67994,2.78349],[50.68015,2.78279],[50.68084,2.78142],[50.68227,2.77826],[50.68263,2.77736],[50.6829,2.77655],[50.68335,2.77478],[50.68345,2.77423],[50.68349,2.77365],[50.68352,2.77351],[50.68354,2.77323],[50.68348,2.77291],[50.68329,2.77266],[50.68311,2.77236],[50.6827,2.7719],[50.68238,2.77142],[50.68186,2.7698],[50.68184,2.76955],[50.68184,2.76846],[50.68187,2.76749],[50.68185,2.76714],[50.68218,2.76702],[50.68289,2.76718],[50.68517,2.76792],[50.68581,2.76801],[50.68606,2.76821],[50.68631,2.76848],[50.68724,2.7689],[50.68755,2.76932],[50.6879,2.76998],[50.68804,2.77032],[50.68824,2.76995],[50.68857,2.76944],[50.68913,2.76844],[50.68958,2.76774],[50.68992,2.76715],[50.69029,2.76757],[50.69081,2.76801],[50.69102,2.76814],[50.69148,2.76834],[50.69184,2.76839],[50.69316,2.7685],[50.69394,2.76883],[50.69469,2.76908],[50.69445,2.77048],[50.69439,2.77145],[50.69441,2.77227],[50.69438,2.77253],[50.69427,2.77286],[50.69409,2.77304],[50.69259,2.773],[50.69208,2.77312],[50.69103,2.77319],[50.6906,2.77314],[50.69014,2.77292],[50.68981,2.77273],[50.68969,2.77272],[50.6896,2.77274],[50.68951,2.77281],[50.68943,2.77296],[50.68923,2.77357],[50.68903,2.77433],[50.68862,2.77646],[50.68867,2.77678],[50.6888,2.77704],[50.69023,2.77804],[50.69072,2.77855],[50.69125,2.77882],[50.69292,2.77995],[50.69392,2.77979],[50.69455,2.77971],[50.69484,2.77958],[50.69524,2.77933],[50.6959,2.77921],[50.69647,2.781],[50.69729,2.78028],[50.69737,2.78025],[50.69751,2.78026],[50.69822,2.78068],[50.69844,2.78092],[50.69879,2.78143],[50.69931,2.78188],[50.6997,2.78213],[50.69981,2.78171]];
+
+const GPX_ORANGE = [[50.69992,2.7813],[50.70028,2.77992],[50.70033,2.78003],[50.70042,2.78006],[50.70058,2.77949],[50.70064,2.77944],[50.7008,2.77893],[50.7007,2.77878],[50.7007,2.77861],[50.70065,2.77846],[50.7006,2.77847],[50.70013,2.77815],[50.70008,2.77802],[50.70019,2.77743],[50.70036,2.77679],[50.70042,2.77634],[50.7003,2.77631],[50.69991,2.77608],[50.69969,2.77579],[50.69963,2.77559],[50.69963,2.77505],[50.69983,2.77437],[50.69908,2.7735],[50.69854,2.77293],[50.69763,2.77179],[50.69583,2.77007],[50.69505,2.76928],[50.69469,2.76908],[50.69394,2.76883],[50.69316,2.7685],[50.69184,2.76839],[50.69148,2.76834],[50.69102,2.76814],[50.69081,2.76801],[50.69029,2.76757],[50.68945,2.76658],[50.68884,2.76558],[50.68789,2.76373],[50.68687,2.76228],[50.68669,2.76192],[50.68633,2.7606],[50.68615,2.76008],[50.6858,2.75947],[50.68566,2.75916],[50.68521,2.75719],[50.6851,2.7566],[50.68617,2.75636],[50.68611,2.75547],[50.68604,2.75515],[50.68569,2.75446],[50.68521,2.7532],[50.68441,2.75167],[50.68437,2.75156],[50.68436,2.7514],[50.68444,2.75122],[50.68512,2.75049],[50.68517,2.7504],[50.68519,2.7503],[50.68518,2.75008],[50.68455,2.74763],[50.68413,2.74578],[50.68407,2.74567],[50.68399,2.74562],[50.68391,2.74565],[50.68321,2.74655],[50.68288,2.74688],[50.6828,2.7467],[50.68257,2.74607],[50.68221,2.74464],[50.68192,2.74328],[50.6819,2.74194],[50.68194,2.74157],[50.68209,2.74109],[50.68235,2.73974],[50.68237,2.73944],[50.68236,2.73915],[50.68224,2.73835],[50.68226,2.73813],[50.68232,2.73797],[50.68331,2.73665],[50.68328,2.73629],[50.68242,2.73507],[50.68191,2.73373],[50.68172,2.73171],[50.68169,2.73159],[50.6828,2.73022],[50.68315,2.72984],[50.68463,2.72836],[50.68524,2.7277],[50.68535,2.72753],[50.68538,2.72738],[50.68537,2.72718],[50.68514,2.72644],[50.68514,2.72621],[50.68517,2.7261],[50.68586,2.72506],[50.6835,2.72103],[50.6829,2.72192],[50.68283,2.72195],[50.6822,2.72098],[50.68203,2.72083],[50.68155,2.72006],[50.68154,2.72003],[50.6874,2.71908],[50.68785,2.71862],[50.68797,2.71852],[50.6883,2.71834],[50.68953,2.71777],[50.69044,2.71741],[50.69065,2.71737],[50.6906,2.71851],[50.69022,2.72153],[50.69036,2.72154],[50.69089,2.72132],[50.69233,2.7206],[50.69335,2.72003],[50.69352,2.71997],[50.69508,2.71962],[50.69604,2.71947],[50.69628,2.71948],[50.69635,2.71953],[50.69647,2.71976],[50.69705,2.72121],[50.69745,2.72227],[50.69755,2.72245],[50.69766,2.7226],[50.6978,2.72275],[50.69845,2.72303],[50.69853,2.72308],[50.6986,2.72317],[50.69865,2.7233],[50.69916,2.72541],[50.69926,2.72599],[50.69975,2.72797],[50.70075,2.73154],[50.70089,2.73191],[50.70099,2.73212],[50.70122,2.73252],[50.70324,2.73546],[50.70337,2.73576],[50.70356,2.73641],[50.7047,2.7358],[50.70487,2.73585],[50.70544,2.73622],[50.70563,2.73626],[50.70592,2.73621],[50.70597,2.73638],[50.70604,2.73654],[50.70679,2.73783],[50.70703,2.73833],[50.70769,2.73987],[50.70807,2.74084],[50.70825,2.74141],[50.70869,2.74297],[50.70821,2.74334],[50.70756,2.74393],[50.7071,2.74431],[50.70685,2.74448],[50.70654,2.74461],[50.70649,2.74467],[50.70648,2.74476],[50.7065,2.74486],[50.70676,2.74532],[50.70694,2.7457],[50.7071,2.74608],[50.70722,2.74644],[50.70728,2.74669],[50.70739,2.74731],[50.70809,2.74977],[50.70843,2.75118],[50.70882,2.75252],[50.7089,2.75271],[50.70876,2.75299],[50.70874,2.75309],[50.70876,2.75377],[50.70873,2.75404],[50.7087,2.75418],[50.7086,2.75431],[50.70796,2.75471],[50.70765,2.75505],[50.70746,2.75532],[50.70688,2.7538],[50.70683,2.75383],[50.70636,2.7544],[50.70604,2.75487],[50.70518,2.7559],[50.70417,2.75725],[50.70409,2.75741],[50.70238,2.75555],[50.70105,2.75389],[50.70071,2.75339],[50.70016,2.75216],[50.70015,2.75197],[50.70018,2.75188],[50.70075,2.75127],[50.70079,2.75117],[50.7008,2.7511],[50.70074,2.75065],[50.70069,2.74987],[50.70034,2.74866],[50.70006,2.74783],[50.69995,2.74735],[50.69958,2.74752],[50.69925,2.74775],[50.69907,2.74791],[50.69875,2.74832],[50.69842,2.74892],[50.69789,2.75022],[50.69774,2.75064],[50.69759,2.75124],[50.69753,2.75186],[50.69734,2.75323],[50.69714,2.75526],[50.69714,2.75606],[50.69722,2.75731],[50.69729,2.75765],[50.69749,2.75821],[50.69767,2.75862],[50.69799,2.75948],[50.69805,2.75991],[50.69809,2.76094],[50.69854,2.76479],[50.69934,2.7699],[50.69942,2.77031],[50.69973,2.77142],[50.69992,2.772],[50.70015,2.77282],[50.70039,2.7742],[50.70041,2.77453],[50.70037,2.77475],[50.70066,2.77502],[50.70054,2.77565],[50.70042,2.77645],[50.70038,2.77679],[50.70017,2.77764],[50.70069,2.77806],[50.70113,2.77841],[50.70146,2.77868],[50.70135,2.77903],[50.70083,2.77945]];
+
+// ============================================================
+// FULL ROUTE for slider interpolation
+// ============================================================
+function buildRoute() {
+  const segments = [GPX_DEPART, GPX_VERTE, GPX_ORANGE, GPX_VERTE, GPX_ORANGE, GPX_VERTE, GPX_ORANGE];
+  function distM(a,b){
+    const dlat=(b[0]-a[0])*111320, dlon=(b[1]-a[1])*111320*Math.cos(a[0]*Math.PI/180);
+    return Math.sqrt(dlat*dlat+dlon*dlon);
+  }
+  const route = [];
+  let cumM = 0, prev = null;
+  for (const seg of segments) {
+    for (const pt of seg) {
+      if (prev) cumM += distM(prev, pt);
+      route.push({lat:pt[0], lon:pt[1], cumKm:cumM/1000});
+      prev = pt;
+    }
+  }
+  const total = route[route.length-1].cumKm;
+  for (const pt of route) pt.cumKm = pt.cumKm / total * 100;
+  return route;
+}
+const FULL_ROUTE = buildRoute();
+
+function latLonAtKm(km) {
+  if (km <= 0) return [FULL_ROUTE[0].lat, FULL_ROUTE[0].lon];
+  if (km >= 100) return [FULL_ROUTE[FULL_ROUTE.length-1].lat, FULL_ROUTE[FULL_ROUTE.length-1].lon];
+  for (let i = 1; i < FULL_ROUTE.length; i++) {
+    if (FULL_ROUTE[i].cumKm >= km) {
+      const a=FULL_ROUTE[i-1], b=FULL_ROUTE[i];
+      const t=(km-a.cumKm)/(b.cumKm-a.cumKm);
+      return [a.lat+t*(b.lat-a.lat), a.lon+t*(b.lon-a.lon)];
+    }
+  }
+  return [FULL_ROUTE[FULL_ROUTE.length-1].lat, FULL_ROUTE[FULL_ROUTE.length-1].lon];
+}
+
+// ============================================================
+// ALL POINTS — cimetière à km 7.4, coords GPX exactes
+// ============================================================
 const ALL_POINTS = [
   {name:"Départ",                       km:0,      loop:"Dép", tour:0, color:"#555",    type:"start",  isCross:false},
   {name:"Fin circuit départ",           km:3.578,  loop:"Dép", tour:0, color:"#555",    type:"start",  isCross:false},
-  {name:"Cimetière Militaire Allemand", km:6.0,    loop:"Dép", tour:0, color:"#C47B00", type:"velo",   isCross:false},
+  {name:"Cimetière Militaire Allemand", km:7.4,    loop:"Dép", tour:0, color:"#C47B00", type:"velo",   isCross:false},
   {name:"L'Hallobeau",                  km:8.262,  loop:"B1",  tour:1, color:"#1D9E75", type:"ravi",   isCross:false},
   {name:"La Croix-du-Bac",             km:12.895, loop:"B1",  tour:1, color:"#1D9E75", type:"ravi",   isCross:false},
   {name:"École Jean Monnet",           km:19.047, loop:"B1",  tour:1, color:"#7F77DD", type:"ravi",   isCross:true},
@@ -217,6 +264,8 @@ const ALL_POINTS = [
   {name:"La Blanche",                   km:94.269, loop:"B2",  tour:3, color:"#EF9F27", type:"ravi",   isCross:false},
   {name:"ARRIVÉE",                      km:100.0,  loop:"Fin", tour:3, color:"#378ADD", type:"finish", isCross:false},
 ];
+const SORTED = [...ALL_POINTS].sort((a,b) => a.km - b.km);
+const RAVI_POINTS = ALL_POINTS.filter(p => p.type==='ravi' || p.type==='finish');
 
 const NUTRI_NOTES = [
   "Gel + eau. Pas de solide encore.",
@@ -238,249 +287,199 @@ const NUTRI_NOTES = [
   "Eau et concentration. Finish en vue.",
   "🏁 Arrivée !",
 ];
+const PRESETS = [{mn:4,sc:30},{mn:4,sc:35},{mn:4,sc:40},{mn:4,sc:45},{mn:4,sc:50},{mn:5,sc:0}];
 
-const SORTED = [...ALL_POINTS].sort((a, b) => a.km - b.km);
-const RAVI_POINTS = ALL_POINTS.filter(p => p.type === 'ravi' || p.type === 'finish');
-
-const PRESETS = [
-  {mn:4, sc:30}, {mn:4, sc:35}, {mn:4, sc:40},
-  {mn:4, sc:45}, {mn:4, sc:50}, {mn:5,  sc:0}
-];
-
-function getPace() {
-  return (parseInt(document.getElementById('pace-min').value) || 4)
-       + (parseInt(document.getElementById('pace-sec').value) || 35) / 60;
+// ============================================================
+// HELPERS
+// ============================================================
+function getPace(){return(parseInt(document.getElementById('pace-min').value)||4)+(parseInt(document.getElementById('pace-sec').value)||35)/60}
+function timeToMin(t){const[h,m]=t.split(':').map(Number);return h*60+m}
+function minToTime(m){const d=((m%1440)+1440)%1440;return String(Math.floor(d/60)).padStart(2,'0')+':'+String(Math.round(d%60)).padStart(2,'0')}
+function fmtDur(m){return Math.floor(m/60)+'h'+String(Math.round(m%60)).padStart(2,'0')}
+function fmtPace(p){const mn=Math.floor(p),s=Math.round((p-mn)*60);return mn+"'"+String(s).padStart(2,'0')+'"'}
+function calcPassage(km,pace,fade,fadeStart){
+  const f=fade/100,fs=Math.min(fadeStart,km);
+  const t1=pace*Math.min(km,fs);
+  if(km<=fs)return t1;
+  const rem=100-fs,x=km-fs;
+  return t1+pace*(x+f*x*x/(2*(rem||1)));
 }
-function timeToMin(t) { const [h,m] = t.split(':').map(Number); return h*60+m; }
-function minToTime(m) {
-  const d = ((m%1440)+1440)%1440;
-  return String(Math.floor(d/60)).padStart(2,'0') + ':' + String(Math.round(d%60)).padStart(2,'0');
+function getParams(){return{start:timeToMin(document.getElementById('start-time').value),pace:getPace(),fade:parseFloat(document.getElementById('fade').value)||0,fadeStart:parseFloat(document.getElementById('fade-start').value)||0}}
+function highlightPreset(){
+  const mn=parseInt(document.getElementById('pace-min').value)||0,sc=parseInt(document.getElementById('pace-sec').value)||0;
+  document.querySelectorAll('.preset-btn').forEach((b,i)=>b.classList.toggle('active-preset',PRESETS[i].mn===mn&&PRESETS[i].sc===sc));
 }
-function fmtDur(m) { return Math.floor(m/60)+'h'+String(Math.round(m%60)).padStart(2,'0'); }
-function fmtPace(p) { const mn=Math.floor(p),s=Math.round((p-mn)*60); return mn+"'"+String(s).padStart(2,'0')+'"'; }
-
-function calcPassage(km, pace, fade, fadeStart) {
-  const f = fade/100, fs = Math.min(fadeStart, km);
-  const t1 = pace * Math.min(km, fs);
-  if (km <= fs) return t1;
-  const rem = 100-fs, x = km-fs;
-  return t1 + pace * (x + f*x*x / (2 * (rem||1)));
+function setPreset(mn,sc){document.getElementById('pace-min').value=mn;document.getElementById('pace-sec').value=String(sc).padStart(2,'0');highlightPreset();compute()}
+function updateFadeInfo(){
+  const fade=parseFloat(document.getElementById('fade').value)||0,fs=parseFloat(document.getElementById('fade-start').value)||0,el=document.getElementById('fade-info');
+  if(!fade){el.style.display='none';return}
+  el.style.display='block';
+  el.textContent=fs===0?`ℹ️ Ralentissement de ${fade}% progressif dès le km 0.`:`ℹ️ Allure constante km 0 → km ${fs}, puis ralentissement progressif de ${fade}% sur les ${100-fs} km restants.`;
 }
+function rowClass(r){return r.type==='velo'?'velo-row':r.type==='start'?'depart-row':r.isCross?'crossover-row':''}
+function badgeFor(r){
+  if(r.type==='start') return`<span class="badge b0">Circuit départ</span>`;
+  if(r.type==='velo')  return`<span class="badge-velo">🚲 Vélos autorisés</span>`;
+  if(r.type==='finish')return`<span class="badge b3">Arrivée</span>`;
+  const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
+  return`<span class="badge ${lc}">${r.loop} T${r.tour}</span>`;
+}
+function triFor(r){return r.isCross?`<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`:''}
 
-function getParams() {
-  return {
-    start:     timeToMin(document.getElementById('start-time').value),
-    pace:      getPace(),
-    fade:      parseFloat(document.getElementById('fade').value) || 0,
-    fadeStart: parseFloat(document.getElementById('fade-start').value) || 0
+// ============================================================
+// LEAFLET MAP
+// ============================================================
+let leafletMap=null, mapLayers={}, posMarker=null, mapInitialized=false;
+
+function initMap(){
+  if(mapInitialized) return;
+  mapInitialized=true;
+
+  leafletMap=L.map('parcours-map').setView([50.692,2.765],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',maxZoom:18
+  }).addTo(leafletMap);
+
+  mapLayers={
+    depart:L.polyline(GPX_DEPART,{color:'#999',weight:4,opacity:0.9,dashArray:'8,5'}).addTo(leafletMap),
+    verte: L.polyline(GPX_VERTE, {color:'#1D9E75',weight:5,opacity:0.85}).addTo(leafletMap),
+    orange:L.polyline(GPX_ORANGE,{color:'#EF9F27',weight:5,opacity:0.85}).addTo(leafletMap),
   };
-}
 
-function highlightPreset() {
-  const mn = parseInt(document.getElementById('pace-min').value)||0;
-  const sc = parseInt(document.getElementById('pace-sec').value)||0;
-  document.querySelectorAll('.preset-btn').forEach((b,i) =>
-    b.classList.toggle('active-preset', PRESETS[i].mn===mn && PRESETS[i].sc===sc));
-}
-function setPreset(mn, sc) {
-  document.getElementById('pace-min').value = mn;
-  document.getElementById('pace-sec').value = String(sc).padStart(2,'0');
-  highlightPreset(); compute();
-}
-
-function updateFadeInfo() {
-  const fade = parseFloat(document.getElementById('fade').value)||0;
-  const fs   = parseFloat(document.getElementById('fade-start').value)||0;
-  const el   = document.getElementById('fade-info');
-  if (!fade) { el.style.display='none'; return; }
-  el.style.display = 'block';
-  el.textContent = fs === 0
-    ? `ℹ️ Ralentissement de ${fade}% progressif dès le km 0.`
-    : `ℹ️ Allure constante km 0 → km ${fs}, puis ralentissement progressif de ${fade}% sur les ${100-fs} km restants.`;
-}
-
-function drawTrack() {
-  const svg = document.getElementById('track-svg');
-  svg.innerHTML = '';
-  const py=42, x1=10, x2=630;
-
-  function mk(tag, attrs, txt) {
-    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v));
-    if (txt !== undefined) el.textContent = txt;
-    svg.appendChild(el); return el;
-  }
-
-  // Circuit départ shading (km 0 → 3.578)
-  const xDs = x1+(x2-x1)*3.578/100;
-  mk('rect',{x:x1, y:py-6, width:xDs-x1, height:12, fill:'#e0e0e0', rx:3, opacity:0.6});
-
-  // Base track
-  mk('line',{x1,x2,y1:py,y2:py, stroke:'#ddd','stroke-width':5,'stroke-linecap':'round'});
-
-  // Progress
-  const km = parseFloat(document.getElementById('km-slider').value);
-  const cx = x1+(x2-x1)*km/100;
-  mk('line',{x1,x2:cx,y1:py,y2:py, stroke:'#1D9E75','stroke-width':5,'stroke-linecap':'round', id:'prog-line'});
-
-  // km labels
-  [0,25,50,75,100].forEach(k =>
-    mk('text',{x:x1+(x2-x1)*k/100, y:70,'text-anchor':'middle','font-size':9, fill:'#aaa'}, k+'km'));
-
-  // Points
-  SORTED.forEach(r => {
-    const x = x1+(x2-x1)*r.km/100;
-    if (r.isCross) {
-      const s=7;
-      mk('polygon',{points:`${x},${py-s-2} ${x+s},${py+s-2} ${x-s},${py+s-2}`, fill:'#7F77DD', stroke:'#534AB7','stroke-width':'0.5'});
-      mk('text',{x, y:py-s-6,'text-anchor':'middle','font-size':7.5, fill:'#534AB7','font-weight':'600'}, r.km.toFixed(1));
-    } else if (r.type === 'velo') {
-      mk('text',{x, y:py-12,'text-anchor':'middle','font-size':14}, '🚲');
-      mk('line',{x1:x,x2:x,y1:py-4,y2:py+4, stroke:'#C47B00','stroke-width':1.5,'stroke-dasharray':'2,2'});
-      mk('text',{x, y:py+16,'text-anchor':'middle','font-size':7.5, fill:'#C47B00','font-weight':'600'}, 'km 6');
-    } else if (r.type === 'start') {
-      mk('circle',{cx:x,cy:py, r:5, fill:'#888', stroke:'white','stroke-width':1.5});
-    } else if (r.type === 'finish') {
-      mk('circle',{cx:x,cy:py, r:6, fill:'#378ADD', stroke:'white','stroke-width':1.5});
-    } else {
-      mk('circle',{cx:x,cy:py, r:4, fill:r.color});
+  function addArrows(pts,color){
+    const step=Math.max(1,Math.floor(pts.length/7));
+    for(let i=step;i<pts.length-1;i+=step){
+      const a=pts[i-1],b=pts[i];
+      const angle=Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;
+      L.marker([b[0],b[1]],{icon:L.divIcon({className:'',html:`<div style="transform:rotate(${angle-90}deg);color:${color};font-size:15px;opacity:.6">▶</div>`,iconSize:[15,15],iconAnchor:[7,7]}),interactive:false}).addTo(leafletMap);
     }
+  }
+  addArrows(GPX_VERTE,'#1D9E75');
+  addArrows(GPX_ORANGE,'#EF9F27');
+
+  function mkIcon(html,size,anchor){return L.divIcon({className:'',html,iconSize:size,iconAnchor:anchor||[size[0]/2,size[1]/2]})}
+
+  // Départ/Arrivée
+  L.marker([50.70065,2.77803],{icon:mkIcon(`<div style="background:#555;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.4)">S</div>`,[22,22])})
+    .bindPopup('<b>🏁 Départ / Arrivée</b><br>Centre de Steenwerck<br><small>Circuit de départ — 3,578 km</small>').addTo(leafletMap);
+
+  // Cimetière Militaire Allemand — km 7.4 — coords GPX exactes (50.69928, 2.79296)
+  // Croisement Rue du Pont d'Achelles / Rue de la Ménegatte
+  L.marker([50.69928,2.79296],{icon:mkIcon(
+    `<div style="background:#C47B00;color:white;border-radius:7px;padding:3px 7px;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.35);white-space:nowrap">🚲</div>`,
+    [32,26],[16,13]
+  )}).bindPopup(`<b>🚲 Cimetière Militaire Allemand</b><br>Croisement Rue du Pont d'Achelles / Rue de la Ménegatte<br><small>km 7.4 — Début autorisé pour les vélos d'assistance</small>`).addTo(leafletMap);
+
+  // Ravitaillements — sans triangle École Jean Monnet, simple pastille pour tous
+  const RAVI_LIEUX = [
+    {name:"L'Hallobeau",      lat:50.69981,lon:2.78171,color:"#1D9E75",passages:"km 8.3 · 40.4 · 72.5"},
+    {name:"La Croix-du-Bac", lat:50.68594,lon:2.8037, color:"#1D9E75",passages:"km 12.9 · 45.0 · 77.2"},
+    {name:"École Jean Monnet",lat:50.68185,lon:2.76714,color:"#7F77DD",passages:"km 19.0 · 51.2 · 83.3 — Croisement boucles"},
+    {name:"Le Doulieu",       lat:50.68169,lon:2.73159,color:"#EF9F27",passages:"km 25.9 · 58.0 · 90.1"},
+    {name:"La Blanche",       lat:50.70083,lon:2.77945,color:"#EF9F27",passages:"km 30.0 · 62.1 · 94.3"},
+    {name:"Salle des Sports", lat:50.70065,lon:2.77803,color:"#7F77DD",passages:"km 35.7 · 67.9 — Ravit. principal"},
+  ];
+  RAVI_LIEUX.forEach(r=>{
+    // Tous en pastille ronde, pas de triangle
+    const html=`<div style="background:${r.color};border-radius:50%;width:13px;height:13px;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`;
+    L.marker([r.lat,r.lon],{icon:mkIcon(html,[13,13])})
+      .bindPopup(`<b>🥤 ${r.name}</b><br><small>${r.passages}</small>`).addTo(leafletMap);
   });
 
-  // Current position
-  mk('circle',{cx,cy:py, r:7, fill:'white', stroke:'#1D9E75','stroke-width':2.5, id:'pos-dot'});
+  // Marqueur position coureur (rouge, se déplace avec le slider)
+  posMarker=L.marker([50.70065,2.77803],{
+    icon:mkIcon(`<div style="background:#e63946;border-radius:50%;width:16px;height:16px;border:3px solid white;box-shadow:0 0 0 2px #e63946,0 2px 6px rgba(0,0,0,.4)"></div>`,[16,16]),
+    zIndexOffset:1000
+  }).addTo(leafletMap);
+
+  fitAll();
 }
 
-function rowClass(r) {
-  if (r.type==='velo')  return 'velo-row';
-  if (r.type==='start') return 'depart-row';
-  if (r.isCross)        return 'crossover-row';
-  return '';
-}
+function fitAll(){if(leafletMap)leafletMap.fitBounds(L.latLngBounds([...GPX_DEPART,...GPX_VERTE,...GPX_ORANGE]),{padding:[20,20]})}
+function toggleLayer(name,btn){btn.classList.toggle('active');if(!leafletMap)return;if(leafletMap.hasLayer(mapLayers[name]))leafletMap.removeLayer(mapLayers[name]);else leafletMap.addLayer(mapLayers[name])}
 
-function badgeFor(r) {
-  if (r.type==='start')  return `<span class="badge b0">Circuit départ</span>`;
-  if (r.type==='velo')   return `<span class="badge-velo">🚲 Vélos autorisés</span>`;
-  if (r.type==='finish') return `<span class="badge b3">Arrivée</span>`;
-  const lc = r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
-  return `<span class="badge ${lc}">${r.loop} T${r.tour}</span>`;
-}
+// ============================================================
+// COMPUTE & TABLES
+// ============================================================
+function compute(){
+  const{start,pace,fade,fadeStart}=getParams();
+  const total=calcPassage(100,pace,fade,fadeStart);
+  document.getElementById('s-time').textContent=fmtDur(total);
+  document.getElementById('s-pace').textContent=fmtPace(total/100)+'/km';
+  document.getElementById('s-finish').textContent=minToTime(start+total);
+  highlightPreset();updateFadeInfo();
 
-function triFor(r) {
-  return r.isCross
-    ? `<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`
-    : '';
-}
-
-function compute() {
-  const {start,pace,fade,fadeStart} = getParams();
-  const total = calcPassage(100,pace,fade,fadeStart);
-  document.getElementById('s-time').textContent   = fmtDur(total);
-  document.getElementById('s-pace').textContent   = fmtPace(total/100)+'/km';
-  document.getElementById('s-finish').textContent = minToTime(start+total);
-  highlightPreset(); updateFadeInfo();
-
-  // Chrono table
-  const tbody = document.getElementById('passage-body');
-  tbody.innerHTML = '';
-  let prevKm=0, prevMin=0;
-  SORTED.forEach(r => {
-    const cum  = calcPassage(r.km,pace,fade,fadeStart);
-    const segK = r.km-prevKm, segM = cum-prevMin;
-    const segP = segK>0 ? segM/segK : 0;
-    const timeCell = r.km===0
-      ? `<td>—</td><td style="font-weight:600">${minToTime(start)}</td><td>—</td>`
-      : `<td>${fmtDur(cum)}</td><td style="font-weight:600">${minToTime(start+cum)}</td><td style="color:#aaa">${fmtPace(segP)}</td>`;
-    tbody.innerHTML += `<tr class="${rowClass(r)}">
-      <td>${triFor(r)}${badgeFor(r)} ${r.name}</td>
-      <td>${r.km===0?'0':r.km.toFixed(1)}</td>
-      ${timeCell}
-    </tr>`;
-    prevKm=r.km; prevMin=cum;
+  const tbody=document.getElementById('passage-body');tbody.innerHTML='';
+  let prevKm=0,prevMin=0;
+  SORTED.forEach(r=>{
+    const cum=calcPassage(r.km,pace,fade,fadeStart);
+    const segK=r.km-prevKm,segM=cum-prevMin,segP=segK>0?segM/segK:0;
+    const timeCell=r.km===0
+      ?`<td>—</td><td style="font-weight:600">${minToTime(start)}</td><td>—</td>`
+      :`<td>${fmtDur(cum)}</td><td style="font-weight:600">${minToTime(start+cum)}</td><td style="color:#aaa">${fmtPace(segP)}</td>`;
+    tbody.innerHTML+=`<tr class="${rowClass(r)}"><td>${triFor(r)}${badgeFor(r)} ${r.name}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td>${timeCell}</tr>`;
+    prevKm=r.km;prevMin=cum;
   });
-
-  updateMapTable(); updateNutriTable(); drawTrack(); updateSlider();
+  updateMapTable();updateNutriTable();updateSlider();
 }
 
-function updateMapTable() {
-  const {start,pace,fade,fadeStart} = getParams();
-  const tbody = document.getElementById('map-body');
-  tbody.innerHTML = '';
+function updateMapTable(){
+  const{start,pace,fade,fadeStart}=getParams();
+  const tbody=document.getElementById('map-body');tbody.innerHTML='';
   let prevMin=0;
-  SORTED.forEach(r => {
-    const cum   = calcPassage(r.km,pace,fade,fadeStart);
-    const delta = cum-prevMin;
-    let tc = '';
-    if (r.type==='start')  tc=`<span class="badge b0">Circuit départ</span>`;
-    else if (r.type==='velo')   tc=`<span class="badge-velo">🚲 Vélos autorisés dès ici</span>`;
-    else if (r.type==='finish') tc=`<span class="badge b3">Arrivée</span>`;
-    else if (r.isCross)    tc=`<span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg><span style="font-size:11px;color:#534AB7;font-weight:600">Croisement</span></span>`;
-    else { const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3'; tc=`<span class="badge ${lc}">${r.loop}</span>`; }
-    const t = r.km===0 ? minToTime(start) : minToTime(start+cum);
-    const d = r.km===0 ? '—' : '+'+fmtDur(delta);
-    tbody.innerHTML += `<tr class="${rowClass(r)}">
-      <td>${r.name}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td>
-      <td>${tc}</td>
-      <td style="font-weight:600">${t}</td>
-      <td style="color:#aaa">${d}</td>
-    </tr>`;
+  SORTED.forEach(r=>{
+    const cum=calcPassage(r.km,pace,fade,fadeStart);const delta=cum-prevMin;
+    let tc='';
+    if(r.type==='start')tc=`<span class="badge b0">Circuit départ</span>`;
+    else if(r.type==='velo')tc=`<span class="badge-velo">🚲 Vélos autorisés dès ici</span>`;
+    else if(r.type==='finish')tc=`<span class="badge b3">Arrivée</span>`;
+    else if(r.isCross)tc=`<span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg><span style="font-size:11px;color:#534AB7;font-weight:600">Croisement</span></span>`;
+    else{const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';tc=`<span class="badge ${lc}">${r.loop}</span>`;}
+    const t=r.km===0?minToTime(start):minToTime(start+cum);
+    const d=r.km===0?'—':'+'+fmtDur(delta);
+    tbody.innerHTML+=`<tr class="${rowClass(r)}"><td>${r.name}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td><td>${tc}</td><td style="font-weight:600">${t}</td><td style="color:#aaa">${d}</td></tr>`;
     prevMin=cum;
   });
 }
 
-function updateNutriTable() {
-  const {start,pace,fade,fadeStart} = getParams();
-  const tbody = document.getElementById('nutri-body');
-  tbody.innerHTML = '';
-  RAVI_POINTS.forEach((r,i) => {
-    const cum = calcPassage(r.km,pace,fade,fadeStart);
-    tbody.innerHTML += `<tr class="${r.isCross?'crossover-row':''}">
-      <td style="font-size:12px">${r.isCross?'🔀 ':''}${r.name}</td>
-      <td>${r.km.toFixed(1)}</td>
-      <td style="font-weight:600">${minToTime(start+cum)}</td>
-      <td style="font-size:12px;color:#888">${NUTRI_NOTES[i]||''}</td>
-    </tr>`;
+function updateNutriTable(){
+  const{start,pace,fade,fadeStart}=getParams();
+  const tbody=document.getElementById('nutri-body');tbody.innerHTML='';
+  RAVI_POINTS.forEach((r,i)=>{
+    const cum=calcPassage(r.km,pace,fade,fadeStart);
+    tbody.innerHTML+=`<tr class="${r.isCross?'crossover-row':''}"><td style="font-size:12px">${r.isCross?'🔀 ':''}${r.name}</td><td>${r.km.toFixed(1)}</td><td style="font-weight:600">${minToTime(start+cum)}</td><td style="font-size:12px;color:#888">${NUTRI_NOTES[i]||''}</td></tr>`;
   });
 }
 
-function updateSlider() {
-  const km = parseFloat(document.getElementById('km-slider').value);
-  const {start,pace,fade,fadeStart} = getParams();
-  const cum = calcPassage(km,pace,fade,fadeStart);
-  const arr = km===0 ? minToTime(start) : minToTime(start+cum);
-  document.getElementById('sl-km').textContent   = 'km '+km.toFixed(1);
-  document.getElementById('sl-time').textContent = arr;
-  const tt = document.getElementById('tooltip-km');
-  tt.textContent  = 'km '+km.toFixed(1)+' → '+arr;
-  tt.style.left   = Math.max(5, Math.min(93,km))+'%';
-  const next = SORTED.find(r => r.km > km);
-  document.getElementById('sl-next').textContent = next
-    ? (next.type==='velo'?'🚲 ': next.isCross?'🔀 ':'')+next.name+' (km '+next.km.toFixed(1)+')'
-    : 'Arrivée !';
-  const svg = document.getElementById('track-svg');
-  const cx  = 10+(630-10)*km/100;
-  const pl  = svg.querySelector('#prog-line');
-  const pd  = svg.querySelector('#pos-dot');
-  if (pl) pl.setAttribute('x2', cx);
-  if (pd) pd.setAttribute('cx', cx);
+function updateSlider(){
+  const km=parseFloat(document.getElementById('km-slider').value);
+  const{start,pace,fade,fadeStart}=getParams();
+  const cum=calcPassage(km,pace,fade,fadeStart);
+  const arr=km===0?minToTime(start):minToTime(start+cum);
+  document.getElementById('sl-km').textContent='km '+km.toFixed(1);
+  document.getElementById('sl-time').textContent=arr;
+  const tt=document.getElementById('tooltip-km');
+  tt.textContent='km '+km.toFixed(1)+' → '+arr;
+  tt.style.left=Math.max(5,Math.min(93,km))+'%';
+  const next=SORTED.find(r=>r.km>km);
+  document.getElementById('sl-next').textContent=next?(next.type==='velo'?'🚲 ':next.isCross?'🔀 ':'')+next.name+' (km '+next.km.toFixed(1)+')':'Arrivée !';
+  if(posMarker){const[lat,lon]=latLonAtKm(km);posMarker.setLatLng([lat,lon]);}
 }
 
-function showTab(name, event) {
-  document.querySelectorAll('.tab').forEach(t  => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+function showTab(name,event){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if (event && event.target) event.target.classList.add('active');
+  if(event&&event.target)event.target.classList.add('active');
+  if(name==='carte'){initMap();setTimeout(()=>{if(leafletMap)leafletMap.invalidateSize()},100)}
 }
 
-document.getElementById('start-time').oninput = compute;
-document.getElementById('fade').oninput       = compute;
-document.getElementById('fade-start').oninput = compute;
-document.getElementById('pace-min').oninput   = () => { highlightPreset(); compute(); };
-document.getElementById('pace-sec').oninput   = () => { highlightPreset(); compute(); };
-document.getElementById('pace-sec').onblur    = () => {
-  const v = parseInt(document.getElementById('pace-sec').value)||0;
-  document.getElementById('pace-sec').value = String(Math.min(59,v)).padStart(2,'0');
-};
+document.getElementById('start-time').oninput=compute;
+document.getElementById('fade').oninput=compute;
+document.getElementById('fade-start').oninput=compute;
+document.getElementById('pace-min').oninput=()=>{highlightPreset();compute()};
+document.getElementById('pace-sec').oninput=()=>{highlightPreset();compute()};
+document.getElementById('pace-sec').onblur=()=>{const v=parseInt(document.getElementById('pace-sec').value)||0;document.getElementById('pace-sec').value=String(Math.min(59,v)).padStart(2,'0')};
 
 compute();
 </script>
