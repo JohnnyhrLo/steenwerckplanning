@@ -40,18 +40,22 @@ td{padding:7px 9px;border-bottom:1px solid #f2f2f2}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;letter-spacing:.01em}
+.b0{background:#f0f0f0;color:#555}
 .b1{background:#E1F5EE;color:#085041}
 .b2{background:#FAEEDA;color:#633806}
 .b3{background:#E6F1FB;color:#0C447C}
+.badge-velo{background:#FFF3CD;color:#856404;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
 .crossover-row td{background:#F1F0FE}
 .crossover-row:hover td{background:#E9E7FD}
+.depart-row td{background:#f7f7f7;color:#666;font-style:italic}
+.velo-row td{background:#FFFBEE}
 .tooltip-box{background:#fff;border:1px solid #ddd;border-radius:8px;padding:6px 11px;font-size:12px;position:absolute;top:-46px;transform:translateX(-50%);white-space:nowrap;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.1);font-weight:500}
 .section-title{font-size:15px;font-weight:600;margin:18px 0 7px;color:#111}
 .nutri-card{background:#f7f7f7;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #efefef}
 .nutri-card h4{font-size:13px;font-weight:600;margin-bottom:9px}
 .nutri-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #efefef;font-size:12px}
 .nutri-item:last-child{border:none}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;margin:10px 0 6px;align-items:center;color:#666}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;margin:10px 0 6px;align-items:center;color:#666}
 .legend span{display:flex;align-items:center;gap:5px}
 #track-svg{width:100%;display:block;margin:6px 0}
 </style>
@@ -71,8 +75,6 @@ tr:hover td{background:#fafafa}
 
   <!-- CHRONO -->
   <div id="tab-chrono" class="panel active">
-
-    <!-- Ligne 1 : Départ + Allure -->
     <div class="row2">
       <div>
         <label>Heure de départ</label>
@@ -88,8 +90,6 @@ tr:hover td{background:#fafafa}
         </div>
       </div>
     </div>
-
-    <!-- Ligne 2 : Ralentissement + Début ralentissement -->
     <div class="row2">
       <div>
         <label>Ralentissement (%)</label>
@@ -100,8 +100,6 @@ tr:hover td{background:#fafafa}
         <input type="number" id="fade-start" min="0" max="90" step="1" value="60">
       </div>
     </div>
-
-    <!-- Presets -->
     <div class="presets">
       <span class="preset-lbl">Preset :</span>
       <button class="preset-btn" onclick="setPreset(4,30)">4:30</button>
@@ -111,25 +109,15 @@ tr:hover td{background:#fafafa}
       <button class="preset-btn" onclick="setPreset(4,50)">4:50</button>
       <button class="preset-btn" onclick="setPreset(5,0)">5:00</button>
     </div>
-
     <div id="fade-info" class="fade-info" style="display:none"></div>
-
-    <!-- Résumé -->
     <div class="row3" style="margin-top:12px">
       <div class="metric"><div class="lbl">Temps estimé</div><div class="val" id="s-time">-</div></div>
       <div class="metric"><div class="lbl">Allure effective moy.</div><div class="val" id="s-pace">-</div></div>
       <div class="metric"><div class="lbl">Arrivée prévue</div><div class="val" id="s-finish">-</div></div>
     </div>
-
     <table>
       <thead>
-        <tr>
-          <th>Ravitaillement</th>
-          <th>Km</th>
-          <th>Temps cumulé</th>
-          <th>Heure passage</th>
-          <th>Allure locale</th>
-        </tr>
+        <tr><th>Point</th><th>Km</th><th>Temps cumulé</th><th>Heure passage</th><th>Allure locale</th></tr>
       </thead>
       <tbody id="passage-body"></tbody>
     </table>
@@ -142,25 +130,20 @@ tr:hover td{background:#fafafa}
       <div id="tooltip-km" class="tooltip-box" style="left:0%">km 0</div>
       <input type="range" id="km-slider" min="0" max="100" step="0.1" value="0" oninput="updateSlider()">
     </div>
-
-    <svg id="track-svg" viewBox="0 0 640 72" xmlns="http://www.w3.org/2000/svg"></svg>
-
+    <svg id="track-svg" viewBox="0 0 640 80" xmlns="http://www.w3.org/2000/svg"></svg>
     <div class="row3" style="margin-top:8px">
       <div class="metric"><div class="lbl">Position</div><div class="val" id="sl-km">km 0</div></div>
       <div class="metric"><div class="lbl">Heure estimée</div><div class="val" id="sl-time">-</div></div>
-      <div class="metric"><div class="lbl">Prochain ravit.</div><div class="val" id="sl-next" style="font-size:13px;margin-top:6px">-</div></div>
+      <div class="metric"><div class="lbl">Prochain point</div><div class="val" id="sl-next" style="font-size:12px;margin-top:6px">-</div></div>
     </div>
-
     <div class="legend">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#555"></span>Départ / repère</span>
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1D9E75"></span>Boucle 1</span>
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#EF9F27"></span>Boucle 2</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#378ADD"></span>Départ / Arrivée</span>
-      <span>
-        <svg width="11" height="11" viewBox="0 0 11 11"><polygon points="5.5,0.5 10.5,10.5 0.5,10.5" fill="#7F77DD"/></svg>
-        Croisement boucles
-      </span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#378ADD"></span>Arrivée</span>
+      <span><svg width="11" height="11" viewBox="0 0 11 11"><polygon points="5.5,0.5 10.5,10.5 0.5,10.5" fill="#7F77DD"/></svg>Croisement boucles</span>
+      <span>🚲 Vélos autorisés dès ici</span>
     </div>
-
     <table>
       <thead>
         <tr><th>Point</th><th>Km</th><th>Type</th><th>Heure estimée</th><th>Δ préc.</th></tr>
@@ -174,13 +157,11 @@ tr:hover td{background:#fafafa}
     <div style="font-size:12px;color:#888;margin-bottom:12px;line-height:1.6">
       Plan nutrition basé sur votre allure configurée dans l'onglet Chrono.
     </div>
-
     <div class="section-title">Besoins estimés</div>
     <div class="row2">
       <div class="metric"><div class="lbl">Calories totales</div><div class="val">~7 000 kcal</div></div>
       <div class="metric"><div class="lbl">Hydratation cible</div><div class="val">~700 ml/h</div></div>
     </div>
-
     <div class="section-title">Stratégie par phase</div>
     <div class="nutri-card">
       <h4>🟢 Phase 1 — km 0 à 35 (conservateur)</h4>
@@ -203,37 +184,38 @@ tr:hover td{background:#fafafa}
       <div class="nutri-item"><span>Sodium</span><span>800–1 000 mg/h (crampes)</span></div>
       <div class="nutri-item"><span>Solide léger</span><span>Fruits secs, banane, chocolat chaud</span></div>
     </div>
-
     <div class="section-title">Plan détaillé par ravitaillement</div>
     <table>
-      <thead>
-        <tr><th>Ravit.</th><th>Km</th><th>Heure</th><th>À faire / prendre</th></tr>
-      </thead>
+      <thead><tr><th>Ravit.</th><th>Km</th><th>Heure</th><th>À faire / prendre</th></tr></thead>
       <tbody id="nutri-body"></tbody>
     </table>
   </div>
 </div>
 
 <script>
+// type: 'start'=départ/repère circuit, 'velo'=repère vélos, 'ravi'=ravitaillement, 'cross'=croisement, 'finish'=arrivée
 const ALL_POINTS = [
-  {name:"L'Hallobeau",       km:8.262,  loop:"B1", tour:1, color:"#1D9E75", isCross:false},
-  {name:"La Croix-du-Bac",   km:12.895, loop:"B1", tour:1, color:"#1D9E75", isCross:false},
-  {name:"École Jean Monnet", km:19.047, loop:"B1", tour:1, color:"#7F77DD", isCross:true},
-  {name:"Le Doulieu",        km:25.857, loop:"B2", tour:1, color:"#EF9F27", isCross:false},
-  {name:"La Blanche",        km:29.988, loop:"B2", tour:1, color:"#EF9F27", isCross:false},
-  {name:"Salle des Sports",  km:35.719, loop:"B2", tour:1, color:"#7F77DD", isCross:true},
-  {name:"L'Hallobeau",       km:40.403, loop:"B1", tour:2, color:"#1D9E75", isCross:false},
-  {name:"La Croix-du-Bac",   km:45.035, loop:"B1", tour:2, color:"#1D9E75", isCross:false},
-  {name:"École Jean Monnet", km:51.187, loop:"B1", tour:2, color:"#7F77DD", isCross:true},
-  {name:"Le Doulieu",        km:57.998, loop:"B2", tour:2, color:"#EF9F27", isCross:false},
-  {name:"La Blanche",        km:62.128, loop:"B2", tour:2, color:"#EF9F27", isCross:false},
-  {name:"Salle des Sports",  km:67.859, loop:"B2", tour:2, color:"#7F77DD", isCross:true},
-  {name:"L'Hallobeau",       km:72.543, loop:"B1", tour:3, color:"#1D9E75", isCross:false},
-  {name:"La Croix-du-Bac",   km:77.176, loop:"B1", tour:3, color:"#1D9E75", isCross:false},
-  {name:"École Jean Monnet", km:83.328, loop:"B1", tour:3, color:"#7F77DD", isCross:true},
-  {name:"Le Doulieu",        km:90.138, loop:"B2", tour:3, color:"#EF9F27", isCross:false},
-  {name:"La Blanche",        km:94.269, loop:"B2", tour:3, color:"#EF9F27", isCross:false},
-  {name:"ARRIVÉE",           km:100.0,  loop:"Fin",tour:3, color:"#378ADD", isCross:false},
+  {name:"Départ",                       km:0,      loop:"Dép", tour:0, color:"#555",    type:"start",  isCross:false},
+  {name:"Fin circuit départ",           km:3.578,  loop:"Dép", tour:0, color:"#555",    type:"start",  isCross:false},
+  {name:"Cimetière Militaire Allemand", km:6.0,    loop:"Dép", tour:0, color:"#C47B00", type:"velo",   isCross:false},
+  {name:"L'Hallobeau",                  km:8.262,  loop:"B1",  tour:1, color:"#1D9E75", type:"ravi",   isCross:false},
+  {name:"La Croix-du-Bac",             km:12.895, loop:"B1",  tour:1, color:"#1D9E75", type:"ravi",   isCross:false},
+  {name:"École Jean Monnet",           km:19.047, loop:"B1",  tour:1, color:"#7F77DD", type:"ravi",   isCross:true},
+  {name:"Le Doulieu",                   km:25.857, loop:"B2",  tour:1, color:"#EF9F27", type:"ravi",   isCross:false},
+  {name:"La Blanche",                   km:29.988, loop:"B2",  tour:1, color:"#EF9F27", type:"ravi",   isCross:false},
+  {name:"Salle des Sports",            km:35.719, loop:"B2",  tour:1, color:"#7F77DD", type:"ravi",   isCross:true},
+  {name:"L'Hallobeau",                  km:40.403, loop:"B1",  tour:2, color:"#1D9E75", type:"ravi",   isCross:false},
+  {name:"La Croix-du-Bac",             km:45.035, loop:"B1",  tour:2, color:"#1D9E75", type:"ravi",   isCross:false},
+  {name:"École Jean Monnet",           km:51.187, loop:"B1",  tour:2, color:"#7F77DD", type:"ravi",   isCross:true},
+  {name:"Le Doulieu",                   km:57.998, loop:"B2",  tour:2, color:"#EF9F27", type:"ravi",   isCross:false},
+  {name:"La Blanche",                   km:62.128, loop:"B2",  tour:2, color:"#EF9F27", type:"ravi",   isCross:false},
+  {name:"Salle des Sports",            km:67.859, loop:"B2",  tour:2, color:"#7F77DD", type:"ravi",   isCross:true},
+  {name:"L'Hallobeau",                  km:72.543, loop:"B1",  tour:3, color:"#1D9E75", type:"ravi",   isCross:false},
+  {name:"La Croix-du-Bac",             km:77.176, loop:"B1",  tour:3, color:"#1D9E75", type:"ravi",   isCross:false},
+  {name:"École Jean Monnet",           km:83.328, loop:"B1",  tour:3, color:"#7F77DD", type:"ravi",   isCross:true},
+  {name:"Le Doulieu",                   km:90.138, loop:"B2",  tour:3, color:"#EF9F27", type:"ravi",   isCross:false},
+  {name:"La Blanche",                   km:94.269, loop:"B2",  tour:3, color:"#EF9F27", type:"ravi",   isCross:false},
+  {name:"ARRIVÉE",                      km:100.0,  loop:"Fin", tour:3, color:"#378ADD", type:"finish", isCross:false},
 ];
 
 const NUTRI_NOTES = [
@@ -257,210 +239,247 @@ const NUTRI_NOTES = [
   "🏁 Arrivée !",
 ];
 
+const SORTED = [...ALL_POINTS].sort((a, b) => a.km - b.km);
+const RAVI_POINTS = ALL_POINTS.filter(p => p.type === 'ravi' || p.type === 'finish');
+
 const PRESETS = [
   {mn:4, sc:30}, {mn:4, sc:35}, {mn:4, sc:40},
-  {mn:4, sc:45}, {mn:4, sc:50}, {mn:5, sc:0}
+  {mn:4, sc:45}, {mn:4, sc:50}, {mn:5,  sc:0}
 ];
 
 function getPace() {
-  const mn = parseInt(document.getElementById('pace-min').value) || 4;
-  const sc = parseInt(document.getElementById('pace-sec').value) || 35;
-  return mn + sc / 60;
+  return (parseInt(document.getElementById('pace-min').value) || 4)
+       + (parseInt(document.getElementById('pace-sec').value) || 35) / 60;
 }
-function timeToMin(t) { const [h, m] = t.split(':').map(Number); return h * 60 + m; }
+function timeToMin(t) { const [h,m] = t.split(':').map(Number); return h*60+m; }
 function minToTime(m) {
-  const d = ((m % 1440) + 1440) % 1440;
-  return String(Math.floor(d / 60)).padStart(2, '0') + ':' + String(Math.round(d % 60)).padStart(2, '0');
+  const d = ((m%1440)+1440)%1440;
+  return String(Math.floor(d/60)).padStart(2,'0') + ':' + String(Math.round(d%60)).padStart(2,'0');
 }
-function fmtDur(m) { const h = Math.floor(m / 60); const mn = Math.round(m % 60); return h + 'h' + String(mn).padStart(2, '0'); }
-function fmtPace(p) { const mn = Math.floor(p); const s = Math.round((p - mn) * 60); return mn + "'" + String(s).padStart(2, '0') + '"'; }
+function fmtDur(m) { return Math.floor(m/60)+'h'+String(Math.round(m%60)).padStart(2,'0'); }
+function fmtPace(p) { const mn=Math.floor(p),s=Math.round((p-mn)*60); return mn+"'"+String(s).padStart(2,'0')+'"'; }
 
 function calcPassage(km, pace, fade, fadeStart) {
-  const f = fade / 100;
-  const fs = Math.min(fadeStart, km);
+  const f = fade/100, fs = Math.min(fadeStart, km);
   const t1 = pace * Math.min(km, fs);
   if (km <= fs) return t1;
-  const remaining = 100 - fs;
-  const x = km - fs;
-  if (remaining <= 0) return t1 + pace * (1 + f) * x;
-  return t1 + pace * (x + f * x * x / (2 * remaining));
+  const rem = 100-fs, x = km-fs;
+  return t1 + pace * (x + f*x*x / (2 * (rem||1)));
 }
 
 function getParams() {
   return {
-    start: timeToMin(document.getElementById('start-time').value),
-    pace: getPace(),
-    fade: parseFloat(document.getElementById('fade').value) || 0,
+    start:     timeToMin(document.getElementById('start-time').value),
+    pace:      getPace(),
+    fade:      parseFloat(document.getElementById('fade').value) || 0,
     fadeStart: parseFloat(document.getElementById('fade-start').value) || 0
   };
 }
 
 function highlightPreset() {
-  const mn = parseInt(document.getElementById('pace-min').value) || 0;
-  const sc = parseInt(document.getElementById('pace-sec').value) || 0;
-  document.querySelectorAll('.preset-btn').forEach((btn, i) => {
-    btn.classList.toggle('active-preset', PRESETS[i].mn === mn && PRESETS[i].sc === sc);
-  });
+  const mn = parseInt(document.getElementById('pace-min').value)||0;
+  const sc = parseInt(document.getElementById('pace-sec').value)||0;
+  document.querySelectorAll('.preset-btn').forEach((b,i) =>
+    b.classList.toggle('active-preset', PRESETS[i].mn===mn && PRESETS[i].sc===sc));
 }
 function setPreset(mn, sc) {
   document.getElementById('pace-min').value = mn;
-  document.getElementById('pace-sec').value = String(sc).padStart(2, '0');
-  highlightPreset();
-  compute();
+  document.getElementById('pace-sec').value = String(sc).padStart(2,'0');
+  highlightPreset(); compute();
 }
 
 function updateFadeInfo() {
-  const fade = parseFloat(document.getElementById('fade').value) || 0;
-  const fs = parseFloat(document.getElementById('fade-start').value) || 0;
-  const el = document.getElementById('fade-info');
-  if (fade === 0) { el.style.display = 'none'; return; }
+  const fade = parseFloat(document.getElementById('fade').value)||0;
+  const fs   = parseFloat(document.getElementById('fade-start').value)||0;
+  const el   = document.getElementById('fade-info');
+  if (!fade) { el.style.display='none'; return; }
   el.style.display = 'block';
   el.textContent = fs === 0
     ? `ℹ️ Ralentissement de ${fade}% progressif dès le km 0.`
-    : `ℹ️ Allure constante km 0 → km ${fs}, puis ralentissement progressif de ${fade}% sur les ${100 - fs} km restants.`;
+    : `ℹ️ Allure constante km 0 → km ${fs}, puis ralentissement progressif de ${fade}% sur les ${100-fs} km restants.`;
 }
 
 function drawTrack() {
   const svg = document.getElementById('track-svg');
   svg.innerHTML = '';
-  const py = 38, x1 = 10, x2 = 630;
+  const py=42, x1=10, x2=630;
+
   function mk(tag, attrs, txt) {
     const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v));
     if (txt !== undefined) el.textContent = txt;
-    svg.appendChild(el);
-    return el;
+    svg.appendChild(el); return el;
   }
-  mk('line', {x1, x2, y1:py, y2:py, stroke:'#e0e0e0', 'stroke-width':5, 'stroke-linecap':'round'});
+
+  // Circuit départ shading (km 0 → 3.578)
+  const xDs = x1+(x2-x1)*3.578/100;
+  mk('rect',{x:x1, y:py-6, width:xDs-x1, height:12, fill:'#e0e0e0', rx:3, opacity:0.6});
+
+  // Base track
+  mk('line',{x1,x2,y1:py,y2:py, stroke:'#ddd','stroke-width':5,'stroke-linecap':'round'});
+
+  // Progress
   const km = parseFloat(document.getElementById('km-slider').value);
-  const cx = x1 + (x2 - x1) * km / 100;
-  mk('line', {x1, x2:cx, y1:py, y2:py, stroke:'#1D9E75', 'stroke-width':5, 'stroke-linecap':'round', id:'prog-line'});
-  [0, 25, 50, 75, 100].forEach(k => {
-    mk('text', {x: x1 + (x2 - x1) * k / 100, y: 64, 'text-anchor':'middle', 'font-size':9, fill:'#aaa'}, k + 'km');
-  });
-  ALL_POINTS.forEach(r => {
-    const x = x1 + (x2 - x1) * r.km / 100;
+  const cx = x1+(x2-x1)*km/100;
+  mk('line',{x1,x2:cx,y1:py,y2:py, stroke:'#1D9E75','stroke-width':5,'stroke-linecap':'round', id:'prog-line'});
+
+  // km labels
+  [0,25,50,75,100].forEach(k =>
+    mk('text',{x:x1+(x2-x1)*k/100, y:70,'text-anchor':'middle','font-size':9, fill:'#aaa'}, k+'km'));
+
+  // Points
+  SORTED.forEach(r => {
+    const x = x1+(x2-x1)*r.km/100;
     if (r.isCross) {
-      const s = 7;
-      mk('polygon', {points:`${x},${py-s-2} ${x+s},${py+s-2} ${x-s},${py+s-2}`, fill:'#7F77DD', stroke:'#534AB7', 'stroke-width':'0.5'});
-      mk('text', {x, y:py-s-5, 'text-anchor':'middle', 'font-size':7.5, fill:'#534AB7', 'font-weight':'600'}, r.km.toFixed(1));
+      const s=7;
+      mk('polygon',{points:`${x},${py-s-2} ${x+s},${py+s-2} ${x-s},${py+s-2}`, fill:'#7F77DD', stroke:'#534AB7','stroke-width':'0.5'});
+      mk('text',{x, y:py-s-6,'text-anchor':'middle','font-size':7.5, fill:'#534AB7','font-weight':'600'}, r.km.toFixed(1));
+    } else if (r.type === 'velo') {
+      mk('text',{x, y:py-12,'text-anchor':'middle','font-size':14}, '🚲');
+      mk('line',{x1:x,x2:x,y1:py-4,y2:py+4, stroke:'#C47B00','stroke-width':1.5,'stroke-dasharray':'2,2'});
+      mk('text',{x, y:py+16,'text-anchor':'middle','font-size':7.5, fill:'#C47B00','font-weight':'600'}, 'km 6');
+    } else if (r.type === 'start') {
+      mk('circle',{cx:x,cy:py, r:5, fill:'#888', stroke:'white','stroke-width':1.5});
+    } else if (r.type === 'finish') {
+      mk('circle',{cx:x,cy:py, r:6, fill:'#378ADD', stroke:'white','stroke-width':1.5});
     } else {
-      mk('circle', {cx:x, cy:py, r:r.km === 100 ? 6 : 4, fill:r.color});
+      mk('circle',{cx:x,cy:py, r:4, fill:r.color});
     }
   });
-  mk('circle', {cx, cy:py, r:7, fill:'white', stroke:'#1D9E75', 'stroke-width':2.5, id:'pos-dot'});
+
+  // Current position
+  mk('circle',{cx,cy:py, r:7, fill:'white', stroke:'#1D9E75','stroke-width':2.5, id:'pos-dot'});
+}
+
+function rowClass(r) {
+  if (r.type==='velo')  return 'velo-row';
+  if (r.type==='start') return 'depart-row';
+  if (r.isCross)        return 'crossover-row';
+  return '';
+}
+
+function badgeFor(r) {
+  if (r.type==='start')  return `<span class="badge b0">Circuit départ</span>`;
+  if (r.type==='velo')   return `<span class="badge-velo">🚲 Vélos autorisés</span>`;
+  if (r.type==='finish') return `<span class="badge b3">Arrivée</span>`;
+  const lc = r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
+  return `<span class="badge ${lc}">${r.loop} T${r.tour}</span>`;
+}
+
+function triFor(r) {
+  return r.isCross
+    ? `<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`
+    : '';
 }
 
 function compute() {
-  const {start, pace, fade, fadeStart} = getParams();
-  const totalMin = calcPassage(100, pace, fade, fadeStart);
-  document.getElementById('s-time').textContent = fmtDur(totalMin);
-  document.getElementById('s-pace').textContent = fmtPace(totalMin / 100) + '/km';
-  document.getElementById('s-finish').textContent = minToTime(start + totalMin);
-  highlightPreset();
-  updateFadeInfo();
+  const {start,pace,fade,fadeStart} = getParams();
+  const total = calcPassage(100,pace,fade,fadeStart);
+  document.getElementById('s-time').textContent   = fmtDur(total);
+  document.getElementById('s-pace').textContent   = fmtPace(total/100)+'/km';
+  document.getElementById('s-finish').textContent = minToTime(start+total);
+  highlightPreset(); updateFadeInfo();
 
+  // Chrono table
   const tbody = document.getElementById('passage-body');
   tbody.innerHTML = '';
-  let prevKm = 0, prevMin = 0;
-  ALL_POINTS.forEach((r, i) => {
-    const cumMin = calcPassage(r.km, pace, fade, fadeStart);
-    const segKm = r.km - prevKm, segMin = cumMin - prevMin;
-    const segP = segKm > 0 ? segMin / segKm : 0;
-    const lc = r.loop === 'B1' ? 'b1' : r.loop === 'B2' ? 'b2' : 'b3';
-    const tri = r.isCross
-      ? `<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`
-      : '';
-    tbody.innerHTML += `<tr class="${r.isCross ? 'crossover-row' : ''}">
-      <td>${tri}<span class="badge ${lc}">${r.loop} T${r.tour}</span> ${r.name}</td>
-      <td>${r.km.toFixed(1)}</td>
-      <td>${fmtDur(cumMin)}</td>
-      <td style="font-weight:600">${minToTime(start + cumMin)}</td>
-      <td style="color:#aaa">${fmtPace(segP)}</td>
+  let prevKm=0, prevMin=0;
+  SORTED.forEach(r => {
+    const cum  = calcPassage(r.km,pace,fade,fadeStart);
+    const segK = r.km-prevKm, segM = cum-prevMin;
+    const segP = segK>0 ? segM/segK : 0;
+    const timeCell = r.km===0
+      ? `<td>—</td><td style="font-weight:600">${minToTime(start)}</td><td>—</td>`
+      : `<td>${fmtDur(cum)}</td><td style="font-weight:600">${minToTime(start+cum)}</td><td style="color:#aaa">${fmtPace(segP)}</td>`;
+    tbody.innerHTML += `<tr class="${rowClass(r)}">
+      <td>${triFor(r)}${badgeFor(r)} ${r.name}</td>
+      <td>${r.km===0?'0':r.km.toFixed(1)}</td>
+      ${timeCell}
     </tr>`;
-    prevKm = r.km; prevMin = cumMin;
+    prevKm=r.km; prevMin=cum;
   });
 
-  updateMapTable();
-  updateNutriTable();
-  drawTrack();
-  updateSlider();
+  updateMapTable(); updateNutriTable(); drawTrack(); updateSlider();
 }
 
 function updateMapTable() {
-  const {start, pace, fade, fadeStart} = getParams();
+  const {start,pace,fade,fadeStart} = getParams();
   const tbody = document.getElementById('map-body');
   tbody.innerHTML = '';
-  let prevMin = 0;
-  ALL_POINTS.forEach((r, i) => {
-    const cumMin = calcPassage(r.km, pace, fade, fadeStart);
-    const delta = cumMin - prevMin;
-    const lc = r.loop === 'B1' ? 'b1' : r.loop === 'B2' ? 'b2' : 'b3';
-    const tc = r.isCross
-      ? `<span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg><span style="font-size:11px;color:#534AB7;font-weight:600">Croisement</span></span>`
-      : `<span class="badge ${lc}">${r.loop}</span>`;
-    tbody.innerHTML += `<tr class="${r.isCross ? 'crossover-row' : ''}">
-      <td>${r.name}</td>
-      <td>${r.km.toFixed(1)}</td>
+  let prevMin=0;
+  SORTED.forEach(r => {
+    const cum   = calcPassage(r.km,pace,fade,fadeStart);
+    const delta = cum-prevMin;
+    let tc = '';
+    if (r.type==='start')  tc=`<span class="badge b0">Circuit départ</span>`;
+    else if (r.type==='velo')   tc=`<span class="badge-velo">🚲 Vélos autorisés dès ici</span>`;
+    else if (r.type==='finish') tc=`<span class="badge b3">Arrivée</span>`;
+    else if (r.isCross)    tc=`<span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg><span style="font-size:11px;color:#534AB7;font-weight:600">Croisement</span></span>`;
+    else { const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3'; tc=`<span class="badge ${lc}">${r.loop}</span>`; }
+    const t = r.km===0 ? minToTime(start) : minToTime(start+cum);
+    const d = r.km===0 ? '—' : '+'+fmtDur(delta);
+    tbody.innerHTML += `<tr class="${rowClass(r)}">
+      <td>${r.name}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td>
       <td>${tc}</td>
-      <td style="font-weight:600">${minToTime(start + cumMin)}</td>
-      <td style="color:#aaa">+${fmtDur(delta)}</td>
+      <td style="font-weight:600">${t}</td>
+      <td style="color:#aaa">${d}</td>
     </tr>`;
-    prevMin = cumMin;
+    prevMin=cum;
   });
 }
 
 function updateNutriTable() {
-  const {start, pace, fade, fadeStart} = getParams();
+  const {start,pace,fade,fadeStart} = getParams();
   const tbody = document.getElementById('nutri-body');
   tbody.innerHTML = '';
-  ALL_POINTS.forEach((r, i) => {
-    const cumMin = calcPassage(r.km, pace, fade, fadeStart);
-    tbody.innerHTML += `<tr class="${r.isCross ? 'crossover-row' : ''}">
-      <td style="font-size:12px">${r.isCross ? '🔀 ' : ''}${r.name}</td>
+  RAVI_POINTS.forEach((r,i) => {
+    const cum = calcPassage(r.km,pace,fade,fadeStart);
+    tbody.innerHTML += `<tr class="${r.isCross?'crossover-row':''}">
+      <td style="font-size:12px">${r.isCross?'🔀 ':''}${r.name}</td>
       <td>${r.km.toFixed(1)}</td>
-      <td style="font-weight:600">${minToTime(start + cumMin)}</td>
-      <td style="font-size:12px;color:#888">${NUTRI_NOTES[i]}</td>
+      <td style="font-weight:600">${minToTime(start+cum)}</td>
+      <td style="font-size:12px;color:#888">${NUTRI_NOTES[i]||''}</td>
     </tr>`;
   });
 }
 
 function updateSlider() {
   const km = parseFloat(document.getElementById('km-slider').value);
-  const {start, pace, fade, fadeStart} = getParams();
-  const cumMin = calcPassage(km, pace, fade, fadeStart);
-  const arr = minToTime(start + cumMin);
-  document.getElementById('sl-km').textContent = 'km ' + km.toFixed(1);
+  const {start,pace,fade,fadeStart} = getParams();
+  const cum = calcPassage(km,pace,fade,fadeStart);
+  const arr = km===0 ? minToTime(start) : minToTime(start+cum);
+  document.getElementById('sl-km').textContent   = 'km '+km.toFixed(1);
   document.getElementById('sl-time').textContent = arr;
   const tt = document.getElementById('tooltip-km');
-  tt.textContent = 'km ' + km.toFixed(1) + ' → ' + arr;
-  tt.style.left = Math.max(5, Math.min(93, km)) + '%';
-  const next = ALL_POINTS.find(r => r.km >= km);
+  tt.textContent  = 'km '+km.toFixed(1)+' → '+arr;
+  tt.style.left   = Math.max(5, Math.min(93,km))+'%';
+  const next = SORTED.find(r => r.km > km);
   document.getElementById('sl-next').textContent = next
-    ? (next.isCross ? '🔀 ' : '') + next.name + ' (km ' + next.km.toFixed(1) + ')'
+    ? (next.type==='velo'?'🚲 ': next.isCross?'🔀 ':'')+next.name+' (km '+next.km.toFixed(1)+')'
     : 'Arrivée !';
   const svg = document.getElementById('track-svg');
-  const cx = 10 + (630 - 10) * km / 100;
-  const pl = svg.querySelector('#prog-line'), pd = svg.querySelector('#pos-dot');
+  const cx  = 10+(630-10)*km/100;
+  const pl  = svg.querySelector('#prog-line');
+  const pd  = svg.querySelector('#pos-dot');
   if (pl) pl.setAttribute('x2', cx);
   if (pd) pd.setAttribute('cx', cx);
 }
 
 function showTab(name, event) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t  => t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
   if (event && event.target) event.target.classList.add('active');
 }
 
 document.getElementById('start-time').oninput = compute;
-document.getElementById('fade').oninput = compute;
+document.getElementById('fade').oninput       = compute;
 document.getElementById('fade-start').oninput = compute;
-document.getElementById('pace-min').oninput = () => { highlightPreset(); compute(); };
-document.getElementById('pace-sec').oninput = () => { highlightPreset(); compute(); };
-document.getElementById('pace-sec').onblur = () => {
-  const v = parseInt(document.getElementById('pace-sec').value) || 0;
-  document.getElementById('pace-sec').value = String(Math.min(59, v)).padStart(2, '0');
+document.getElementById('pace-min').oninput   = () => { highlightPreset(); compute(); };
+document.getElementById('pace-sec').oninput   = () => { highlightPreset(); compute(); };
+document.getElementById('pace-sec').onblur    = () => {
+  const v = parseInt(document.getElementById('pace-sec').value)||0;
+  document.getElementById('pace-sec').value = String(Math.min(59,v)).padStart(2,'0');
 };
 
 compute();
