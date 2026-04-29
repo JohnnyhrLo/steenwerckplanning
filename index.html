@@ -6,55 +6,57 @@
 <title>100 km de Steenwerck — Planificateur</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:#1a1a1a;background:#f5f5f5;padding:16px}
-.card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:16px;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:#1a1a1a;background:#f0f0f0;padding:16px}
+.card{background:#fff;border-radius:14px;box-shadow:0 1px 6px rgba(0,0,0,.1);overflow:hidden}
+.header-wrap{padding:18px 18px 12px}
 h1{font-size:20px;font-weight:600;margin-bottom:2px}
-.sub{font-size:12px;color:#666}
-.tabs{display:flex;gap:4px;border-bottom:1px solid #e5e5e5;padding:12px 16px 0}
-.tab{padding:8px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:500;color:#666;border:1px solid transparent;border-bottom:none;background:transparent;transition:all .15s}
+.sub{font-size:12px;color:#888}
+.tabs{display:flex;gap:4px;border-bottom:1px solid #e5e5e5;padding:0 16px}
+.tab{padding:10px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:500;color:#777;border:1px solid transparent;border-bottom:none;background:transparent;transition:all .15s}
 .tab.active{background:#fff;border-color:#e5e5e5;color:#111;margin-bottom:-1px}
 .panel{display:none;padding:16px}.panel.active{display:block}
-label{font-size:12px;color:#666;display:block;margin-bottom:4px;margin-top:12px}
-.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px}
-.metric{background:#f9f9f9;border-radius:8px;padding:12px 14px;border:1px solid #efefef}
+label{font-size:12px;color:#777;display:block;margin-bottom:5px;margin-top:14px;font-weight:500}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.metric{background:#f7f7f7;border-radius:8px;padding:12px 14px;border:1px solid #efefef}
 .metric .val{font-size:20px;font-weight:600;margin-top:4px;color:#111}
-.metric .lbl{font-size:11px;color:#888}
-.pace-input-wrap{display:flex;align-items:center;gap:6px}
-.pace-input-wrap input{width:60px;font-size:18px;font-weight:600;text-align:center;border:1px solid #ddd;border-radius:6px;padding:4px 2px}
-.pace-input-wrap span{font-size:13px;color:#888}
-input[type=number],input[type=time]{width:100%;font-size:14px;border:1px solid #ddd;border-radius:6px;padding:5px 8px}
+.metric .lbl{font-size:11px;color:#999;font-weight:500}
+input[type=time],input[type=number],input[type=text]{width:100%;font-size:14px;border:1px solid #ddd;border-radius:7px;padding:6px 9px;background:#fff;color:#111;transition:border .15s}
+input:focus{outline:none;border-color:#1D9E75}
 input[type=range]{width:100%;margin:8px 0;accent-color:#1D9E75}
-.tooltip-box{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:6px 10px;font-size:12px;position:absolute;top:-44px;transform:translateX(-50%);white-space:nowrap;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-th{font-size:11px;font-weight:600;color:#888;text-align:left;padding:6px 8px;border-bottom:1px solid #e5e5e5;background:#fafafa}
-td{padding:7px 8px;border-bottom:1px solid #f0f0f0}
+.pace-wrap{display:flex;align-items:center;gap:6px}
+.pace-wrap input{width:44px;font-size:18px;font-weight:600;text-align:center;padding:5px 3px}
+.pace-wrap .sep{font-size:18px;font-weight:300;color:#aaa}
+.pace-wrap .unit{font-size:12px;color:#aaa;white-space:nowrap}
+.presets{display:flex;gap:6px;align-items:center;margin:10px 0 6px;flex-wrap:wrap}
+.preset-lbl{font-size:12px;color:#999;margin-right:2px}
+.preset-btn{font-size:12px;font-weight:500;padding:5px 12px;border-radius:7px;cursor:pointer;border:1px solid #ddd;background:#fff;color:#444;transition:all .15s}
+.preset-btn:hover{background:#f5f5f5;border-color:#bbb}
+.preset-btn.active-preset{background:#1D9E75;border-color:#1D9E75;color:#fff}
+.fade-info{font-size:12px;color:#666;background:#f7f7f7;border:1px solid #eaeaea;border-radius:7px;padding:8px 11px;margin:8px 0 4px;line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+th{font-size:11px;font-weight:600;color:#999;text-align:left;padding:7px 9px;border-bottom:1px solid #eee;background:#fafafa;letter-spacing:.02em}
+td{padding:7px 9px;border-bottom:1px solid #f2f2f2}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
-.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;letter-spacing:.01em}
 .b1{background:#E1F5EE;color:#085041}
 .b2{background:#FAEEDA;color:#633806}
 .b3{background:#E6F1FB;color:#0C447C}
-.crossover-row td{background:#F0EFFE}
-.crossover-row:hover td{background:#E8E5FD}
-.preset-btn{font-size:12px;font-weight:500;padding:5px 13px;border-radius:6px;cursor:pointer;border:1px solid #ddd;background:#fff;color:#333;transition:all .15s}
-.preset-btn:hover{background:#f0f0f0;border-color:#bbb}
-.preset-btn.active-preset{background:#1D9E75;border-color:#1D9E75;color:#fff}
-.section-title{font-size:15px;font-weight:600;margin:16px 0 6px;color:#111}
-.nutri-card{background:#f9f9f9;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #efefef}
-.nutri-card h4{font-size:13px;font-weight:600;margin-bottom:8px}
+.crossover-row td{background:#F1F0FE}
+.crossover-row:hover td{background:#E9E7FD}
+.tooltip-box{background:#fff;border:1px solid #ddd;border-radius:8px;padding:6px 11px;font-size:12px;position:absolute;top:-46px;transform:translateX(-50%);white-space:nowrap;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.1);font-weight:500}
+.section-title{font-size:15px;font-weight:600;margin:18px 0 7px;color:#111}
+.nutri-card{background:#f7f7f7;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #efefef}
+.nutri-card h4{font-size:13px;font-weight:600;margin-bottom:9px}
 .nutri-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #efefef;font-size:12px}
 .nutri-item:last-child{border:none}
-.fade-info{font-size:12px;color:#777;background:#f9f9f9;border:1px solid #e8e8e8;border-radius:6px;padding:8px 10px;margin-top:8px;line-height:1.5}
-#track-svg{width:100%;display:block;margin:8px 0}
-.header-wrap{padding:16px 16px 12px}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;margin:10px 0 6px;align-items:center;color:#555}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;margin:10px 0 6px;align-items:center;color:#666}
 .legend span{display:flex;align-items:center;gap:5px}
+#track-svg{width:100%;display:block;margin:6px 0}
 </style>
 </head>
 <body>
-
 <div class="card">
   <div class="header-wrap">
     <h1>100 km de Steenwerck</h1>
@@ -69,32 +71,39 @@ tr:hover td{background:#fafafa}
 
   <!-- CHRONO -->
   <div id="tab-chrono" class="panel active">
-    <div class="row4">
+
+    <!-- Ligne 1 : Départ + Allure -->
+    <div class="row2">
       <div>
         <label>Heure de départ</label>
         <input type="time" id="start-time" value="05:00">
       </div>
       <div>
-        <label>Allure (min:sec/km)</label>
-        <div class="pace-input-wrap">
-          <input type="text" id="pace-min" value="4" maxlength="2" placeholder="4">
-          <span>:</span>
-          <input type="text" id="pace-sec" value="35" maxlength="2" placeholder="35">
-          <span>/km</span>
+        <label>Allure (min:sec / km)</label>
+        <div class="pace-wrap">
+          <input type="text" id="pace-min" value="4" maxlength="2">
+          <span class="sep">:</span>
+          <input type="text" id="pace-sec" value="35" maxlength="2">
+          <span class="unit">/km</span>
         </div>
       </div>
+    </div>
+
+    <!-- Ligne 2 : Ralentissement + Début ralentissement -->
+    <div class="row2">
       <div>
         <label>Ralentissement (%)</label>
         <input type="number" id="fade" min="0" max="30" step="1" value="10">
       </div>
       <div>
         <label>Début ralentissement (km)</label>
-        <input type="number" id="fade-start" min="0" max="90" step="1" value="0">
+        <input type="number" id="fade-start" min="0" max="90" step="1" value="60">
       </div>
     </div>
 
-    <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
-      <span style="font-size:12px;color:#888;margin-right:2px">Preset :</span>
+    <!-- Presets -->
+    <div class="presets">
+      <span class="preset-lbl">Preset :</span>
       <button class="preset-btn" onclick="setPreset(4,30)">4:30</button>
       <button class="preset-btn active-preset" onclick="setPreset(4,35)">4:35</button>
       <button class="preset-btn" onclick="setPreset(4,40)">4:40</button>
@@ -103,31 +112,40 @@ tr:hover td{background:#fafafa}
       <button class="preset-btn" onclick="setPreset(5,0)">5:00</button>
     </div>
 
-    <div id="fade-info" class="fade-info"></div>
+    <div id="fade-info" class="fade-info" style="display:none"></div>
 
-    <div class="row" style="margin-top:12px">
+    <!-- Résumé -->
+    <div class="row3" style="margin-top:12px">
       <div class="metric"><div class="lbl">Temps estimé</div><div class="val" id="s-time">-</div></div>
       <div class="metric"><div class="lbl">Allure effective moy.</div><div class="val" id="s-pace">-</div></div>
       <div class="metric"><div class="lbl">Arrivée prévue</div><div class="val" id="s-finish">-</div></div>
     </div>
 
     <table>
-      <thead><tr><th>Ravitaillement</th><th>Km</th><th>Temps cumulé</th><th>Heure passage</th><th>Allure locale</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Ravitaillement</th>
+          <th>Km</th>
+          <th>Temps cumulé</th>
+          <th>Heure passage</th>
+          <th>Allure locale</th>
+        </tr>
+      </thead>
       <tbody id="passage-body"></tbody>
     </table>
   </div>
 
   <!-- CARTE -->
   <div id="tab-carte" class="panel">
-    <label>Votre position sur le parcours</label>
-    <div style="position:relative;margin:20px 0 4px">
+    <label style="margin-top:4px">Votre position sur le parcours</label>
+    <div style="position:relative;margin:22px 0 4px">
       <div id="tooltip-km" class="tooltip-box" style="left:0%">km 0</div>
       <input type="range" id="km-slider" min="0" max="100" step="0.1" value="0" oninput="updateSlider()">
     </div>
 
     <svg id="track-svg" viewBox="0 0 640 72" xmlns="http://www.w3.org/2000/svg"></svg>
 
-    <div class="row" style="margin-top:8px">
+    <div class="row3" style="margin-top:8px">
       <div class="metric"><div class="lbl">Position</div><div class="val" id="sl-km">km 0</div></div>
       <div class="metric"><div class="lbl">Heure estimée</div><div class="val" id="sl-time">-</div></div>
       <div class="metric"><div class="lbl">Prochain ravit.</div><div class="val" id="sl-next" style="font-size:13px;margin-top:6px">-</div></div>
@@ -137,32 +155,39 @@ tr:hover td{background:#fafafa}
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1D9E75"></span>Boucle 1</span>
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#EF9F27"></span>Boucle 2</span>
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#378ADD"></span>Départ / Arrivée</span>
-      <span><svg width="11" height="11" viewBox="0 0 11 11"><polygon points="5.5,0.5 10.5,10.5 0.5,10.5" fill="#7F77DD"/></svg>Croisement boucles</span>
+      <span>
+        <svg width="11" height="11" viewBox="0 0 11 11"><polygon points="5.5,0.5 10.5,10.5 0.5,10.5" fill="#7F77DD"/></svg>
+        Croisement boucles
+      </span>
     </div>
 
     <table>
-      <thead><tr><th>Point</th><th>Km</th><th>Type</th><th>Heure estimée</th><th>Δ préc.</th></tr></thead>
+      <thead>
+        <tr><th>Point</th><th>Km</th><th>Type</th><th>Heure estimée</th><th>Δ préc.</th></tr>
+      </thead>
       <tbody id="map-body"></tbody>
     </table>
   </div>
 
   <!-- NUTRITION -->
   <div id="tab-nutrition" class="panel">
-    <div style="font-size:12px;color:#666;margin-bottom:12px;line-height:1.6">
+    <div style="font-size:12px;color:#888;margin-bottom:12px;line-height:1.6">
       Plan nutrition basé sur votre allure configurée dans l'onglet Chrono.
     </div>
+
     <div class="section-title">Besoins estimés</div>
     <div class="row2">
       <div class="metric"><div class="lbl">Calories totales</div><div class="val">~7 000 kcal</div></div>
       <div class="metric"><div class="lbl">Hydratation cible</div><div class="val">~700 ml/h</div></div>
     </div>
-    <div class="section-title" style="margin-top:16px">Stratégie par phase</div>
+
+    <div class="section-title">Stratégie par phase</div>
     <div class="nutri-card">
       <h4>🟢 Phase 1 — km 0 à 35 (conservateur)</h4>
       <div class="nutri-item"><span>Glucides</span><span>60–70 g/h</span></div>
       <div class="nutri-item"><span>Eau</span><span>500–600 ml/h</span></div>
       <div class="nutri-item"><span>Sodium</span><span>500 mg/h</span></div>
-      <div class="nutri-item"><span>Sources</span><span>Gels (1/45min), bananes, oranges</span></div>
+      <div class="nutri-item"><span>Sources</span><span>Gels (1/45 min), bananes, oranges</span></div>
     </div>
     <div class="nutri-card">
       <h4>🟠 Phase 2 — km 35 à 68 (maintien)</h4>
@@ -175,39 +200,43 @@ tr:hover td{background:#fafafa}
       <h4>🔵 Phase 3 — km 68 à 100 (fin de course)</h4>
       <div class="nutri-item"><span>Glucides</span><span>40–50 g/h (appétit réduit)</span></div>
       <div class="nutri-item"><span>Caféine</span><span>Café + cola disponible aux ravits</span></div>
-      <div class="nutri-item"><span>Sodium</span><span>800–1000 mg/h (crampes)</span></div>
+      <div class="nutri-item"><span>Sodium</span><span>800–1 000 mg/h (crampes)</span></div>
       <div class="nutri-item"><span>Solide léger</span><span>Fruits secs, banane, chocolat chaud</span></div>
     </div>
-    <div class="section-title" style="margin-top:16px">Plan détaillé par ravitaillement</div>
+
+    <div class="section-title">Plan détaillé par ravitaillement</div>
     <table>
-      <thead><tr><th>Ravit.</th><th>Km</th><th>Heure</th><th>À faire / prendre</th></tr></thead>
+      <thead>
+        <tr><th>Ravit.</th><th>Km</th><th>Heure</th><th>À faire / prendre</th></tr>
+      </thead>
       <tbody id="nutri-body"></tbody>
     </table>
   </div>
 </div>
 
 <script>
-const ALL_POINTS=[
-  {name:"L'Hallobeau",       km:8.262,  loop:"B1",tour:1,color:"#1D9E75",isCross:false},
-  {name:"La Croix-du-Bac",   km:12.895, loop:"B1",tour:1,color:"#1D9E75",isCross:false},
-  {name:"École Jean Monnet", km:19.047, loop:"B1",tour:1,color:"#7F77DD",isCross:true},
-  {name:"Le Doulieu",        km:25.857, loop:"B2",tour:1,color:"#EF9F27",isCross:false},
-  {name:"La Blanche",        km:29.988, loop:"B2",tour:1,color:"#EF9F27",isCross:false},
-  {name:"Salle des Sports",  km:35.719, loop:"B2",tour:1,color:"#7F77DD",isCross:true},
-  {name:"L'Hallobeau",       km:40.403, loop:"B1",tour:2,color:"#1D9E75",isCross:false},
-  {name:"La Croix-du-Bac",   km:45.035, loop:"B1",tour:2,color:"#1D9E75",isCross:false},
-  {name:"École Jean Monnet", km:51.187, loop:"B1",tour:2,color:"#7F77DD",isCross:true},
-  {name:"Le Doulieu",        km:57.998, loop:"B2",tour:2,color:"#EF9F27",isCross:false},
-  {name:"La Blanche",        km:62.128, loop:"B2",tour:2,color:"#EF9F27",isCross:false},
-  {name:"Salle des Sports",  km:67.859, loop:"B2",tour:2,color:"#7F77DD",isCross:true},
-  {name:"L'Hallobeau",       km:72.543, loop:"B1",tour:3,color:"#1D9E75",isCross:false},
-  {name:"La Croix-du-Bac",   km:77.176, loop:"B1",tour:3,color:"#1D9E75",isCross:false},
-  {name:"École Jean Monnet", km:83.328, loop:"B1",tour:3,color:"#7F77DD",isCross:true},
-  {name:"Le Doulieu",        km:90.138, loop:"B2",tour:3,color:"#EF9F27",isCross:false},
-  {name:"La Blanche",        km:94.269, loop:"B2",tour:3,color:"#EF9F27",isCross:false},
-  {name:"ARRIVÉE",           km:100.0,  loop:"Fin",tour:3,color:"#378ADD",isCross:false},
+const ALL_POINTS = [
+  {name:"L'Hallobeau",       km:8.262,  loop:"B1", tour:1, color:"#1D9E75", isCross:false},
+  {name:"La Croix-du-Bac",   km:12.895, loop:"B1", tour:1, color:"#1D9E75", isCross:false},
+  {name:"École Jean Monnet", km:19.047, loop:"B1", tour:1, color:"#7F77DD", isCross:true},
+  {name:"Le Doulieu",        km:25.857, loop:"B2", tour:1, color:"#EF9F27", isCross:false},
+  {name:"La Blanche",        km:29.988, loop:"B2", tour:1, color:"#EF9F27", isCross:false},
+  {name:"Salle des Sports",  km:35.719, loop:"B2", tour:1, color:"#7F77DD", isCross:true},
+  {name:"L'Hallobeau",       km:40.403, loop:"B1", tour:2, color:"#1D9E75", isCross:false},
+  {name:"La Croix-du-Bac",   km:45.035, loop:"B1", tour:2, color:"#1D9E75", isCross:false},
+  {name:"École Jean Monnet", km:51.187, loop:"B1", tour:2, color:"#7F77DD", isCross:true},
+  {name:"Le Doulieu",        km:57.998, loop:"B2", tour:2, color:"#EF9F27", isCross:false},
+  {name:"La Blanche",        km:62.128, loop:"B2", tour:2, color:"#EF9F27", isCross:false},
+  {name:"Salle des Sports",  km:67.859, loop:"B2", tour:2, color:"#7F77DD", isCross:true},
+  {name:"L'Hallobeau",       km:72.543, loop:"B1", tour:3, color:"#1D9E75", isCross:false},
+  {name:"La Croix-du-Bac",   km:77.176, loop:"B1", tour:3, color:"#1D9E75", isCross:false},
+  {name:"École Jean Monnet", km:83.328, loop:"B1", tour:3, color:"#7F77DD", isCross:true},
+  {name:"Le Doulieu",        km:90.138, loop:"B2", tour:3, color:"#EF9F27", isCross:false},
+  {name:"La Blanche",        km:94.269, loop:"B2", tour:3, color:"#EF9F27", isCross:false},
+  {name:"ARRIVÉE",           km:100.0,  loop:"Fin",tour:3, color:"#378ADD", isCross:false},
 ];
-const NUTRI_NOTES=[
+
+const NUTRI_NOTES = [
   "Gel + eau. Pas de solide encore.",
   "Banane ou orange. Bien boire.",
   "🔀 Croisement B1→B2. 1er gel caféiné si nuit.",
@@ -228,218 +257,211 @@ const NUTRI_NOTES=[
   "🏁 Arrivée !",
 ];
 
-const PRESETS=[
-  {min:4,sec:30},{min:4,sec:35},{min:4,sec:40},
-  {min:4,sec:45},{min:4,sec:50},{min:5,sec:0}
+const PRESETS = [
+  {mn:4, sc:30}, {mn:4, sc:35}, {mn:4, sc:40},
+  {mn:4, sc:45}, {mn:4, sc:50}, {mn:5, sc:0}
 ];
 
-// Pace helpers — always work in decimal min/km internally
-function getPace(){
-  const mn=parseInt(document.getElementById('pace-min').value)||4;
-  const sc=parseInt(document.getElementById('pace-sec').value)||35;
-  return mn + sc/60;
+function getPace() {
+  const mn = parseInt(document.getElementById('pace-min').value) || 4;
+  const sc = parseInt(document.getElementById('pace-sec').value) || 35;
+  return mn + sc / 60;
 }
-function timeToMin(t){const[h,m]=t.split(':').map(Number);return h*60+m}
-function minToTime(m){const d=((m%1440)+1440)%1440;return String(Math.floor(d/60)).padStart(2,'0')+':'+String(Math.round(d%60)).padStart(2,'0')}
-function fmtDur(m){const h=Math.floor(m/60);const mn=Math.round(m%60);return h+'h'+String(mn).padStart(2,'0')}
-function fmtPace(p){const mn=Math.floor(p);const s=Math.round((p-mn)*60);return mn+"'"+String(s).padStart(2,'0')+'"'}
+function timeToMin(t) { const [h, m] = t.split(':').map(Number); return h * 60 + m; }
+function minToTime(m) {
+  const d = ((m % 1440) + 1440) % 1440;
+  return String(Math.floor(d / 60)).padStart(2, '0') + ':' + String(Math.round(d % 60)).padStart(2, '0');
+}
+function fmtDur(m) { const h = Math.floor(m / 60); const mn = Math.round(m % 60); return h + 'h' + String(mn).padStart(2, '0'); }
+function fmtPace(p) { const mn = Math.floor(p); const s = Math.round((p - mn) * 60); return mn + "'" + String(s).padStart(2, '0') + '"'; }
 
-// Cumulative time with fade starting at fadeStart km
-// Before fadeStart: constant pace
-// From fadeStart: pace * (1 + fade/100 * (x - fadeStart)/(100 - fadeStart))
-function calcPassage(km, pace, fade, fadeStart){
-  const f=fade/100;
-  const fs=Math.min(fadeStart, km);
-  // segment 0..fs at constant pace
+function calcPassage(km, pace, fade, fadeStart) {
+  const f = fade / 100;
+  const fs = Math.min(fadeStart, km);
   const t1 = pace * Math.min(km, fs);
-  if(km <= fs) return t1;
-  // segment fs..km with linear fade
+  if (km <= fs) return t1;
   const remaining = 100 - fs;
   const x = km - fs;
-  if(remaining <= 0) return t1 + pace*(1+f)*x;
-  // integral: pace*(1 + f*(t/remaining)) dt from 0 to x
-  return t1 + pace*(x + f*x*x/(2*remaining));
+  if (remaining <= 0) return t1 + pace * (1 + f) * x;
+  return t1 + pace * (x + f * x * x / (2 * remaining));
 }
 
-function getParams(){
-  return{
+function getParams() {
+  return {
     start: timeToMin(document.getElementById('start-time').value),
     pace: getPace(),
-    fade: parseFloat(document.getElementById('fade').value)||0,
-    fadeStart: parseFloat(document.getElementById('fade-start').value)||0
+    fade: parseFloat(document.getElementById('fade').value) || 0,
+    fadeStart: parseFloat(document.getElementById('fade-start').value) || 0
   };
 }
 
-function highlightPreset(){
-  const mn=parseInt(document.getElementById('pace-min').value)||0;
-  const sc=parseInt(document.getElementById('pace-sec').value)||0;
-  document.querySelectorAll('.preset-btn').forEach((btn,i)=>{
-    btn.classList.toggle('active-preset', PRESETS[i].min===mn && PRESETS[i].sec===sc);
+function highlightPreset() {
+  const mn = parseInt(document.getElementById('pace-min').value) || 0;
+  const sc = parseInt(document.getElementById('pace-sec').value) || 0;
+  document.querySelectorAll('.preset-btn').forEach((btn, i) => {
+    btn.classList.toggle('active-preset', PRESETS[i].mn === mn && PRESETS[i].sc === sc);
   });
 }
-
-function setPreset(mn,sc){
-  document.getElementById('pace-min').value=mn;
-  document.getElementById('pace-sec').value=String(sc).padStart(2,'0');
+function setPreset(mn, sc) {
+  document.getElementById('pace-min').value = mn;
+  document.getElementById('pace-sec').value = String(sc).padStart(2, '0');
   highlightPreset();
   compute();
 }
 
-function updateFadeInfo(){
-  const fade=parseFloat(document.getElementById('fade').value)||0;
-  const fs=parseFloat(document.getElementById('fade-start').value)||0;
-  const el=document.getElementById('fade-info');
-  if(fade===0){el.style.display='none';return;}
-  el.style.display='block';
-  if(fs===0){
-    el.textContent=`ℹ️ Ralentissement de ${fade}% appliqué progressivement dès le km 0 jusqu'à l'arrivée.`;
-  } else {
-    el.textContent=`ℹ️ Allure constante de km 0 à km ${fs}, puis ralentissement progressif de ${fade}% sur les ${100-fs} km restants.`;
-  }
+function updateFadeInfo() {
+  const fade = parseFloat(document.getElementById('fade').value) || 0;
+  const fs = parseFloat(document.getElementById('fade-start').value) || 0;
+  const el = document.getElementById('fade-info');
+  if (fade === 0) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  el.textContent = fs === 0
+    ? `ℹ️ Ralentissement de ${fade}% progressif dès le km 0.`
+    : `ℹ️ Allure constante km 0 → km ${fs}, puis ralentissement progressif de ${fade}% sur les ${100 - fs} km restants.`;
 }
 
-function drawTrack(){
-  const svg=document.getElementById('track-svg');
-  svg.innerHTML='';
-  const py=38,x1=10,x2=630;
-  function mkEl(tag,attrs){const el=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));svg.appendChild(el);return el;}
-
-  mkEl('line',{x1,x2,y1:py,y2:py,stroke:'#e0e0e0','stroke-width':5,'stroke-linecap':'round'});
-  const km=parseFloat(document.getElementById('km-slider').value);
-  const cx=x1+(x2-x1)*km/100;
-  mkEl('line',{x1,x2:cx,y1:py,y2:py,stroke:'#1D9E75','stroke-width':5,'stroke-linecap':'round',id:'prog-line'});
-
-  [0,25,50,75,100].forEach(k=>{
-    const x=x1+(x2-x1)*k/100;
-    const t=mkEl('text',{x,y:64,'text-anchor':'middle','font-size':9,fill:'#999'});
-    t.textContent=k+'km';
+function drawTrack() {
+  const svg = document.getElementById('track-svg');
+  svg.innerHTML = '';
+  const py = 38, x1 = 10, x2 = 630;
+  function mk(tag, attrs, txt) {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    if (txt !== undefined) el.textContent = txt;
+    svg.appendChild(el);
+    return el;
+  }
+  mk('line', {x1, x2, y1:py, y2:py, stroke:'#e0e0e0', 'stroke-width':5, 'stroke-linecap':'round'});
+  const km = parseFloat(document.getElementById('km-slider').value);
+  const cx = x1 + (x2 - x1) * km / 100;
+  mk('line', {x1, x2:cx, y1:py, y2:py, stroke:'#1D9E75', 'stroke-width':5, 'stroke-linecap':'round', id:'prog-line'});
+  [0, 25, 50, 75, 100].forEach(k => {
+    mk('text', {x: x1 + (x2 - x1) * k / 100, y: 64, 'text-anchor':'middle', 'font-size':9, fill:'#aaa'}, k + 'km');
   });
-
-  ALL_POINTS.forEach(r=>{
-    const x=x1+(x2-x1)*r.km/100;
-    if(r.isCross){
-      const s=7;
-      mkEl('polygon',{points:`${x},${py-s-2} ${x+s},${py+s-2} ${x-s},${py+s-2}`,fill:'#7F77DD',stroke:'#534AB7','stroke-width':'0.5'});
-      const tl=mkEl('text',{x,y:py-s-5,'text-anchor':'middle','font-size':7.5,fill:'#534AB7','font-weight':'600'});
-      tl.textContent=r.km.toFixed(1);
+  ALL_POINTS.forEach(r => {
+    const x = x1 + (x2 - x1) * r.km / 100;
+    if (r.isCross) {
+      const s = 7;
+      mk('polygon', {points:`${x},${py-s-2} ${x+s},${py+s-2} ${x-s},${py+s-2}`, fill:'#7F77DD', stroke:'#534AB7', 'stroke-width':'0.5'});
+      mk('text', {x, y:py-s-5, 'text-anchor':'middle', 'font-size':7.5, fill:'#534AB7', 'font-weight':'600'}, r.km.toFixed(1));
     } else {
-      mkEl('circle',{cx:x,cy:py,r:r.km===100?6:4,fill:r.color});
+      mk('circle', {cx:x, cy:py, r:r.km === 100 ? 6 : 4, fill:r.color});
     }
   });
-
-  mkEl('circle',{cx,cy:py,r:7,fill:'white',stroke:'#1D9E75','stroke-width':2,id:'pos-dot'});
+  mk('circle', {cx, cy:py, r:7, fill:'white', stroke:'#1D9E75', 'stroke-width':2.5, id:'pos-dot'});
 }
 
-function compute(){
-  const{start,pace,fade,fadeStart}=getParams();
-  const totalMin=calcPassage(100,pace,fade,fadeStart);
-  document.getElementById('s-time').textContent=fmtDur(totalMin);
-  document.getElementById('s-pace').textContent=fmtPace(totalMin/100)+'/km';
-  document.getElementById('s-finish').textContent=minToTime(start+totalMin);
+function compute() {
+  const {start, pace, fade, fadeStart} = getParams();
+  const totalMin = calcPassage(100, pace, fade, fadeStart);
+  document.getElementById('s-time').textContent = fmtDur(totalMin);
+  document.getElementById('s-pace').textContent = fmtPace(totalMin / 100) + '/km';
+  document.getElementById('s-finish').textContent = minToTime(start + totalMin);
   highlightPreset();
   updateFadeInfo();
 
-  const tbody=document.getElementById('passage-body');
-  tbody.innerHTML='';
-  let prevKm=0,prevMin=0;
-  ALL_POINTS.forEach((r,i)=>{
-    const cumMin=calcPassage(r.km,pace,fade,fadeStart);
-    const segKm=r.km-prevKm;
-    const segMin=cumMin-prevMin;
-    const segP=segKm>0?segMin/segKm:0;
-    const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
-    const tri=r.isCross?`<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`:'';
-    tbody.innerHTML+=`<tr class="${r.isCross?'crossover-row':''}">
+  const tbody = document.getElementById('passage-body');
+  tbody.innerHTML = '';
+  let prevKm = 0, prevMin = 0;
+  ALL_POINTS.forEach((r, i) => {
+    const cumMin = calcPassage(r.km, pace, fade, fadeStart);
+    const segKm = r.km - prevKm, segMin = cumMin - prevMin;
+    const segP = segKm > 0 ? segMin / segKm : 0;
+    const lc = r.loop === 'B1' ? 'b1' : r.loop === 'B2' ? 'b2' : 'b3';
+    const tri = r.isCross
+      ? `<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`
+      : '';
+    tbody.innerHTML += `<tr class="${r.isCross ? 'crossover-row' : ''}">
       <td>${tri}<span class="badge ${lc}">${r.loop} T${r.tour}</span> ${r.name}</td>
       <td>${r.km.toFixed(1)}</td>
       <td>${fmtDur(cumMin)}</td>
-      <td style="font-weight:600">${minToTime(start+cumMin)}</td>
-      <td style="color:#888">${fmtPace(segP)}</td>
+      <td style="font-weight:600">${minToTime(start + cumMin)}</td>
+      <td style="color:#aaa">${fmtPace(segP)}</td>
     </tr>`;
-    prevKm=r.km;prevMin=cumMin;
+    prevKm = r.km; prevMin = cumMin;
   });
 
-  updateMapTable();updateNutriTable();drawTrack();updateSlider();
+  updateMapTable();
+  updateNutriTable();
+  drawTrack();
+  updateSlider();
 }
 
-function updateMapTable(){
-  const{start,pace,fade,fadeStart}=getParams();
-  const tbody=document.getElementById('map-body');
-  tbody.innerHTML='';
-  let prevMin=0;
-  ALL_POINTS.forEach((r,i)=>{
-    const cumMin=calcPassage(r.km,pace,fade,fadeStart);
-    const delta=cumMin-prevMin;
-    const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
-    const typecell=r.isCross
-      ?`<span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg><span style="font-size:11px;color:#534AB7;font-weight:600">Croisement</span></span>`
-      :`<span class="badge ${lc}">${r.loop}</span>`;
-    tbody.innerHTML+=`<tr class="${r.isCross?'crossover-row':''}">
-      <td>${r.name}</td><td>${r.km.toFixed(1)}</td><td>${typecell}</td>
-      <td style="font-weight:600">${minToTime(start+cumMin)}</td>
-      <td style="color:#888">+${fmtDur(delta)}</td>
-    </tr>`;
-    prevMin=cumMin;
-  });
-}
-
-function updateNutriTable(){
-  const{start,pace,fade,fadeStart}=getParams();
-  const tbody=document.getElementById('nutri-body');
-  tbody.innerHTML='';
-  ALL_POINTS.forEach((r,i)=>{
-    const cumMin=calcPassage(r.km,pace,fade,fadeStart);
-    tbody.innerHTML+=`<tr class="${r.isCross?'crossover-row':''}">
-      <td style="font-size:12px">${r.isCross?'🔀 ':''}${r.name}</td>
+function updateMapTable() {
+  const {start, pace, fade, fadeStart} = getParams();
+  const tbody = document.getElementById('map-body');
+  tbody.innerHTML = '';
+  let prevMin = 0;
+  ALL_POINTS.forEach((r, i) => {
+    const cumMin = calcPassage(r.km, pace, fade, fadeStart);
+    const delta = cumMin - prevMin;
+    const lc = r.loop === 'B1' ? 'b1' : r.loop === 'B2' ? 'b2' : 'b3';
+    const tc = r.isCross
+      ? `<span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg><span style="font-size:11px;color:#534AB7;font-weight:600">Croisement</span></span>`
+      : `<span class="badge ${lc}">${r.loop}</span>`;
+    tbody.innerHTML += `<tr class="${r.isCross ? 'crossover-row' : ''}">
+      <td>${r.name}</td>
       <td>${r.km.toFixed(1)}</td>
-      <td style="font-weight:600">${minToTime(start+cumMin)}</td>
-      <td style="font-size:12px;color:#666">${NUTRI_NOTES[i]}</td>
+      <td>${tc}</td>
+      <td style="font-weight:600">${minToTime(start + cumMin)}</td>
+      <td style="color:#aaa">+${fmtDur(delta)}</td>
+    </tr>`;
+    prevMin = cumMin;
+  });
+}
+
+function updateNutriTable() {
+  const {start, pace, fade, fadeStart} = getParams();
+  const tbody = document.getElementById('nutri-body');
+  tbody.innerHTML = '';
+  ALL_POINTS.forEach((r, i) => {
+    const cumMin = calcPassage(r.km, pace, fade, fadeStart);
+    tbody.innerHTML += `<tr class="${r.isCross ? 'crossover-row' : ''}">
+      <td style="font-size:12px">${r.isCross ? '🔀 ' : ''}${r.name}</td>
+      <td>${r.km.toFixed(1)}</td>
+      <td style="font-weight:600">${minToTime(start + cumMin)}</td>
+      <td style="font-size:12px;color:#888">${NUTRI_NOTES[i]}</td>
     </tr>`;
   });
 }
 
-function updateSlider(){
-  const km=parseFloat(document.getElementById('km-slider').value);
-  const{start,pace,fade,fadeStart}=getParams();
-  const cumMin=calcPassage(km,pace,fade,fadeStart);
-  const arr=minToTime(start+cumMin);
-  document.getElementById('sl-km').textContent='km '+km.toFixed(1);
-  document.getElementById('sl-time').textContent=arr;
-  const pct=km;
-  const tt=document.getElementById('tooltip-km');
-  tt.textContent='km '+km.toFixed(1)+' → '+arr;
-  tt.style.left=Math.max(5,Math.min(93,pct))+'%';
-  const next=ALL_POINTS.find(r=>r.km>=km);
-  document.getElementById('sl-next').textContent=next?(next.isCross?'🔀 ':'')+next.name+' (km '+next.km.toFixed(1)+')':'Arrivée !';
-  const svg=document.getElementById('track-svg');
-  const x1=10,x2=630;
-  const cx=x1+(x2-x1)*km/100;
-  const pl=svg.querySelector('#prog-line');
-  const pd=svg.querySelector('#pos-dot');
-  if(pl)pl.setAttribute('x2',cx);
-  if(pd)pd.setAttribute('cx',cx);
+function updateSlider() {
+  const km = parseFloat(document.getElementById('km-slider').value);
+  const {start, pace, fade, fadeStart} = getParams();
+  const cumMin = calcPassage(km, pace, fade, fadeStart);
+  const arr = minToTime(start + cumMin);
+  document.getElementById('sl-km').textContent = 'km ' + km.toFixed(1);
+  document.getElementById('sl-time').textContent = arr;
+  const tt = document.getElementById('tooltip-km');
+  tt.textContent = 'km ' + km.toFixed(1) + ' → ' + arr;
+  tt.style.left = Math.max(5, Math.min(93, km)) + '%';
+  const next = ALL_POINTS.find(r => r.km >= km);
+  document.getElementById('sl-next').textContent = next
+    ? (next.isCross ? '🔀 ' : '') + next.name + ' (km ' + next.km.toFixed(1) + ')'
+    : 'Arrivée !';
+  const svg = document.getElementById('track-svg');
+  const cx = 10 + (630 - 10) * km / 100;
+  const pl = svg.querySelector('#prog-line'), pd = svg.querySelector('#pos-dot');
+  if (pl) pl.setAttribute('x2', cx);
+  if (pd) pd.setAttribute('cx', cx);
 }
 
-function showTab(name,event){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  if(event&&event.target)event.target.classList.add('active');
+function showTab(name, event) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (event && event.target) event.target.classList.add('active');
 }
 
-// Input events
-document.getElementById('start-time').oninput=compute;
-document.getElementById('pace-min').oninput=()=>{highlightPreset();compute()};
-document.getElementById('pace-sec').oninput=()=>{
-  // auto-pad seconds on blur
-  highlightPreset();compute();
+document.getElementById('start-time').oninput = compute;
+document.getElementById('fade').oninput = compute;
+document.getElementById('fade-start').oninput = compute;
+document.getElementById('pace-min').oninput = () => { highlightPreset(); compute(); };
+document.getElementById('pace-sec').oninput = () => { highlightPreset(); compute(); };
+document.getElementById('pace-sec').onblur = () => {
+  const v = parseInt(document.getElementById('pace-sec').value) || 0;
+  document.getElementById('pace-sec').value = String(Math.min(59, v)).padStart(2, '0');
 };
-document.getElementById('pace-sec').onblur=()=>{
-  const v=parseInt(document.getElementById('pace-sec').value)||0;
-  document.getElementById('pace-sec').value=String(Math.min(59,v)).padStart(2,'0');
-};
-document.getElementById('fade').oninput=compute;
-document.getElementById('fade-start').oninput=compute;
 
 compute();
 </script>
