@@ -362,7 +362,7 @@ body.lang-en .en-inline{display:inline}
       <div class="section-title">🚲 Logistics — Cycling assistant</div>
       <div class="nutri-card card-purple">
         <h4>Meeting points for your assistant</h4>
-        <div class="nutri-row"><span class="lbl"><strong>km 7.4</strong> — German Military Cemetery</span><span class="val">Join the course · no bottle exchange</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 7.4</strong> — Cimetière Militaire Allemand</span><span class="val">Join the course · no bottle exchange</span></div>
         <div class="nutri-row"><span class="lbl"><strong>km 19.0</strong> — École Jean Monnet 🔀</span><span class="val">Hand over B2 + gel · collect empty B1</span></div>
         <div class="nutri-row"><span class="lbl"><strong>km 35.7</strong> — Salle des Sports 🔀</span><span class="val">Hand over B3 + gel · collect empty B2</span></div>
         <div class="nutri-row"><span class="lbl"><strong>km 51.2</strong> — École Jean Monnet 🔀</span><span class="val">Hand over B4 + gel · collect empty B3</span></div>
@@ -497,7 +497,7 @@ function latLonAtKm(km){
 const ALL_POINTS=[
   {name:{fr:"Départ",en:"Start"},km:0,loop:"Dép",tour:0,color:"#555",type:"start",isCross:false},
   {name:{fr:"Fin circuit départ",en:"End of start loop"},km:3.578,loop:"Dép",tour:0,color:"#555",type:"start",isCross:false},
-  {name:{fr:"Cimetière Militaire Allemand",en:"German Military Cemetery"},km:7.4,loop:"Dép",tour:0,color:"#C47B00",type:"velo",isCross:false},
+  {name:{fr:"Cimetière Militaire Allemand",en:"Cimetière Militaire Allemand"},km:7.4,loop:"Dép",tour:0,color:"#C47B00",type:"velo",isCross:false},
   {name:{fr:"L'Hallobeau",en:"L'Hallobeau"},km:8.262,loop:"B1",tour:1,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"La Croix-du-Bac",en:"La Croix-du-Bac"},km:12.895,loop:"B1",tour:1,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"École Jean Monnet",en:"École Jean Monnet"},km:19.047,loop:"B1",tour:1,color:"#7F77DD",type:"ravi",isCross:true},
@@ -612,7 +612,7 @@ function initMap(){
   addArrows(GPX_VERTE,'#1D9E75');addArrows(GPX_ORANGE,'#EF9F27');
   function mkIcon(html,size,anchor){return L.divIcon({className:'',html,iconSize:size,iconAnchor:anchor||[size[0]/2,size[1]/2]})}
   L.marker([50.70065,2.77803],{icon:mkIcon(`<div style="background:#555;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.4)">S</div>`,[22,22])}).bindPopup('<b>🏁 Départ / Start · Arrivée / Finish</b><br>Centre de Steenwerck · 05:00').addTo(leafletMap);
-  L.marker([50.69928,2.79296],{icon:mkIcon(`<div style="background:#C47B00;color:white;border-radius:7px;padding:3px 7px;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.35);white-space:nowrap">🚲</div>`,[32,26],[16,13])}).bindPopup(`<b>🚲 Cimetière Militaire Allemand / German Military Cemetery</b><br>km 7.4 — Rue du Pont d'Achelles / Rue de la Ménegatte<br><small>Cycling assistant joins here · no bottle exchange</small>`).addTo(leafletMap);
+  L.marker([50.69928,2.79296],{icon:mkIcon(`<div style="background:#C47B00;color:white;border-radius:7px;padding:3px 7px;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.35);white-space:nowrap">🚲</div>`,[32,26],[16,13])}).bindPopup(`<b>🚲 Cimetière Militaire Allemand</b><br>km 7.4 — Rue du Pont d'Achelles / Rue de la Ménegatte<br><small>Cycling assistant joins here · no bottle exchange</small>`).addTo(leafletMap);
   const RAVI_LIEUX=[
     {name:"L'Hallobeau",lat:50.69981,lon:2.78171,color:"#1D9E75",info:"km 8.3 · 40.4 · 72.5"},
     {name:"La Croix-du-Bac",lat:50.68594,lon:2.8037,color:"#1D9E75",info:"km 12.9 · 45.0 · 77.2"},
