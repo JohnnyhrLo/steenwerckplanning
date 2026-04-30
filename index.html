@@ -10,9 +10,12 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:#1a1a1a;background:#f0f0f0;padding:16px}
 .card{background:#fff;border-radius:14px;box-shadow:0 1px 6px rgba(0,0,0,.1);overflow:hidden}
-.header-wrap{padding:18px 18px 12px}
-h1{font-size:20px;font-weight:600;margin-bottom:2px}
-.sub{font-size:12px;color:#888}
+.header-wrap{padding:18px 18px 12px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.header-left h1{font-size:20px;font-weight:600;margin-bottom:2px}
+.header-left .sub{font-size:12px;color:#888}
+.lang-toggle{display:flex;border:1px solid #ddd;border-radius:8px;overflow:hidden;flex-shrink:0}
+.lang-btn{padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;background:#fff;border:none;color:#888;transition:all .15s}
+.lang-btn.active{background:#1D9E75;color:#fff}
 .tabs{display:flex;gap:4px;border-bottom:1px solid #e5e5e5;padding:0 16px}
 .tab{padding:10px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:500;color:#777;border:1px solid transparent;border-bottom:none;background:transparent;transition:all .15s}
 .tab.active{background:#fff;border-color:#e5e5e5;color:#111;margin-bottom:-1px}
@@ -20,9 +23,13 @@ h1{font-size:20px;font-weight:600;margin-bottom:2px}
 label{font-size:12px;color:#777;display:block;margin-bottom:5px;margin-top:14px;font-weight:500}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px}
 .metric{background:#f7f7f7;border-radius:8px;padding:12px 14px;border:1px solid #efefef}
 .metric .val{font-size:20px;font-weight:600;margin-top:4px;color:#111}
 .metric .lbl{font-size:11px;color:#999;font-weight:500}
+.metric.green{border-color:#c6ecd9;background:#f0faf5}.metric.green .val{color:#085041}
+.metric.orange{border-color:#f9dfc0;background:#fdf6ee}.metric.orange .val{color:#7a4010}
+.metric.blue{border-color:#c5d9f1;background:#eef4fb}.metric.blue .val{color:#0c447c}
 input[type=time],input[type=number],input[type=text]{width:100%;font-size:14px;border:1px solid #ddd;border-radius:7px;padding:6px 9px;background:#fff;color:#111;transition:border .15s}
 input:focus{outline:none;border-color:#1D9E75}
 input[type=range]{width:100%;margin:8px 0;accent-color:#1D9E75}
@@ -42,23 +49,33 @@ td{padding:7px 9px;border-bottom:1px solid #f2f2f2}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
-.b0{background:#f0f0f0;color:#555}
-.b1{background:#E1F5EE;color:#085041}
-.b2{background:#FAEEDA;color:#633806}
-.b3{background:#E6F1FB;color:#0C447C}
+.b0{background:#f0f0f0;color:#555}.b1{background:#E1F5EE;color:#085041}.b2{background:#FAEEDA;color:#633806}.b3{background:#E6F1FB;color:#0C447C}
 .badge-velo{background:#FFF3CD;color:#856404;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
-.crossover-row td{background:#F1F0FE}
-.crossover-row:hover td{background:#E9E7FD}
+.crossover-row td{background:#F1F0FE}.crossover-row:hover td{background:#E9E7FD}
 .depart-row td{background:#f7f7f7;color:#666;font-style:italic}
 .velo-row td{background:#FFFBEE}
+.handoff-row td{background:#F1F0FE;font-weight:500}
 .tooltip-box{background:#fff;border:1px solid #ddd;border-radius:8px;padding:6px 11px;font-size:12px;position:absolute;top:-46px;transform:translateX(-50%);white-space:nowrap;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.1);font-weight:500}
-.section-title{font-size:15px;font-weight:600;margin:18px 0 7px;color:#111}
-.nutri-card{background:#f7f7f7;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #efefef}
-.nutri-card h4{font-size:13px;font-weight:600;margin-bottom:9px}
-.nutri-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #efefef;font-size:12px}
-.nutri-item:last-child{border:none}
-.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;margin:10px 0 6px;align-items:center;color:#666}
-.legend span{display:flex;align-items:center;gap:5px}
+.section-title{font-size:15px;font-weight:600;margin:20px 0 8px;color:#111}
+.nutri-card{border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #efefef}
+.nutri-card.card-green{background:#f0faf5;border-color:#c6ecd9}
+.nutri-card.card-orange{background:#fdf6ee;border-color:#f9dfc0}
+.nutri-card.card-blue{background:#eef4fb;border-color:#c5d9f1}
+.nutri-card.card-grey{background:#f7f7f7;border-color:#e5e5e5}
+.nutri-card.card-purple{background:#F4F2FE;border-color:#C8C0F8}
+.nutri-card h4{font-size:13px;font-weight:600;margin-bottom:10px}
+.nutri-row{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:12px;gap:12px}
+.nutri-row:last-child{border:none}
+.nutri-row .val{font-weight:600;color:#333;white-space:nowrap;text-align:right}
+.nutri-row .lbl{color:#555;flex:1}
+.boucle-card{background:#fff;border:1.5px solid #1D9E75;border-radius:10px;padding:14px;margin-bottom:10px}
+.boucle-card h4{font-size:13px;font-weight:600;color:#085041;margin-bottom:10px}
+.boucle-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #e8f5ee;font-size:12px}
+.boucle-item:last-child{border:none}
+.pill{background:#1D9E75;color:white;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:600;white-space:nowrap;margin-top:1px;flex-shrink:0}
+.pill.orange{background:#EF9F27}.pill.grey{background:#888}.pill.purple{background:#7F77DD}
+.warning-box{background:#FFF8E6;border:1px solid #f9dfc0;border-radius:8px;padding:10px 12px;font-size:12px;color:#7a4010;line-height:1.6;margin-top:8px}
+.info-box{background:#eef4fb;border:1px solid #c5d9f1;border-radius:8px;padding:10px 12px;font-size:12px;color:#0c447c;line-height:1.6;margin-top:8px}
 #parcours-map{height:340px;border-radius:10px;overflow:hidden;border:1px solid #e5e5e5;margin-bottom:14px}
 .map-controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
 .map-ctrl-btn{font-size:11px;font-weight:500;padding:4px 10px;border-radius:14px;cursor:pointer;border:1.5px solid;background:#fff;transition:all .15s}
@@ -66,27 +83,53 @@ tr:hover td{background:#fafafa}
 .map-ctrl-btn.b-depart{border-color:#888;color:#888}.map-ctrl-btn.b-depart.active{background:#888}
 .map-ctrl-btn.b-verte{border-color:#1D9E75;color:#1D9E75}.map-ctrl-btn.b-verte.active{background:#1D9E75}
 .map-ctrl-btn.b-orange{border-color:#EF9F27;color:#EF9F27}.map-ctrl-btn.b-orange.active{background:#EF9F27}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;margin:10px 0 6px;align-items:center;color:#666}
+.legend span{display:flex;align-items:center;gap:5px}
+/* Hide/show language content */
+.fr{display:block}.en{display:none}
+body.lang-en .fr{display:none}
+body.lang-en .en{display:block}
+body.lang-en .fr-inline{display:none}
+body.lang-en .en-inline{display:inline}
+.en-inline{display:none}
+.fr-inline{display:inline}
 </style>
 </head>
 <body>
 <div class="card">
   <div class="header-wrap">
-    <h1>100 km de Steenwerck</h1>
-    <div class="sub">13–14 mai 2026 &nbsp;·&nbsp; 3 boucles &nbsp;·&nbsp; 18 ravitaillements</div>
+    <div class="header-left">
+      <h1>100 km de Steenwerck</h1>
+      <div class="sub fr">13 mai 2026 · Départ 05h00 · Course de jour · 3 tours · 18 ravitaillements</div>
+      <div class="sub en">13 May 2026 · Start 05:00 · Daytime race · 3 loops · 18 aid stations</div>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('fr',this)">🇫🇷 FR</button>
+      <button class="lang-btn" onclick="setLang('en',this)">🇬🇧 EN</button>
+    </div>
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="showTab('chrono',event)">⏱ Chrono</button>
-    <button class="tab" onclick="showTab('carte',event)">🗺 Carte</button>
-    <button class="tab" onclick="showTab('nutrition',event)">🍌 Nutrition</button>
+    <button class="tab active" onclick="showTab('chrono',event)">
+      <span class="fr-inline">⏱ Chrono</span><span class="en-inline">⏱ Pace</span>
+    </button>
+    <button class="tab" onclick="showTab('carte',event)">
+      <span class="fr-inline">🗺 Carte</span><span class="en-inline">🗺 Map</span>
+    </button>
+    <button class="tab" onclick="showTab('nutrition',event)">
+      <span class="fr-inline">🍌 Nutrition</span><span class="en-inline">🍌 Nutrition</span>
+    </button>
   </div>
 
-  <!-- CHRONO -->
+  <!-- CHRONO / PACE -->
   <div id="tab-chrono" class="panel active">
     <div class="row2">
-      <div><label>Heure de départ</label><input type="time" id="start-time" value="05:00"></div>
       <div>
-        <label>Allure (min:sec / km)</label>
+        <label><span class="fr-inline">Heure de départ</span><span class="en-inline">Start time</span></label>
+        <input type="time" id="start-time" value="05:00">
+      </div>
+      <div>
+        <label><span class="fr-inline">Allure (min:sec / km)</span><span class="en-inline">Pace (min:sec / km)</span></label>
         <div class="pace-wrap">
           <input type="text" id="pace-min" value="4" maxlength="2">
           <span class="sep">:</span>
@@ -96,8 +139,14 @@ tr:hover td{background:#fafafa}
       </div>
     </div>
     <div class="row2">
-      <div><label>Ralentissement (%)</label><input type="number" id="fade" min="0" max="30" step="1" value="10"></div>
-      <div><label>Début ralentissement (km)</label><input type="number" id="fade-start" min="0" max="90" step="1" value="60"></div>
+      <div>
+        <label><span class="fr-inline">Ralentissement (%)</span><span class="en-inline">Slowdown (%)</span></label>
+        <input type="number" id="fade" min="0" max="30" step="1" value="10">
+      </div>
+      <div>
+        <label><span class="fr-inline">Début ralentissement (km)</span><span class="en-inline">Slowdown starts at (km)</span></label>
+        <input type="number" id="fade-start" min="0" max="90" step="1" value="60">
+      </div>
     </div>
     <div class="presets">
       <span class="preset-lbl">Preset :</span>
@@ -110,296 +159,477 @@ tr:hover td{background:#fafafa}
     </div>
     <div id="fade-info" class="fade-info" style="display:none"></div>
     <div class="row3" style="margin-top:12px">
-      <div class="metric"><div class="lbl">Temps estimé</div><div class="val" id="s-time">-</div></div>
-      <div class="metric"><div class="lbl">Allure effective moy.</div><div class="val" id="s-pace">-</div></div>
-      <div class="metric"><div class="lbl">Arrivée prévue</div><div class="val" id="s-finish">-</div></div>
+      <div class="metric">
+        <div class="lbl"><span class="fr-inline">Temps estimé</span><span class="en-inline">Estimated time</span></div>
+        <div class="val" id="s-time">-</div>
+      </div>
+      <div class="metric">
+        <div class="lbl"><span class="fr-inline">Allure effective moy.</span><span class="en-inline">Avg effective pace</span></div>
+        <div class="val" id="s-pace">-</div>
+      </div>
+      <div class="metric">
+        <div class="lbl"><span class="fr-inline">Arrivée prévue</span><span class="en-inline">Estimated finish</span></div>
+        <div class="val" id="s-finish">-</div>
+      </div>
     </div>
     <table>
-      <thead><tr><th>Point</th><th>Km</th><th>Temps cumulé</th><th>Heure passage</th><th>Allure locale</th></tr></thead>
+      <thead>
+        <tr>
+          <th><span class="fr-inline">Point</span><span class="en-inline">Checkpoint</span></th>
+          <th>Km</th>
+          <th><span class="fr-inline">Temps cumulé</span><span class="en-inline">Elapsed time</span></th>
+          <th><span class="fr-inline">Heure passage</span><span class="en-inline">Est. time</span></th>
+          <th><span class="fr-inline">Allure locale</span><span class="en-inline">Seg. pace</span></th>
+        </tr>
+      </thead>
       <tbody id="passage-body"></tbody>
     </table>
   </div>
 
-  <!-- CARTE -->
+  <!-- CARTE / MAP -->
   <div id="tab-carte" class="panel">
     <div class="map-controls">
-      <button class="map-ctrl-btn b-depart active" onclick="toggleLayer('depart',this)">Circuit départ</button>
-      <button class="map-ctrl-btn b-verte  active" onclick="toggleLayer('verte',this)">Boucle 1 verte</button>
-      <button class="map-ctrl-btn b-orange active" onclick="toggleLayer('orange',this)">Boucle 2 orange</button>
-      <button style="font-size:11px;padding:4px 10px;border-radius:14px;cursor:pointer;border:1px solid #ddd;background:#fff;margin-left:auto" onclick="fitAll()">🗺 Recentrer</button>
+      <button class="map-ctrl-btn b-depart active" onclick="toggleLayer('depart',this)">
+        <span class="fr-inline">Circuit départ</span><span class="en-inline">Start loop</span>
+      </button>
+      <button class="map-ctrl-btn b-verte active" onclick="toggleLayer('verte',this)">
+        <span class="fr-inline">Boucle 1 verte</span><span class="en-inline">Loop 1 green</span>
+      </button>
+      <button class="map-ctrl-btn b-orange active" onclick="toggleLayer('orange',this)">
+        <span class="fr-inline">Boucle 2 orange</span><span class="en-inline">Loop 2 orange</span>
+      </button>
+      <button style="font-size:11px;padding:4px 10px;border-radius:14px;cursor:pointer;border:1px solid #ddd;background:#fff;margin-left:auto" onclick="fitAll()">🗺 <span class="fr-inline">Recentrer</span><span class="en-inline">Fit</span></button>
     </div>
     <div id="parcours-map"></div>
-
-    <label style="margin-top:4px">Votre position sur le parcours</label>
+    <label style="margin-top:4px"><span class="fr-inline">Votre position sur le parcours</span><span class="en-inline">Your position on the course</span></label>
     <div style="position:relative;margin:20px 0 4px">
       <div id="tooltip-km" class="tooltip-box" style="left:0%">km 0</div>
       <input type="range" id="km-slider" min="0" max="100" step="0.1" value="0" oninput="updateSlider()">
     </div>
-
     <div class="row3" style="margin-top:8px">
-      <div class="metric"><div class="lbl">Position</div><div class="val" id="sl-km">km 0</div></div>
-      <div class="metric"><div class="lbl">Heure estimée</div><div class="val" id="sl-time">-</div></div>
-      <div class="metric"><div class="lbl">Prochain point</div><div class="val" id="sl-next" style="font-size:12px;margin-top:6px">-</div></div>
+      <div class="metric"><div class="lbl"><span class="fr-inline">Position</span><span class="en-inline">Position</span></div><div class="val" id="sl-km">km 0</div></div>
+      <div class="metric"><div class="lbl"><span class="fr-inline">Heure estimée</span><span class="en-inline">Est. time</span></div><div class="val" id="sl-time">-</div></div>
+      <div class="metric"><div class="lbl"><span class="fr-inline">Prochain point</span><span class="en-inline">Next checkpoint</span></div><div class="val" id="sl-next" style="font-size:12px;margin-top:6px">-</div></div>
     </div>
-
     <div class="legend" style="margin-top:12px">
-      <span><span style="display:inline-block;width:18px;height:2px;border-top:2px dashed #999"></span>Circuit départ</span>
-      <span><span style="display:inline-block;width:18px;height:3px;background:#1D9E75;border-radius:2px"></span>Boucle 1 verte</span>
-      <span><span style="display:inline-block;width:18px;height:3px;background:#EF9F27;border-radius:2px"></span>Boucle 2 orange</span>
-      <span><svg width="11" height="11" viewBox="0 0 11 11"><polygon points="5.5,0.5 10.5,10.5 0.5,10.5" fill="#7F77DD"/></svg>Croisement boucles</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e63946;border:2px solid white;box-shadow:0 0 0 1px #e63946"></span>Votre position</span>
+      <span><span style="display:inline-block;width:18px;height:2px;border-top:2px dashed #999"></span><span class="fr-inline">Circuit départ</span><span class="en-inline">Start loop</span></span>
+      <span><span style="display:inline-block;width:18px;height:3px;background:#1D9E75;border-radius:2px"></span><span class="fr-inline">Boucle 1 verte</span><span class="en-inline">Loop 1 green</span></span>
+      <span><span style="display:inline-block;width:18px;height:3px;background:#EF9F27;border-radius:2px"></span><span class="fr-inline">Boucle 2 orange</span><span class="en-inline">Loop 2 orange</span></span>
+      <span><svg width="11" height="11" viewBox="0 0 11 11"><polygon points="5.5,0.5 10.5,10.5 0.5,10.5" fill="#7F77DD"/></svg><span class="fr-inline">Échange gourde</span><span class="en-inline">Bottle handoff</span></span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e63946;border:2px solid white;box-shadow:0 0 0 1px #e63946"></span><span class="fr-inline">Votre position</span><span class="en-inline">Your position</span></span>
     </div>
-
     <table style="margin-top:12px">
-      <thead><tr><th>Point</th><th>Km</th><th>Type</th><th>Heure</th><th>Δ préc.</th></tr></thead>
+      <thead>
+        <tr>
+          <th><span class="fr-inline">Point</span><span class="en-inline">Checkpoint</span></th>
+          <th>Km</th>
+          <th><span class="fr-inline">Type</span><span class="en-inline">Type</span></th>
+          <th><span class="fr-inline">Heure</span><span class="en-inline">Time</span></th>
+          <th>Δ <span class="fr-inline">préc.</span><span class="en-inline">prev.</span></th>
+        </tr>
+      </thead>
       <tbody id="map-body"></tbody>
     </table>
   </div>
 
   <!-- NUTRITION -->
   <div id="tab-nutrition" class="panel">
-    <div style="font-size:12px;color:#888;margin-bottom:12px;line-height:1.6">Plan nutrition basé sur votre allure configurée dans l'onglet Chrono.</div>
-    <div class="section-title">Besoins estimés</div>
-    <div class="row2">
-      <div class="metric"><div class="lbl">Calories totales</div><div class="val">~7 000 kcal</div></div>
-      <div class="metric"><div class="lbl">Hydratation cible</div><div class="val">~700 ml/h</div></div>
+
+    <!-- FR nutrition content -->
+    <div class="fr">
+      <div class="section-title">📊 Bilan nutritionnel course</div>
+      <div class="row4">
+        <div class="metric green"><div class="lbl">Glucides totaux</div><div class="val">~492 g</div></div>
+        <div class="metric orange"><div class="lbl">Apport calorique</div><div class="val">~1 970 kcal</div></div>
+        <div class="metric blue"><div class="lbl">Sodium total</div><div class="val">~3,3 g</div></div>
+        <div class="metric"><div class="lbl">Eau (gourdes seules)</div><div class="val">3 L</div></div>
+      </div>
+      <div class="row3">
+        <div class="metric green"><div class="lbl">Glucides / heure</div><div class="val">~66 g/h</div></div>
+        <div class="metric blue"><div class="lbl">Sodium / heure</div><div class="val">~445 mg/h</div></div>
+        <div class="metric"><div class="lbl">Magnésium / heure</div><div class="val">~145 mg/h</div></div>
+      </div>
+      <div class="info-box">☀️ <strong>Course de jour</strong> — Départ 05h00, arrivée estimée ~13h15. Vigilance sur la <strong>montée des températures</strong> (8°C au départ → ~20°C à l'arrivée) : les besoins en électrolytes augmentent sur les dernières boucles.</div>
+
+      <div class="section-title">🚲 Logistique — Assistant vélo</div>
+      <div class="nutri-card card-purple">
+        <h4>Points de rendez-vous pour ton assistante</h4>
+        <div class="nutri-row"><span class="lbl"><strong>km 7,4</strong> — Cimetière Militaire Allemand</span><span class="val">Rejoindre le parcours · pas d'échange</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 19,0</strong> — École Jean Monnet 🔀</span><span class="val">Remettre G2 + gel · récupérer G1 vide</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 35,7</strong> — Salle des Sports 🔀</span><span class="val">Remettre G3 + gel · récupérer G2 vide</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 51,2</strong> — École Jean Monnet 🔀</span><span class="val">Remettre G4 + gel · récupérer G3 vide</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 67,9</strong> — Salle des Sports 🔀</span><span class="val">Remettre G5 + gel · récupérer G4 vide</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 83,3</strong> — École Jean Monnet 🔀</span><span class="val">Remettre G6 + gel · récupérer G5 vide</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 100</strong> — Arrivée 🏁</span><span class="val">Récupérer G6 vide 🎉</span></div>
+      </div>
+
+      <div class="section-title">🎒 Gourdes à préparer (la veille)</div>
+      <div class="nutri-card card-grey">
+        <h4>6 gourdes identiques numérotées G1 à G6</h4>
+        <div class="nutri-row"><span class="lbl">Eau</span><span class="val">500 mL (ajouter le matin)</span></div>
+        <div class="nutri-row"><span class="lbl">Sucre</span><span class="val">50 g</span></div>
+        <div class="nutri-row"><span class="lbl">Électrolytes</span><span class="val">1 sachet Apurna neutre</span></div>
+        <div class="nutri-row"><span class="lbl">Gel (remis séparément)</span><span class="val">1 gel Nutripure Longue Distance</span></div>
+        <div style="margin-top:8px;font-size:12px;color:#666;line-height:1.6">💡 Préparer sucre + sachet Apurna la veille. Ajouter l'eau fraîche le matin. Étiqueter G1 à G6 dans l'ordre.</div>
+      </div>
+
+      <div class="section-title">🔄 Plan par boucle</div>
+      <div class="boucle-card" style="border-color:#888">
+        <h4 style="color:#555">🏁 Circuit de départ — km 0 → 3,578</h4>
+        <div class="boucle-item"><span class="pill grey">Rien</span><span>Pas de nutrition — laisser l'intestin se réveiller</span></div>
+        <div class="boucle-item"><span class="pill grey">Eau</span><span>Quelques gorgées seulement si soif</span></div>
+      </div>
+      <div class="boucle-card">
+        <h4>🟢 Boucle 1 verte T1 — km 3,578 → 19,047</h4>
+        <div class="boucle-item"><span class="pill">G1</span><span>Prendre gourde G1 au départ · boire progressivement par petites gorgées</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 gel Nutripure LD · avaler progressivement sur 10–15 min en début de boucle</span></div>
+      </div>
+      <div class="boucle-card" style="border-color:#EF9F27">
+        <h4 style="color:#7a4010">🟠 Boucle 2 orange T1 — km 19,047 → 35,719</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Échange</span><span><strong>École Jean Monnet (km 19)</strong> — récupérer G2 + gel auprès de ton assistante</span></div>
+        <div class="boucle-item"><span class="pill orange">G2</span><span>Boire progressivement sur la boucle</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 gel Nutripure LD · en début de boucle orange</span></div>
+      </div>
+      <div class="boucle-card">
+        <h4>🟢 Boucle 1 verte T2 — km 35,719 → 51,187</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Échange</span><span><strong>Salle des Sports (km 35,7)</strong> — récupérer G3 + gel</span></div>
+        <div class="boucle-item"><span class="pill">G3</span><span>Boire progressivement · température en hausse → veiller à finir la gourde</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 gel Nutripure LD</span></div>
+      </div>
+      <div class="boucle-card" style="border-color:#EF9F27">
+        <h4 style="color:#7a4010">🟠 Boucle 2 orange T2 — km 51,187 → 67,859</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Échange</span><span><strong>École Jean Monnet (km 51,2)</strong> — récupérer G4 + gel</span></div>
+        <div class="boucle-item"><span class="pill orange">G4</span><span>Boire progressivement · maintenir même si appétit réduit</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 gel Nutripure LD</span></div>
+      </div>
+      <div class="boucle-card">
+        <h4>🟢 Boucle 1 verte T3 — km 67,859 → 83,328</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Échange</span><span><strong>Salle des Sports (km 67,9)</strong> — récupérer G5 + gel · dernier tour !</span></div>
+        <div class="boucle-item"><span class="pill">G5</span><span>Boire progressivement · si nausée → réduire à 40 g sucre pour G6</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 gel Nutripure LD</span></div>
+      </div>
+      <div class="boucle-card" style="border-color:#EF9F27">
+        <h4 style="color:#7a4010">🟠 Boucle 2 orange T3 — km 83,328 → 100</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Échange</span><span><strong>École Jean Monnet (km 83,3)</strong> — récupérer G6 + gel · plus que 17 km !</span></div>
+        <div class="boucle-item"><span class="pill orange">G6</span><span>Boire jusqu'à l'arrivée · maintenir les glucides coûte que coûte</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>Dernier gel de la course</span></div>
+      </div>
+
+      <div class="section-title">🧪 Composition d'une gourde</div>
+      <div class="nutri-card card-grey">
+        <h4>Par gourde 500 mL — apport par boucle (~1h15)</h4>
+        <div class="nutri-row"><span class="lbl">50 g sucre</span><span class="val">50 g glucides · ~200 kcal</span></div>
+        <div class="nutri-row"><span class="lbl">1 sachet Apurna neutre</span><span class="val">500 mg Na · 500 mg K · 180 mg Mg</span></div>
+        <div class="nutri-row"><span class="lbl">1 gel Nutripure LD (séparé)</span><span class="val">30 g glucides · 120 kcal · 53 mg Na</span></div>
+        <div class="nutri-row" style="border-top:2px solid #1D9E75;margin-top:4px;padding-top:8px;font-weight:700;color:#085041">
+          <span class="lbl">Total par boucle</span><span class="val">~82 g glucides · ~320 kcal · 553 mg Na</span>
+        </div>
+      </div>
+
+      <div class="section-title">🌡️ Gestion de la chaleur</div>
+      <div class="nutri-card card-orange">
+        <h4>Montée des températures en cours de course</h4>
+        <div class="nutri-row"><span class="lbl">05h00 (départ)</span><span class="val">~8–12°C · sudation faible</span></div>
+        <div class="nutri-row"><span class="lbl">09h00–11h00 (T2)</span><span class="val">~14–18°C · sudation modérée</span></div>
+        <div class="nutri-row"><span class="lbl">12h00–15h00 (T3)</span><span class="val">~18–22°C · sudation plus importante</span></div>
+        <div class="nutri-row"><span class="lbl">Adaptation gourdes T3</span><span class="val">Finir impérativement G5 et G6 entières</span></div>
+      </div>
+      <div class="warning-box">⚠️ <strong>Règle d'or :</strong> Ne rien tester de nouveau le jour J. Tester ce plan exact sur une sortie longue de 25–30 km avant la course.</div>
+
+      <div class="section-title">🗓 Tableau de bord par point de passage</div>
+      <table>
+        <thead><tr><th>Point</th><th>Km</th><th>Heure</th><th>Action</th></tr></thead>
+        <tbody id="nutri-body-fr"></tbody>
+      </table>
     </div>
-    <div class="section-title">Stratégie par phase</div>
-    <div class="nutri-card"><h4>🟢 Phase 1 — km 0 à 35 (conservateur)</h4>
-      <div class="nutri-item"><span>Glucides</span><span>60–70 g/h</span></div>
-      <div class="nutri-item"><span>Eau</span><span>500–600 ml/h</span></div>
-      <div class="nutri-item"><span>Sodium</span><span>500 mg/h</span></div>
-      <div class="nutri-item"><span>Sources</span><span>Gels (1/45 min), bananes, oranges</span></div>
+
+    <!-- EN nutrition content -->
+    <div class="en">
+      <div class="section-title">📊 Race nutrition summary</div>
+      <div class="row4">
+        <div class="metric green"><div class="lbl">Total carbs</div><div class="val">~492 g</div></div>
+        <div class="metric orange"><div class="lbl">Caloric intake</div><div class="val">~1,970 kcal</div></div>
+        <div class="metric blue"><div class="lbl">Total sodium</div><div class="val">~3.3 g</div></div>
+        <div class="metric"><div class="lbl">Water (bottles only)</div><div class="val">3 L</div></div>
+      </div>
+      <div class="row3">
+        <div class="metric green"><div class="lbl">Carbs / hour</div><div class="val">~66 g/h</div></div>
+        <div class="metric blue"><div class="lbl">Sodium / hour</div><div class="val">~445 mg/h</div></div>
+        <div class="metric"><div class="lbl">Magnesium / hour</div><div class="val">~145 mg/h</div></div>
+      </div>
+      <div class="info-box">☀️ <strong>Daytime race</strong> — Start 05:00, estimated finish ~13:15. Watch for <strong>rising temperatures</strong> (8°C at start → ~20°C at finish): electrolyte needs increase over the final loops.</div>
+
+      <div class="section-title">🚲 Logistics — Cycling assistant</div>
+      <div class="nutri-card card-purple">
+        <h4>Meeting points for your assistant</h4>
+        <div class="nutri-row"><span class="lbl"><strong>km 7.4</strong> — German Military Cemetery</span><span class="val">Join the course · no bottle exchange</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 19.0</strong> — École Jean Monnet 🔀</span><span class="val">Hand over B2 + gel · collect empty B1</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 35.7</strong> — Salle des Sports 🔀</span><span class="val">Hand over B3 + gel · collect empty B2</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 51.2</strong> — École Jean Monnet 🔀</span><span class="val">Hand over B4 + gel · collect empty B3</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 67.9</strong> — Salle des Sports 🔀</span><span class="val">Hand over B5 + gel · collect empty B4</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 83.3</strong> — École Jean Monnet 🔀</span><span class="val">Hand over B6 + gel · collect empty B5</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 100</strong> — Finish 🏁</span><span class="val">Collect empty B6 🎉</span></div>
+      </div>
+
+      <div class="section-title">🎒 Bottles to prepare (the night before)</div>
+      <div class="nutri-card card-grey">
+        <h4>6 identical bottles labelled B1 to B6</h4>
+        <div class="nutri-row"><span class="lbl">Water</span><span class="val">500 mL (add on race morning)</span></div>
+        <div class="nutri-row"><span class="lbl">Sugar</span><span class="val">50 g</span></div>
+        <div class="nutri-row"><span class="lbl">Electrolytes</span><span class="val">1 Apurna neutral sachet</span></div>
+        <div class="nutri-row"><span class="lbl">Gel (handed separately)</span><span class="val">1 Nutripure Long Distance gel</span></div>
+        <div style="margin-top:8px;font-size:12px;color:#666;line-height:1.6">💡 Pre-fill sugar + Apurna sachet the night before. Add fresh water race morning. Label B1–B6 in order.</div>
+      </div>
+
+      <div class="section-title">🔄 Loop-by-loop plan</div>
+      <div class="boucle-card" style="border-color:#888">
+        <h4 style="color:#555">🏁 Start loop — km 0 → 3.578</h4>
+        <div class="boucle-item"><span class="pill grey">Nothing</span><span>No nutrition — let your gut wake up</span></div>
+        <div class="boucle-item"><span class="pill grey">Water</span><span>A few sips only if thirsty</span></div>
+      </div>
+      <div class="boucle-card">
+        <h4>🟢 Green loop 1 T1 — km 3.578 → 19.047</h4>
+        <div class="boucle-item"><span class="pill">B1</span><span>Take bottle B1 at the start · sip steadily throughout</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 Nutripure LD gel · take gradually over 10–15 min at the start of the loop</span></div>
+      </div>
+      <div class="boucle-card" style="border-color:#EF9F27">
+        <h4 style="color:#7a4010">🟠 Orange loop 1 T1 — km 19.047 → 35.719</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Handoff</span><span><strong>École Jean Monnet (km 19)</strong> — collect B2 + gel from your assistant</span></div>
+        <div class="boucle-item"><span class="pill orange">B2</span><span>Sip steadily throughout the loop</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 Nutripure LD gel · at the start of the orange loop</span></div>
+      </div>
+      <div class="boucle-card">
+        <h4>🟢 Green loop 1 T2 — km 35.719 → 51.187</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Handoff</span><span><strong>Salle des Sports (km 35.7)</strong> — collect B3 + gel</span></div>
+        <div class="boucle-item"><span class="pill">B3</span><span>Sip steadily · temperatures rising → make sure to finish the bottle</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 Nutripure LD gel</span></div>
+      </div>
+      <div class="boucle-card" style="border-color:#EF9F27">
+        <h4 style="color:#7a4010">🟠 Orange loop 2 T2 — km 51.187 → 67.859</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Handoff</span><span><strong>École Jean Monnet (km 51.2)</strong> — collect B4 + gel</span></div>
+        <div class="boucle-item"><span class="pill orange">B4</span><span>Sip steadily · keep fuelling even if appetite drops</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 Nutripure LD gel</span></div>
+      </div>
+      <div class="boucle-card">
+        <h4>🟢 Green loop 1 T3 — km 67.859 → 83.328</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Handoff</span><span><strong>Salle des Sports (km 67.9)</strong> — collect B5 + gel · final lap!</span></div>
+        <div class="boucle-item"><span class="pill">B5</span><span>Sip steadily · if nausea → reduce to 40g sugar for B6</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>1 Nutripure LD gel</span></div>
+      </div>
+      <div class="boucle-card" style="border-color:#EF9F27">
+        <h4 style="color:#7a4010">🟠 Orange loop 2 T3 — km 83.328 → 100</h4>
+        <div class="boucle-item"><span class="pill purple">🔀 Handoff</span><span><strong>École Jean Monnet (km 83.3)</strong> — collect B6 + gel · only 17 km left!</span></div>
+        <div class="boucle-item"><span class="pill orange">B6</span><span>Drink through to the finish · keep carbs coming no matter what</span></div>
+        <div class="boucle-item"><span class="pill orange">Gel</span><span>Last gel of the race</span></div>
+      </div>
+
+      <div class="section-title">🧪 Bottle composition</div>
+      <div class="nutri-card card-grey">
+        <h4>Per 500 mL bottle — per loop (~1h15)</h4>
+        <div class="nutri-row"><span class="lbl">50 g sugar</span><span class="val">50 g carbs · ~200 kcal</span></div>
+        <div class="nutri-row"><span class="lbl">1 Apurna neutral sachet</span><span class="val">500 mg Na · 500 mg K · 180 mg Mg</span></div>
+        <div class="nutri-row"><span class="lbl">1 Nutripure LD gel (separate)</span><span class="val">30 g carbs · 120 kcal · 53 mg Na</span></div>
+        <div class="nutri-row" style="border-top:2px solid #1D9E75;margin-top:4px;padding-top:8px;font-weight:700;color:#085041">
+          <span class="lbl">Total per loop</span><span class="val">~82 g carbs · ~320 kcal · 553 mg Na</span>
+        </div>
+      </div>
+
+      <div class="section-title">🌡️ Heat management (daytime race)</div>
+      <div class="nutri-card card-orange">
+        <h4>Rising temperatures during the race</h4>
+        <div class="nutri-row"><span class="lbl">05:00 (start)</span><span class="val">~8–12°C · low sweat rate</span></div>
+        <div class="nutri-row"><span class="lbl">09:00–11:00 (T2)</span><span class="val">~14–18°C · moderate sweat rate</span></div>
+        <div class="nutri-row"><span class="lbl">12:00–15:00 (T3)</span><span class="val">~18–22°C · higher sweat rate</span></div>
+        <div class="nutri-row"><span class="lbl">T3 adjustment</span><span class="val">Make sure to finish B5 and B6 fully</span></div>
+      </div>
+      <div class="warning-box">⚠️ <strong>Golden rule:</strong> Test nothing new on race day. Trial this exact plan (sugar bottle + Apurna + Nutripure gel) on a long run of 25–30 km before the race.</div>
+
+      <div class="section-title">🗓 Checkpoint dashboard</div>
+      <table>
+        <thead><tr><th>Checkpoint</th><th>Km</th><th>Time</th><th>Action</th></tr></thead>
+        <tbody id="nutri-body-en"></tbody>
+      </table>
     </div>
-    <div class="nutri-card"><h4>🟠 Phase 2 — km 35 à 68 (maintien)</h4>
-      <div class="nutri-item"><span>Glucides</span><span>50–60 g/h</span></div>
-      <div class="nutri-item"><span>Eau + électrolytes</span><span>600–700 ml/h</span></div>
-      <div class="nutri-item"><span>Caféine</span><span>Dès km 50 → 1 gel caféiné/h</span></div>
-      <div class="nutri-item"><span>Solide</span><span>Soupe chaude aux ravits</span></div>
-    </div>
-    <div class="nutri-card"><h4>🔵 Phase 3 — km 68 à 100 (fin de course)</h4>
-      <div class="nutri-item"><span>Glucides</span><span>40–50 g/h</span></div>
-      <div class="nutri-item"><span>Caféine</span><span>Café + cola disponible aux ravits</span></div>
-      <div class="nutri-item"><span>Sodium</span><span>800–1 000 mg/h</span></div>
-      <div class="nutri-item"><span>Solide léger</span><span>Fruits secs, banane, chocolat chaud</span></div>
-    </div>
-    <div class="section-title">Plan détaillé par ravitaillement</div>
-    <table>
-      <thead><tr><th>Ravit.</th><th>Km</th><th>Heure</th><th>À faire / prendre</th></tr></thead>
-      <tbody id="nutri-body"></tbody>
-    </table>
   </div>
 </div>
 
 <script>
 // ============================================================
+// LANGUAGE
+// ============================================================
+let currentLang='fr';
+function setLang(lang,btn){
+  currentLang=lang;
+  document.body.classList.toggle('lang-en',lang==='en');
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateNutriTable();
+}
+
+// ============================================================
 // GPX DATA
 // ============================================================
-const GPX_DEPART = [[50.70065,2.77803],[50.70016,2.77764],[50.70018,2.77754],[50.70037,2.77681],[50.7004,2.77658],[50.70051,2.7758],[50.70066,2.77502],[50.70069,2.77503],[50.70037,2.77475],[50.69983,2.77436],[50.69919,2.77362],[50.69854,2.77293],[50.69763,2.77179],[50.69583,2.77007],[50.69505,2.76928],[50.69469,2.76908],[50.69498,2.76802],[50.69521,2.76736],[50.6954,2.76691],[50.69557,2.76637],[50.69585,2.7653],[50.69648,2.76422],[50.69664,2.76404],[50.69701,2.76345],[50.6982,2.76183],[50.69853,2.76467],[50.6991,2.76842],[50.69952,2.76856],[50.69971,2.76859],[50.69981,2.76874],[50.69988,2.76906],[50.69997,2.76914],[50.70051,2.76951],[50.70053,2.76979],[50.70051,2.76992],[50.70056,2.77021],[50.70062,2.77031],[50.70115,2.77076],[50.70109,2.77101],[50.70038,2.77377],[50.70033,2.7738],[50.70039,2.7742],[50.70041,2.77453],[50.70037,2.77475],[50.70066,2.77502],[50.70081,2.77512],[50.70083,2.77507],[50.70087,2.77493],[50.70091,2.77479],[50.70095,2.77462],[50.70115,2.77374],[50.70118,2.77372],[50.70189,2.77402],[50.70214,2.77361],[50.70252,2.77339],[50.70259,2.77341],[50.70286,2.77373],[50.70298,2.77387],[50.70234,2.77483],[50.70222,2.77516],[50.7021,2.77583],[50.70198,2.77663],[50.70194,2.77701],[50.70192,2.77746],[50.70191,2.77758],[50.70187,2.77789],[50.70166,2.77842],[50.70145,2.77868],[50.70142,2.7788],[50.70095,2.77918],[50.70083,2.77939]];
-
-const GPX_VERTE = [[50.70071,2.77959],[50.70033,2.78012],[50.70033,2.78003],[50.70042,2.78006],[50.701,2.78044],[50.70102,2.78038],[50.70161,2.78072],[50.70176,2.78012],[50.70346,2.78137],[50.70379,2.78012],[50.70425,2.78023],[50.70451,2.77925],[50.70462,2.77905],[50.70474,2.77888],[50.7049,2.77874],[50.70507,2.77868],[50.70548,2.77864],[50.70591,2.77866],[50.70618,2.7787],[50.70685,2.77895],[50.70725,2.77916],[50.70773,2.77957],[50.70851,2.78054],[50.70973,2.78227],[50.71105,2.78432],[50.71226,2.78646],[50.7121,2.78658],[50.71165,2.78661],[50.71107,2.78668],[50.70951,2.78699],[50.70892,2.78714],[50.70849,2.78737],[50.70768,2.78804],[50.70747,2.78826],[50.70686,2.78879],[50.70431,2.79134],[50.70396,2.79172],[50.70293,2.79316],[50.7026,2.79377],[50.70246,2.79392],[50.70229,2.79393],[50.7022,2.79404],[50.70178,2.79492],[50.70159,2.79524],[50.70149,2.79537],[50.70134,2.79548],[50.70129,2.79557],[50.70127,2.79576],[50.70132,2.79592],[50.70155,2.79652],[50.70178,2.79701],[50.70179,2.79719],[50.70176,2.79729],[50.70105,2.79577],[50.70013,2.79365],[50.69997,2.7931],[50.69988,2.79252],[50.69964,2.79256],[50.69941,2.79273],[50.69928,2.79296],[50.69911,2.79319],[50.69867,2.79357],[50.69824,2.794],[50.69794,2.79438],[50.69762,2.79525],[50.69711,2.79629],[50.69698,2.79653],[50.69678,2.79672],[50.69662,2.79691],[50.69648,2.79721],[50.69643,2.79756],[50.69639,2.79826],[50.69621,2.79857],[50.69582,2.79985],[50.69575,2.79999],[50.69566,2.79997],[50.69548,2.79979],[50.69532,2.79976],[50.69511,2.79981],[50.69479,2.79993],[50.69431,2.80022],[50.69344,2.80062],[50.69145,2.80119],[50.69057,2.80171],[50.68922,2.80245],[50.68889,2.80258],[50.6883,2.80269],[50.68676,2.80337],[50.68594,2.8037],[50.68551,2.80169],[50.68542,2.80072],[50.68541,2.8003],[50.68586,2.7977],[50.68642,2.79745],[50.68666,2.79743],[50.68698,2.79752],[50.68729,2.79753],[50.68782,2.79728],[50.68841,2.79688],[50.68921,2.79629],[50.68988,2.79529],[50.69072,2.79427],[50.69095,2.7939],[50.69115,2.79353],[50.69143,2.79282],[50.69163,2.79251],[50.69259,2.79156],[50.69239,2.7912],[50.69217,2.79091],[50.69183,2.79037],[50.69166,2.79019],[50.69155,2.78997],[50.69145,2.78963],[50.69097,2.7886],[50.69011,2.78732],[50.68999,2.78718],[50.68987,2.78715],[50.68958,2.7872],[50.68921,2.78664],[50.68872,2.78583],[50.68909,2.78556],[50.68917,2.78544],[50.68919,2.78512],[50.68809,2.78603],[50.68793,2.78612],[50.68755,2.78626],[50.6871,2.7863],[50.68571,2.78619],[50.68482,2.78623],[50.6839,2.78639],[50.6836,2.78647],[50.68294,2.78651],[50.68262,2.78637],[50.68211,2.78601],[50.68157,2.78528],[50.68099,2.78431],[50.68059,2.78384],[50.68031,2.78363],[50.67994,2.78349],[50.67907,2.78515],[50.6783,2.78633],[50.67805,2.78677],[50.678,2.78698],[50.67794,2.78775],[50.67788,2.78802],[50.6778,2.7882],[50.67762,2.78844],[50.67699,2.78907],[50.67636,2.78955],[50.67572,2.79001],[50.67598,2.7906],[50.67588,2.79073],[50.67598,2.7906],[50.67572,2.79001],[50.67636,2.78955],[50.67699,2.78907],[50.67762,2.78844],[50.6778,2.7882],[50.67788,2.78802],[50.67794,2.78775],[50.678,2.78698],[50.67805,2.78677],[50.6783,2.78633],[50.67907,2.78515],[50.67994,2.78349],[50.68015,2.78279],[50.68084,2.78142],[50.68227,2.77826],[50.68263,2.77736],[50.6829,2.77655],[50.68335,2.77478],[50.68345,2.77423],[50.68349,2.77365],[50.68352,2.77351],[50.68354,2.77323],[50.68348,2.77291],[50.68329,2.77266],[50.68311,2.77236],[50.6827,2.7719],[50.68238,2.77142],[50.68186,2.7698],[50.68184,2.76955],[50.68184,2.76846],[50.68187,2.76749],[50.68185,2.76714],[50.68218,2.76702],[50.68289,2.76718],[50.68517,2.76792],[50.68581,2.76801],[50.68606,2.76821],[50.68631,2.76848],[50.68724,2.7689],[50.68755,2.76932],[50.6879,2.76998],[50.68804,2.77032],[50.68824,2.76995],[50.68857,2.76944],[50.68913,2.76844],[50.68958,2.76774],[50.68992,2.76715],[50.69029,2.76757],[50.69081,2.76801],[50.69102,2.76814],[50.69148,2.76834],[50.69184,2.76839],[50.69316,2.7685],[50.69394,2.76883],[50.69469,2.76908],[50.69445,2.77048],[50.69439,2.77145],[50.69441,2.77227],[50.69438,2.77253],[50.69427,2.77286],[50.69409,2.77304],[50.69259,2.773],[50.69208,2.77312],[50.69103,2.77319],[50.6906,2.77314],[50.69014,2.77292],[50.68981,2.77273],[50.68969,2.77272],[50.6896,2.77274],[50.68951,2.77281],[50.68943,2.77296],[50.68923,2.77357],[50.68903,2.77433],[50.68862,2.77646],[50.68867,2.77678],[50.6888,2.77704],[50.69023,2.77804],[50.69072,2.77855],[50.69125,2.77882],[50.69292,2.77995],[50.69392,2.77979],[50.69455,2.77971],[50.69484,2.77958],[50.69524,2.77933],[50.6959,2.77921],[50.69647,2.781],[50.69729,2.78028],[50.69737,2.78025],[50.69751,2.78026],[50.69822,2.78068],[50.69844,2.78092],[50.69879,2.78143],[50.69931,2.78188],[50.6997,2.78213],[50.69981,2.78171]];
-
-const GPX_ORANGE = [[50.69992,2.7813],[50.70028,2.77992],[50.70033,2.78003],[50.70042,2.78006],[50.70058,2.77949],[50.70064,2.77944],[50.7008,2.77893],[50.7007,2.77878],[50.7007,2.77861],[50.70065,2.77846],[50.7006,2.77847],[50.70013,2.77815],[50.70008,2.77802],[50.70019,2.77743],[50.70036,2.77679],[50.70042,2.77634],[50.7003,2.77631],[50.69991,2.77608],[50.69969,2.77579],[50.69963,2.77559],[50.69963,2.77505],[50.69983,2.77437],[50.69908,2.7735],[50.69854,2.77293],[50.69763,2.77179],[50.69583,2.77007],[50.69505,2.76928],[50.69469,2.76908],[50.69394,2.76883],[50.69316,2.7685],[50.69184,2.76839],[50.69148,2.76834],[50.69102,2.76814],[50.69081,2.76801],[50.69029,2.76757],[50.68945,2.76658],[50.68884,2.76558],[50.68789,2.76373],[50.68687,2.76228],[50.68669,2.76192],[50.68633,2.7606],[50.68615,2.76008],[50.6858,2.75947],[50.68566,2.75916],[50.68521,2.75719],[50.6851,2.7566],[50.68617,2.75636],[50.68611,2.75547],[50.68604,2.75515],[50.68569,2.75446],[50.68521,2.7532],[50.68441,2.75167],[50.68437,2.75156],[50.68436,2.7514],[50.68444,2.75122],[50.68512,2.75049],[50.68517,2.7504],[50.68519,2.7503],[50.68518,2.75008],[50.68455,2.74763],[50.68413,2.74578],[50.68407,2.74567],[50.68399,2.74562],[50.68391,2.74565],[50.68321,2.74655],[50.68288,2.74688],[50.6828,2.7467],[50.68257,2.74607],[50.68221,2.74464],[50.68192,2.74328],[50.6819,2.74194],[50.68194,2.74157],[50.68209,2.74109],[50.68235,2.73974],[50.68237,2.73944],[50.68236,2.73915],[50.68224,2.73835],[50.68226,2.73813],[50.68232,2.73797],[50.68331,2.73665],[50.68328,2.73629],[50.68242,2.73507],[50.68191,2.73373],[50.68172,2.73171],[50.68169,2.73159],[50.6828,2.73022],[50.68315,2.72984],[50.68463,2.72836],[50.68524,2.7277],[50.68535,2.72753],[50.68538,2.72738],[50.68537,2.72718],[50.68514,2.72644],[50.68514,2.72621],[50.68517,2.7261],[50.68586,2.72506],[50.6835,2.72103],[50.6829,2.72192],[50.68283,2.72195],[50.6822,2.72098],[50.68203,2.72083],[50.68155,2.72006],[50.68154,2.72003],[50.6874,2.71908],[50.68785,2.71862],[50.68797,2.71852],[50.6883,2.71834],[50.68953,2.71777],[50.69044,2.71741],[50.69065,2.71737],[50.6906,2.71851],[50.69022,2.72153],[50.69036,2.72154],[50.69089,2.72132],[50.69233,2.7206],[50.69335,2.72003],[50.69352,2.71997],[50.69508,2.71962],[50.69604,2.71947],[50.69628,2.71948],[50.69635,2.71953],[50.69647,2.71976],[50.69705,2.72121],[50.69745,2.72227],[50.69755,2.72245],[50.69766,2.7226],[50.6978,2.72275],[50.69845,2.72303],[50.69853,2.72308],[50.6986,2.72317],[50.69865,2.7233],[50.69916,2.72541],[50.69926,2.72599],[50.69975,2.72797],[50.70075,2.73154],[50.70089,2.73191],[50.70099,2.73212],[50.70122,2.73252],[50.70324,2.73546],[50.70337,2.73576],[50.70356,2.73641],[50.7047,2.7358],[50.70487,2.73585],[50.70544,2.73622],[50.70563,2.73626],[50.70592,2.73621],[50.70597,2.73638],[50.70604,2.73654],[50.70679,2.73783],[50.70703,2.73833],[50.70769,2.73987],[50.70807,2.74084],[50.70825,2.74141],[50.70869,2.74297],[50.70821,2.74334],[50.70756,2.74393],[50.7071,2.74431],[50.70685,2.74448],[50.70654,2.74461],[50.70649,2.74467],[50.70648,2.74476],[50.7065,2.74486],[50.70676,2.74532],[50.70694,2.7457],[50.7071,2.74608],[50.70722,2.74644],[50.70728,2.74669],[50.70739,2.74731],[50.70809,2.74977],[50.70843,2.75118],[50.70882,2.75252],[50.7089,2.75271],[50.70876,2.75299],[50.70874,2.75309],[50.70876,2.75377],[50.70873,2.75404],[50.7087,2.75418],[50.7086,2.75431],[50.70796,2.75471],[50.70765,2.75505],[50.70746,2.75532],[50.70688,2.7538],[50.70683,2.75383],[50.70636,2.7544],[50.70604,2.75487],[50.70518,2.7559],[50.70417,2.75725],[50.70409,2.75741],[50.70238,2.75555],[50.70105,2.75389],[50.70071,2.75339],[50.70016,2.75216],[50.70015,2.75197],[50.70018,2.75188],[50.70075,2.75127],[50.70079,2.75117],[50.7008,2.7511],[50.70074,2.75065],[50.70069,2.74987],[50.70034,2.74866],[50.70006,2.74783],[50.69995,2.74735],[50.69958,2.74752],[50.69925,2.74775],[50.69907,2.74791],[50.69875,2.74832],[50.69842,2.74892],[50.69789,2.75022],[50.69774,2.75064],[50.69759,2.75124],[50.69753,2.75186],[50.69734,2.75323],[50.69714,2.75526],[50.69714,2.75606],[50.69722,2.75731],[50.69729,2.75765],[50.69749,2.75821],[50.69767,2.75862],[50.69799,2.75948],[50.69805,2.75991],[50.69809,2.76094],[50.69854,2.76479],[50.69934,2.7699],[50.69942,2.77031],[50.69973,2.77142],[50.69992,2.772],[50.70015,2.77282],[50.70039,2.7742],[50.70041,2.77453],[50.70037,2.77475],[50.70066,2.77502],[50.70054,2.77565],[50.70042,2.77645],[50.70038,2.77679],[50.70017,2.77764],[50.70069,2.77806],[50.70113,2.77841],[50.70146,2.77868],[50.70135,2.77903],[50.70083,2.77945]];
+const GPX_DEPART=[[50.70065,2.77803],[50.70016,2.77764],[50.70018,2.77754],[50.70037,2.77681],[50.7004,2.77658],[50.70051,2.7758],[50.70066,2.77502],[50.70069,2.77503],[50.70037,2.77475],[50.69983,2.77436],[50.69919,2.77362],[50.69854,2.77293],[50.69763,2.77179],[50.69583,2.77007],[50.69505,2.76928],[50.69469,2.76908],[50.69498,2.76802],[50.69521,2.76736],[50.6954,2.76691],[50.69557,2.76637],[50.69585,2.7653],[50.69648,2.76422],[50.69664,2.76404],[50.69701,2.76345],[50.6982,2.76183],[50.69853,2.76467],[50.6991,2.76842],[50.69952,2.76856],[50.69971,2.76859],[50.69981,2.76874],[50.69988,2.76906],[50.69997,2.76914],[50.70051,2.76951],[50.70053,2.76979],[50.70051,2.76992],[50.70056,2.77021],[50.70062,2.77031],[50.70115,2.77076],[50.70109,2.77101],[50.70038,2.77377],[50.70033,2.7738],[50.70039,2.7742],[50.70041,2.77453],[50.70037,2.77475],[50.70066,2.77502],[50.70081,2.77512],[50.70083,2.77507],[50.70087,2.77493],[50.70091,2.77479],[50.70095,2.77462],[50.70115,2.77374],[50.70118,2.77372],[50.70189,2.77402],[50.70214,2.77361],[50.70252,2.77339],[50.70259,2.77341],[50.70286,2.77373],[50.70298,2.77387],[50.70234,2.77483],[50.70222,2.77516],[50.7021,2.77583],[50.70198,2.77663],[50.70194,2.77701],[50.70192,2.77746],[50.70191,2.77758],[50.70187,2.77789],[50.70166,2.77842],[50.70145,2.77868],[50.70142,2.7788],[50.70095,2.77918],[50.70083,2.77939]];
+const GPX_VERTE=[[50.70071,2.77959],[50.70033,2.78012],[50.70033,2.78003],[50.70042,2.78006],[50.701,2.78044],[50.70102,2.78038],[50.70161,2.78072],[50.70176,2.78012],[50.70346,2.78137],[50.70379,2.78012],[50.70425,2.78023],[50.70451,2.77925],[50.70462,2.77905],[50.70474,2.77888],[50.7049,2.77874],[50.70507,2.77868],[50.70548,2.77864],[50.70591,2.77866],[50.70618,2.7787],[50.70685,2.77895],[50.70725,2.77916],[50.70773,2.77957],[50.70851,2.78054],[50.70973,2.78227],[50.71105,2.78432],[50.71226,2.78646],[50.7121,2.78658],[50.71165,2.78661],[50.71107,2.78668],[50.70951,2.78699],[50.70892,2.78714],[50.70849,2.78737],[50.70768,2.78804],[50.70747,2.78826],[50.70686,2.78879],[50.70431,2.79134],[50.70396,2.79172],[50.70293,2.79316],[50.7026,2.79377],[50.70246,2.79392],[50.70229,2.79393],[50.7022,2.79404],[50.70178,2.79492],[50.70159,2.79524],[50.70149,2.79537],[50.70134,2.79548],[50.70129,2.79557],[50.70127,2.79576],[50.70132,2.79592],[50.70155,2.79652],[50.70178,2.79701],[50.70179,2.79719],[50.70176,2.79729],[50.70105,2.79577],[50.70013,2.79365],[50.69997,2.7931],[50.69988,2.79252],[50.69964,2.79256],[50.69941,2.79273],[50.69928,2.79296],[50.69911,2.79319],[50.69867,2.79357],[50.69824,2.794],[50.69794,2.79438],[50.69762,2.79525],[50.69711,2.79629],[50.69698,2.79653],[50.69678,2.79672],[50.69662,2.79691],[50.69648,2.79721],[50.69643,2.79756],[50.69639,2.79826],[50.69621,2.79857],[50.69582,2.79985],[50.69575,2.79999],[50.69566,2.79997],[50.69548,2.79979],[50.69532,2.79976],[50.69511,2.79981],[50.69479,2.79993],[50.69431,2.80022],[50.69344,2.80062],[50.69145,2.80119],[50.69057,2.80171],[50.68922,2.80245],[50.68889,2.80258],[50.6883,2.80269],[50.68676,2.80337],[50.68594,2.8037],[50.68551,2.80169],[50.68542,2.80072],[50.68541,2.8003],[50.68586,2.7977],[50.68642,2.79745],[50.68666,2.79743],[50.68698,2.79752],[50.68729,2.79753],[50.68782,2.79728],[50.68841,2.79688],[50.68921,2.79629],[50.68988,2.79529],[50.69072,2.79427],[50.69095,2.7939],[50.69115,2.79353],[50.69143,2.79282],[50.69163,2.79251],[50.69259,2.79156],[50.69239,2.7912],[50.69217,2.79091],[50.69183,2.79037],[50.69166,2.79019],[50.69155,2.78997],[50.69145,2.78963],[50.69097,2.7886],[50.69011,2.78732],[50.68999,2.78718],[50.68987,2.78715],[50.68958,2.7872],[50.68921,2.78664],[50.68872,2.78583],[50.68909,2.78556],[50.68917,2.78544],[50.68919,2.78512],[50.68809,2.78603],[50.68793,2.78612],[50.68755,2.78626],[50.6871,2.7863],[50.68571,2.78619],[50.68482,2.78623],[50.6839,2.78639],[50.6836,2.78647],[50.68294,2.78651],[50.68262,2.78637],[50.68211,2.78601],[50.68157,2.78528],[50.68099,2.78431],[50.68059,2.78384],[50.68031,2.78363],[50.67994,2.78349],[50.67907,2.78515],[50.6783,2.78633],[50.67805,2.78677],[50.678,2.78698],[50.67794,2.78775],[50.67788,2.78802],[50.6778,2.7882],[50.67762,2.78844],[50.67699,2.78907],[50.67636,2.78955],[50.67572,2.79001],[50.67598,2.7906],[50.67588,2.79073],[50.67598,2.7906],[50.67572,2.79001],[50.67636,2.78955],[50.67699,2.78907],[50.67762,2.78844],[50.6778,2.7882],[50.67788,2.78802],[50.67794,2.78775],[50.678,2.78698],[50.67805,2.78677],[50.6783,2.78633],[50.67907,2.78515],[50.67994,2.78349],[50.68015,2.78279],[50.68084,2.78142],[50.68227,2.77826],[50.68263,2.77736],[50.6829,2.77655],[50.68335,2.77478],[50.68345,2.77423],[50.68349,2.77365],[50.68352,2.77351],[50.68354,2.77323],[50.68348,2.77291],[50.68329,2.77266],[50.68311,2.77236],[50.6827,2.7719],[50.68238,2.77142],[50.68186,2.7698],[50.68184,2.76955],[50.68184,2.76846],[50.68187,2.76749],[50.68185,2.76714],[50.68218,2.76702],[50.68289,2.76718],[50.68517,2.76792],[50.68581,2.76801],[50.68606,2.76821],[50.68631,2.76848],[50.68724,2.7689],[50.68755,2.76932],[50.6879,2.76998],[50.68804,2.77032],[50.68824,2.76995],[50.68857,2.76944],[50.68913,2.76844],[50.68958,2.76774],[50.68992,2.76715],[50.69029,2.76757],[50.69081,2.76801],[50.69102,2.76814],[50.69148,2.76834],[50.69184,2.76839],[50.69316,2.7685],[50.69394,2.76883],[50.69469,2.76908],[50.69445,2.77048],[50.69439,2.77145],[50.69441,2.77227],[50.69438,2.77253],[50.69427,2.77286],[50.69409,2.77304],[50.69259,2.773],[50.69208,2.77312],[50.69103,2.77319],[50.6906,2.77314],[50.69014,2.77292],[50.68981,2.77273],[50.68969,2.77272],[50.6896,2.77274],[50.68951,2.77281],[50.68943,2.77296],[50.68923,2.77357],[50.68903,2.77433],[50.68862,2.77646],[50.68867,2.77678],[50.6888,2.77704],[50.69023,2.77804],[50.69072,2.77855],[50.69125,2.77882],[50.69292,2.77995],[50.69392,2.77979],[50.69455,2.77971],[50.69484,2.77958],[50.69524,2.77933],[50.6959,2.77921],[50.69647,2.781],[50.69729,2.78028],[50.69737,2.78025],[50.69751,2.78026],[50.69822,2.78068],[50.69844,2.78092],[50.69879,2.78143],[50.69931,2.78188],[50.6997,2.78213],[50.69981,2.78171]];
+const GPX_ORANGE=[[50.69992,2.7813],[50.70028,2.77992],[50.70033,2.78003],[50.70042,2.78006],[50.70058,2.77949],[50.70064,2.77944],[50.7008,2.77893],[50.7007,2.77878],[50.7007,2.77861],[50.70065,2.77846],[50.7006,2.77847],[50.70013,2.77815],[50.70008,2.77802],[50.70019,2.77743],[50.70036,2.77679],[50.70042,2.77634],[50.7003,2.77631],[50.69991,2.77608],[50.69969,2.77579],[50.69963,2.77559],[50.69963,2.77505],[50.69983,2.77437],[50.69908,2.7735],[50.69854,2.77293],[50.69763,2.77179],[50.69583,2.77007],[50.69505,2.76928],[50.69469,2.76908],[50.69394,2.76883],[50.69316,2.7685],[50.69184,2.76839],[50.69148,2.76834],[50.69102,2.76814],[50.69081,2.76801],[50.69029,2.76757],[50.68945,2.76658],[50.68884,2.76558],[50.68789,2.76373],[50.68687,2.76228],[50.68669,2.76192],[50.68633,2.7606],[50.68615,2.76008],[50.6858,2.75947],[50.68566,2.75916],[50.68521,2.75719],[50.6851,2.7566],[50.68617,2.75636],[50.68611,2.75547],[50.68604,2.75515],[50.68569,2.75446],[50.68521,2.7532],[50.68441,2.75167],[50.68437,2.75156],[50.68436,2.7514],[50.68444,2.75122],[50.68512,2.75049],[50.68517,2.7504],[50.68519,2.7503],[50.68518,2.75008],[50.68455,2.74763],[50.68413,2.74578],[50.68407,2.74567],[50.68399,2.74562],[50.68391,2.74565],[50.68321,2.74655],[50.68288,2.74688],[50.6828,2.7467],[50.68257,2.74607],[50.68221,2.74464],[50.68192,2.74328],[50.6819,2.74194],[50.68194,2.74157],[50.68209,2.74109],[50.68235,2.73974],[50.68237,2.73944],[50.68236,2.73915],[50.68224,2.73835],[50.68226,2.73813],[50.68232,2.73797],[50.68331,2.73665],[50.68328,2.73629],[50.68242,2.73507],[50.68191,2.73373],[50.68172,2.73171],[50.68169,2.73159],[50.6828,2.73022],[50.68315,2.72984],[50.68463,2.72836],[50.68524,2.7277],[50.68535,2.72753],[50.68538,2.72738],[50.68537,2.72718],[50.68514,2.72644],[50.68514,2.72621],[50.68517,2.7261],[50.68586,2.72506],[50.6835,2.72103],[50.6829,2.72192],[50.68283,2.72195],[50.6822,2.72098],[50.68203,2.72083],[50.68155,2.72006],[50.68154,2.72003],[50.6874,2.71908],[50.68785,2.71862],[50.68797,2.71852],[50.6883,2.71834],[50.68953,2.71777],[50.69044,2.71741],[50.69065,2.71737],[50.6906,2.71851],[50.69022,2.72153],[50.69036,2.72154],[50.69089,2.72132],[50.69233,2.7206],[50.69335,2.72003],[50.69352,2.71997],[50.69508,2.71962],[50.69604,2.71947],[50.69628,2.71948],[50.69635,2.71953],[50.69647,2.71976],[50.69705,2.72121],[50.69745,2.72227],[50.69755,2.72245],[50.69766,2.7226],[50.6978,2.72275],[50.69845,2.72303],[50.69853,2.72308],[50.6986,2.72317],[50.69865,2.7233],[50.69916,2.72541],[50.69926,2.72599],[50.69975,2.72797],[50.70075,2.73154],[50.70089,2.73191],[50.70099,2.73212],[50.70122,2.73252],[50.70324,2.73546],[50.70337,2.73576],[50.70356,2.73641],[50.7047,2.7358],[50.70487,2.73585],[50.70544,2.73622],[50.70563,2.73626],[50.70592,2.73621],[50.70597,2.73638],[50.70604,2.73654],[50.70679,2.73783],[50.70703,2.73833],[50.70769,2.73987],[50.70807,2.74084],[50.70825,2.74141],[50.70869,2.74297],[50.70821,2.74334],[50.70756,2.74393],[50.7071,2.74431],[50.70685,2.74448],[50.70654,2.74461],[50.70649,2.74467],[50.70648,2.74476],[50.7065,2.74486],[50.70676,2.74532],[50.70694,2.7457],[50.7071,2.74608],[50.70722,2.74644],[50.70728,2.74669],[50.70739,2.74731],[50.70809,2.74977],[50.70843,2.75118],[50.70882,2.75252],[50.7089,2.75271],[50.70876,2.75299],[50.70874,2.75309],[50.70876,2.75377],[50.70873,2.75404],[50.7087,2.75418],[50.7086,2.75431],[50.70796,2.75471],[50.70765,2.75505],[50.70746,2.75532],[50.70688,2.7538],[50.70683,2.75383],[50.70636,2.7544],[50.70604,2.75487],[50.70518,2.7559],[50.70417,2.75725],[50.70409,2.75741],[50.70238,2.75555],[50.70105,2.75389],[50.70071,2.75339],[50.70016,2.75216],[50.70015,2.75197],[50.70018,2.75188],[50.70075,2.75127],[50.70079,2.75117],[50.7008,2.7511],[50.70074,2.75065],[50.70069,2.74987],[50.70034,2.74866],[50.70006,2.74783],[50.69995,2.74735],[50.69958,2.74752],[50.69925,2.74775],[50.69907,2.74791],[50.69875,2.74832],[50.69842,2.74892],[50.69789,2.75022],[50.69774,2.75064],[50.69759,2.75124],[50.69753,2.75186],[50.69734,2.75323],[50.69714,2.75526],[50.69714,2.75606],[50.69722,2.75731],[50.69729,2.75765],[50.69749,2.75821],[50.69767,2.75862],[50.69799,2.75948],[50.69805,2.75991],[50.69809,2.76094],[50.69854,2.76479],[50.69934,2.7699],[50.69942,2.77031],[50.69973,2.77142],[50.69992,2.772],[50.70015,2.77282],[50.70039,2.7742],[50.70041,2.77453],[50.70037,2.77475],[50.70066,2.77502],[50.70054,2.77565],[50.70042,2.77645],[50.70038,2.77679],[50.70017,2.77764],[50.70069,2.77806],[50.70113,2.77841],[50.70146,2.77868],[50.70135,2.77903],[50.70083,2.77945]];
 
 // ============================================================
-// FULL ROUTE for slider interpolation
+// ROUTE
 // ============================================================
-function buildRoute() {
-  const segments = [GPX_DEPART, GPX_VERTE, GPX_ORANGE, GPX_VERTE, GPX_ORANGE, GPX_VERTE, GPX_ORANGE];
-  function distM(a,b){
-    const dlat=(b[0]-a[0])*111320, dlon=(b[1]-a[1])*111320*Math.cos(a[0]*Math.PI/180);
-    return Math.sqrt(dlat*dlat+dlon*dlon);
-  }
-  const route = [];
-  let cumM = 0, prev = null;
-  for (const seg of segments) {
-    for (const pt of seg) {
-      if (prev) cumM += distM(prev, pt);
-      route.push({lat:pt[0], lon:pt[1], cumKm:cumM/1000});
-      prev = pt;
-    }
-  }
-  const total = route[route.length-1].cumKm;
-  for (const pt of route) pt.cumKm = pt.cumKm / total * 100;
-  return route;
+function buildRoute(){
+  const segs=[GPX_DEPART,GPX_VERTE,GPX_ORANGE,GPX_VERTE,GPX_ORANGE,GPX_VERTE,GPX_ORANGE];
+  function dM(a,b){const dlat=(b[0]-a[0])*111320,dlon=(b[1]-a[1])*111320*Math.cos(a[0]*Math.PI/180);return Math.sqrt(dlat*dlat+dlon*dlon)}
+  const r=[];let c=0,p=null;
+  for(const s of segs)for(const pt of s){if(p)c+=dM(p,pt);r.push({lat:pt[0],lon:pt[1],cumKm:c/1000});p=pt}
+  const t=r[r.length-1].cumKm;for(const pt of r)pt.cumKm=pt.cumKm/t*100;return r;
 }
-const FULL_ROUTE = buildRoute();
-
-function latLonAtKm(km) {
-  if (km <= 0) return [FULL_ROUTE[0].lat, FULL_ROUTE[0].lon];
-  if (km >= 100) return [FULL_ROUTE[FULL_ROUTE.length-1].lat, FULL_ROUTE[FULL_ROUTE.length-1].lon];
-  for (let i = 1; i < FULL_ROUTE.length; i++) {
-    if (FULL_ROUTE[i].cumKm >= km) {
-      const a=FULL_ROUTE[i-1], b=FULL_ROUTE[i];
-      const t=(km-a.cumKm)/(b.cumKm-a.cumKm);
-      return [a.lat+t*(b.lat-a.lat), a.lon+t*(b.lon-a.lon)];
-    }
-  }
-  return [FULL_ROUTE[FULL_ROUTE.length-1].lat, FULL_ROUTE[FULL_ROUTE.length-1].lon];
+const FULL_ROUTE=buildRoute();
+function latLonAtKm(km){
+  if(km<=0)return[FULL_ROUTE[0].lat,FULL_ROUTE[0].lon];
+  if(km>=100)return[FULL_ROUTE[FULL_ROUTE.length-1].lat,FULL_ROUTE[FULL_ROUTE.length-1].lon];
+  for(let i=1;i<FULL_ROUTE.length;i++){if(FULL_ROUTE[i].cumKm>=km){const a=FULL_ROUTE[i-1],b=FULL_ROUTE[i],t=(km-a.cumKm)/(b.cumKm-a.cumKm);return[a.lat+t*(b.lat-a.lat),a.lon+t*(b.lon-a.lon)]}}
+  return[FULL_ROUTE[FULL_ROUTE.length-1].lat,FULL_ROUTE[FULL_ROUTE.length-1].lon];
 }
 
 // ============================================================
-// ALL POINTS — cimetière à km 7.4, coords GPX exactes
+// ALL POINTS
 // ============================================================
-const ALL_POINTS = [
-  {name:"Départ",                       km:0,      loop:"Dép", tour:0, color:"#555",    type:"start",  isCross:false},
-  {name:"Fin circuit départ",           km:3.578,  loop:"Dép", tour:0, color:"#555",    type:"start",  isCross:false},
-  {name:"Cimetière Militaire Allemand", km:7.4,    loop:"Dép", tour:0, color:"#C47B00", type:"velo",   isCross:false},
-  {name:"L'Hallobeau",                  km:8.262,  loop:"B1",  tour:1, color:"#1D9E75", type:"ravi",   isCross:false},
-  {name:"La Croix-du-Bac",             km:12.895, loop:"B1",  tour:1, color:"#1D9E75", type:"ravi",   isCross:false},
-  {name:"École Jean Monnet",           km:19.047, loop:"B1",  tour:1, color:"#7F77DD", type:"ravi",   isCross:true},
-  {name:"Le Doulieu",                   km:25.857, loop:"B2",  tour:1, color:"#EF9F27", type:"ravi",   isCross:false},
-  {name:"La Blanche",                   km:29.988, loop:"B2",  tour:1, color:"#EF9F27", type:"ravi",   isCross:false},
-  {name:"Salle des Sports",            km:35.719, loop:"B2",  tour:1, color:"#7F77DD", type:"ravi",   isCross:true},
-  {name:"L'Hallobeau",                  km:40.403, loop:"B1",  tour:2, color:"#1D9E75", type:"ravi",   isCross:false},
-  {name:"La Croix-du-Bac",             km:45.035, loop:"B1",  tour:2, color:"#1D9E75", type:"ravi",   isCross:false},
-  {name:"École Jean Monnet",           km:51.187, loop:"B1",  tour:2, color:"#7F77DD", type:"ravi",   isCross:true},
-  {name:"Le Doulieu",                   km:57.998, loop:"B2",  tour:2, color:"#EF9F27", type:"ravi",   isCross:false},
-  {name:"La Blanche",                   km:62.128, loop:"B2",  tour:2, color:"#EF9F27", type:"ravi",   isCross:false},
-  {name:"Salle des Sports",            km:67.859, loop:"B2",  tour:2, color:"#7F77DD", type:"ravi",   isCross:true},
-  {name:"L'Hallobeau",                  km:72.543, loop:"B1",  tour:3, color:"#1D9E75", type:"ravi",   isCross:false},
-  {name:"La Croix-du-Bac",             km:77.176, loop:"B1",  tour:3, color:"#1D9E75", type:"ravi",   isCross:false},
-  {name:"École Jean Monnet",           km:83.328, loop:"B1",  tour:3, color:"#7F77DD", type:"ravi",   isCross:true},
-  {name:"Le Doulieu",                   km:90.138, loop:"B2",  tour:3, color:"#EF9F27", type:"ravi",   isCross:false},
-  {name:"La Blanche",                   km:94.269, loop:"B2",  tour:3, color:"#EF9F27", type:"ravi",   isCross:false},
-  {name:"ARRIVÉE",                      km:100.0,  loop:"Fin", tour:3, color:"#378ADD", type:"finish", isCross:false},
+const ALL_POINTS=[
+  {name:{fr:"Départ",en:"Start"},km:0,loop:"Dép",tour:0,color:"#555",type:"start",isCross:false},
+  {name:{fr:"Fin circuit départ",en:"End of start loop"},km:3.578,loop:"Dép",tour:0,color:"#555",type:"start",isCross:false},
+  {name:{fr:"Cimetière Militaire Allemand",en:"German Military Cemetery"},km:7.4,loop:"Dép",tour:0,color:"#C47B00",type:"velo",isCross:false},
+  {name:{fr:"L'Hallobeau",en:"L'Hallobeau"},km:8.262,loop:"B1",tour:1,color:"#1D9E75",type:"ravi",isCross:false},
+  {name:{fr:"La Croix-du-Bac",en:"La Croix-du-Bac"},km:12.895,loop:"B1",tour:1,color:"#1D9E75",type:"ravi",isCross:false},
+  {name:{fr:"École Jean Monnet",en:"École Jean Monnet"},km:19.047,loop:"B1",tour:1,color:"#7F77DD",type:"ravi",isCross:true},
+  {name:{fr:"Le Doulieu",en:"Le Doulieu"},km:25.857,loop:"B2",tour:1,color:"#EF9F27",type:"ravi",isCross:false},
+  {name:{fr:"La Blanche",en:"La Blanche"},km:29.988,loop:"B2",tour:1,color:"#EF9F27",type:"ravi",isCross:false},
+  {name:{fr:"Salle des Sports",en:"Salle des Sports"},km:35.719,loop:"B2",tour:1,color:"#7F77DD",type:"ravi",isCross:true},
+  {name:{fr:"L'Hallobeau",en:"L'Hallobeau"},km:40.403,loop:"B1",tour:2,color:"#1D9E75",type:"ravi",isCross:false},
+  {name:{fr:"La Croix-du-Bac",en:"La Croix-du-Bac"},km:45.035,loop:"B1",tour:2,color:"#1D9E75",type:"ravi",isCross:false},
+  {name:{fr:"École Jean Monnet",en:"École Jean Monnet"},km:51.187,loop:"B1",tour:2,color:"#7F77DD",type:"ravi",isCross:true},
+  {name:{fr:"Le Doulieu",en:"Le Doulieu"},km:57.998,loop:"B2",tour:2,color:"#EF9F27",type:"ravi",isCross:false},
+  {name:{fr:"La Blanche",en:"La Blanche"},km:62.128,loop:"B2",tour:2,color:"#EF9F27",type:"ravi",isCross:false},
+  {name:{fr:"Salle des Sports",en:"Salle des Sports"},km:67.859,loop:"B2",tour:2,color:"#7F77DD",type:"ravi",isCross:true},
+  {name:{fr:"L'Hallobeau",en:"L'Hallobeau"},km:72.543,loop:"B1",tour:3,color:"#1D9E75",type:"ravi",isCross:false},
+  {name:{fr:"La Croix-du-Bac",en:"La Croix-du-Bac"},km:77.176,loop:"B1",tour:3,color:"#1D9E75",type:"ravi",isCross:false},
+  {name:{fr:"École Jean Monnet",en:"École Jean Monnet"},km:83.328,loop:"B1",tour:3,color:"#7F77DD",type:"ravi",isCross:true},
+  {name:{fr:"Le Doulieu",en:"Le Doulieu"},km:90.138,loop:"B2",tour:3,color:"#EF9F27",type:"ravi",isCross:false},
+  {name:{fr:"La Blanche",en:"La Blanche"},km:94.269,loop:"B2",tour:3,color:"#EF9F27",type:"ravi",isCross:false},
+  {name:{fr:"ARRIVÉE",en:"FINISH"},km:100.0,loop:"Fin",tour:3,color:"#378ADD",type:"finish",isCross:false},
 ];
-const SORTED = [...ALL_POINTS].sort((a,b) => a.km - b.km);
-const RAVI_POINTS = ALL_POINTS.filter(p => p.type==='ravi' || p.type==='finish');
+const SORTED=[...ALL_POINTS].sort((a,b)=>a.km-b.km);
 
-const NUTRI_NOTES = [
-  "Gel + eau. Pas de solide encore.",
-  "Banane ou orange. Bien boire.",
-  "🔀 Croisement B1→B2. 1er gel caféiné si nuit.",
-  "Soupe ou solide léger. Vérif chaussures.",
-  "Eau + électrolytes. Rythme stable.",
-  "🔀 Croisement B2→B1 — Ravit. principal T1. Manger solide.",
-  "Gel + eau. Surveiller crampes.",
-  "Cola ou jus d'orange.",
-  "🔀 Croisement B1→B2. Mi-course ! Solide + caféine.",
-  "Électrolytes renforcés. Soupe si froid.",
-  "Gel caféiné. Rester concentré.",
-  "🔀 Croisement B2→B1 — Ravit. principal T2. Contrôle pieds.",
-  "Dernier tour ! Moral au beau fixe.",
-  "Cola + café si somnolence.",
-  "🔀 Croisement B1→B2. km 83 — plus que 17 km !",
-  "Sodium prioritaire. Crampes à risque.",
-  "Eau et concentration. Finish en vue.",
-  "🏁 Arrivée !",
-];
-const PRESETS = [{mn:4,sc:30},{mn:4,sc:35},{mn:4,sc:40},{mn:4,sc:45},{mn:4,sc:50},{mn:5,sc:0}];
+const NUTRI_ACTIONS={
+  fr:{
+    0:"🏁 Départ 05h00 — Prendre gourde G1 + gel Nutripure LD",
+    3.578:"Fin circuit départ — Rien",
+    7.4:"🚲 Assistante rejoint le parcours — pas d'échange",
+    8.262:"Avaler gel G1 progressivement · boire gourde G1 par petites gorgées",
+    12.895:"Continuer à boire G1",
+    19.047:"🔀 ÉCHANGE — Remettre G1 vide · récupérer G2 (500mL sucre+Apurna) + gel",
+    25.857:"Avaler gel G2 progressivement · boire gourde G2",
+    29.988:"Continuer à boire G2",
+    35.719:"🔀 ÉCHANGE — Remettre G2 vide · récupérer G3 (500mL sucre+Apurna) + gel",
+    40.403:"Avaler gel G3 progressivement · boire gourde G3",
+    45.035:"Continuer à boire G3 · températures en hausse → finir la gourde",
+    51.187:"🔀 ÉCHANGE — Remettre G3 vide · récupérer G4 (500mL sucre+Apurna) + gel",
+    57.998:"Avaler gel G4 progressivement · boire gourde G4",
+    62.128:"Continuer à boire G4 · maintenir même si appétit réduit",
+    67.859:"🔀 ÉCHANGE — Remettre G4 vide · récupérer G5 (500mL sucre+Apurna) + gel",
+    72.543:"Avaler gel G5 progressivement · boire gourde G5 · dernier tour !",
+    77.176:"Continuer à boire G5",
+    83.328:"🔀 ÉCHANGE — Remettre G5 vide · récupérer G6 (500mL sucre+Apurna) + gel · plus que 17 km !",
+    90.138:"Avaler gel G6 progressivement · boire gourde G6 · finish en vue",
+    94.269:"Finir G6 · tenir le rythme",
+    100.0:"🏁 ARRIVÉE — Félicitations !"
+  },
+  en:{
+    0:"🏁 Start 05:00 — Take bottle B1 + Nutripure LD gel",
+    3.578:"End of start loop — Nothing",
+    7.4:"🚲 Assistant joins the course — no bottle exchange",
+    8.262:"Take gel B1 gradually · sip bottle B1 steadily",
+    12.895:"Keep sipping B1",
+    19.047:"🔀 HANDOFF — Return empty B1 · collect B2 (500mL sugar+Apurna) + gel",
+    25.857:"Take gel B2 gradually · sip bottle B2 steadily",
+    29.988:"Keep sipping B2",
+    35.719:"🔀 HANDOFF — Return empty B2 · collect B3 (500mL sugar+Apurna) + gel",
+    40.403:"Take gel B3 gradually · sip bottle B3 steadily",
+    45.035:"Keep sipping B3 · temperatures rising → make sure to finish the bottle",
+    51.187:"🔀 HANDOFF — Return empty B3 · collect B4 (500mL sugar+Apurna) + gel",
+    57.998:"Take gel B4 gradually · sip bottle B4 steadily",
+    62.128:"Keep sipping B4 · keep fuelling even if appetite drops",
+    67.859:"🔀 HANDOFF — Return empty B4 · collect B5 (500mL sugar+Apurna) + gel",
+    72.543:"Take gel B5 gradually · sip bottle B5 · final lap!",
+    77.176:"Keep sipping B5",
+    83.328:"🔀 HANDOFF — Return empty B5 · collect B6 (500mL sugar+Apurna) + gel · only 17 km left!",
+    90.138:"Take gel B6 gradually · sip bottle B6 · finish in sight",
+    94.269:"Finish B6 · hold your pace",
+    100.0:"🏁 FINISH — Congratulations!"
+  }
+};
 
-// ============================================================
-// HELPERS
-// ============================================================
+const PRESETS=[{mn:4,sc:30},{mn:4,sc:35},{mn:4,sc:40},{mn:4,sc:45},{mn:4,sc:50},{mn:5,sc:0}];
+
 function getPace(){return(parseInt(document.getElementById('pace-min').value)||4)+(parseInt(document.getElementById('pace-sec').value)||35)/60}
 function timeToMin(t){const[h,m]=t.split(':').map(Number);return h*60+m}
 function minToTime(m){const d=((m%1440)+1440)%1440;return String(Math.floor(d/60)).padStart(2,'0')+':'+String(Math.round(d%60)).padStart(2,'0')}
 function fmtDur(m){return Math.floor(m/60)+'h'+String(Math.round(m%60)).padStart(2,'0')}
 function fmtPace(p){const mn=Math.floor(p),s=Math.round((p-mn)*60);return mn+"'"+String(s).padStart(2,'0')+'"'}
-function calcPassage(km,pace,fade,fadeStart){
-  const f=fade/100,fs=Math.min(fadeStart,km);
-  const t1=pace*Math.min(km,fs);
-  if(km<=fs)return t1;
-  const rem=100-fs,x=km-fs;
-  return t1+pace*(x+f*x*x/(2*(rem||1)));
-}
+function calcPassage(km,pace,fade,fadeStart){const f=fade/100,fs=Math.min(fadeStart,km);const t1=pace*Math.min(km,fs);if(km<=fs)return t1;const rem=100-fs,x=km-fs;return t1+pace*(x+f*x*x/(2*(rem||1)))}
 function getParams(){return{start:timeToMin(document.getElementById('start-time').value),pace:getPace(),fade:parseFloat(document.getElementById('fade').value)||0,fadeStart:parseFloat(document.getElementById('fade-start').value)||0}}
-function highlightPreset(){
-  const mn=parseInt(document.getElementById('pace-min').value)||0,sc=parseInt(document.getElementById('pace-sec').value)||0;
-  document.querySelectorAll('.preset-btn').forEach((b,i)=>b.classList.toggle('active-preset',PRESETS[i].mn===mn&&PRESETS[i].sc===sc));
-}
+function highlightPreset(){const mn=parseInt(document.getElementById('pace-min').value)||0,sc=parseInt(document.getElementById('pace-sec').value)||0;document.querySelectorAll('.preset-btn').forEach((b,i)=>b.classList.toggle('active-preset',PRESETS[i].mn===mn&&PRESETS[i].sc===sc))}
 function setPreset(mn,sc){document.getElementById('pace-min').value=mn;document.getElementById('pace-sec').value=String(sc).padStart(2,'0');highlightPreset();compute()}
 function updateFadeInfo(){
   const fade=parseFloat(document.getElementById('fade').value)||0,fs=parseFloat(document.getElementById('fade-start').value)||0,el=document.getElementById('fade-info');
   if(!fade){el.style.display='none';return}
   el.style.display='block';
-  el.textContent=fs===0?`ℹ️ Ralentissement de ${fade}% progressif dès le km 0.`:`ℹ️ Allure constante km 0 → km ${fs}, puis ralentissement progressif de ${fade}% sur les ${100-fs} km restants.`;
+  const lang=currentLang;
+  if(lang==='fr') el.textContent=fs===0?`ℹ️ Ralentissement de ${fade}% progressif dès le km 0.`:`ℹ️ Allure constante km 0 → km ${fs}, puis ralentissement progressif de ${fade}% sur les ${100-fs} km restants.`;
+  else el.textContent=fs===0?`ℹ️ Slowdown of ${fade}% applied progressively from km 0.`:`ℹ️ Constant pace km 0 → km ${fs}, then progressive slowdown of ${fade}% over the remaining ${100-fs} km.`;
 }
+
+function getName(r){return typeof r.name==='object'?r.name[currentLang]:r.name}
 function rowClass(r){return r.type==='velo'?'velo-row':r.type==='start'?'depart-row':r.isCross?'crossover-row':''}
 function badgeFor(r){
-  if(r.type==='start') return`<span class="badge b0">Circuit départ</span>`;
-  if(r.type==='velo')  return`<span class="badge-velo">🚲 Vélos autorisés</span>`;
-  if(r.type==='finish')return`<span class="badge b3">Arrivée</span>`;
+  if(r.type==='start')return`<span class="badge b0">${currentLang==='fr'?'Circuit départ':'Start loop'}</span>`;
+  if(r.type==='velo')return`<span class="badge-velo">🚲 ${currentLang==='fr'?'Vélos autorisés':'Bikes allowed'}</span>`;
+  if(r.type==='finish')return`<span class="badge b3">${currentLang==='fr'?'Arrivée':'Finish'}</span>`;
   const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
   return`<span class="badge ${lc}">${r.loop} T${r.tour}</span>`;
 }
 function triFor(r){return r.isCross?`<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`:''}
 
 // ============================================================
-// LEAFLET MAP
+// LEAFLET
 // ============================================================
-let leafletMap=null, mapLayers={}, posMarker=null, mapInitialized=false;
-
+let leafletMap=null,mapLayers={},posMarker=null,mapInitialized=false;
 function initMap(){
-  if(mapInitialized) return;
-  mapInitialized=true;
-
+  if(mapInitialized)return;mapInitialized=true;
   leafletMap=L.map('parcours-map').setView([50.692,2.765],13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',maxZoom:18
-  }).addTo(leafletMap);
-
-  mapLayers={
-    depart:L.polyline(GPX_DEPART,{color:'#999',weight:4,opacity:0.9,dashArray:'8,5'}).addTo(leafletMap),
-    verte: L.polyline(GPX_VERTE, {color:'#1D9E75',weight:5,opacity:0.85}).addTo(leafletMap),
-    orange:L.polyline(GPX_ORANGE,{color:'#EF9F27',weight:5,opacity:0.85}).addTo(leafletMap),
-  };
-
-  function addArrows(pts,color){
-    const step=Math.max(1,Math.floor(pts.length/7));
-    for(let i=step;i<pts.length-1;i+=step){
-      const a=pts[i-1],b=pts[i];
-      const angle=Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;
-      L.marker([b[0],b[1]],{icon:L.divIcon({className:'',html:`<div style="transform:rotate(${angle-90}deg);color:${color};font-size:15px;opacity:.6">▶</div>`,iconSize:[15,15],iconAnchor:[7,7]}),interactive:false}).addTo(leafletMap);
-    }
-  }
-  addArrows(GPX_VERTE,'#1D9E75');
-  addArrows(GPX_ORANGE,'#EF9F27');
-
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',maxZoom:18}).addTo(leafletMap);
+  mapLayers={depart:L.polyline(GPX_DEPART,{color:'#999',weight:4,opacity:0.9,dashArray:'8,5'}).addTo(leafletMap),verte:L.polyline(GPX_VERTE,{color:'#1D9E75',weight:5,opacity:0.85}).addTo(leafletMap),orange:L.polyline(GPX_ORANGE,{color:'#EF9F27',weight:5,opacity:0.85}).addTo(leafletMap)};
+  function addArrows(pts,color){const step=Math.max(1,Math.floor(pts.length/7));for(let i=step;i<pts.length-1;i+=step){const a=pts[i-1],b=pts[i];const angle=Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;L.marker([b[0],b[1]],{icon:L.divIcon({className:'',html:`<div style="transform:rotate(${angle-90}deg);color:${color};font-size:15px;opacity:.6">▶</div>`,iconSize:[15,15],iconAnchor:[7,7]}),interactive:false}).addTo(leafletMap)}}
+  addArrows(GPX_VERTE,'#1D9E75');addArrows(GPX_ORANGE,'#EF9F27');
   function mkIcon(html,size,anchor){return L.divIcon({className:'',html,iconSize:size,iconAnchor:anchor||[size[0]/2,size[1]/2]})}
-
-  // Départ/Arrivée
-  L.marker([50.70065,2.77803],{icon:mkIcon(`<div style="background:#555;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.4)">S</div>`,[22,22])})
-    .bindPopup('<b>🏁 Départ / Arrivée</b><br>Centre de Steenwerck<br><small>Circuit de départ — 3,578 km</small>').addTo(leafletMap);
-
-  // Cimetière Militaire Allemand — km 7.4 — coords GPX exactes (50.69928, 2.79296)
-  // Croisement Rue du Pont d'Achelles / Rue de la Ménegatte
-  L.marker([50.69928,2.79296],{icon:mkIcon(
-    `<div style="background:#C47B00;color:white;border-radius:7px;padding:3px 7px;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.35);white-space:nowrap">🚲</div>`,
-    [32,26],[16,13]
-  )}).bindPopup(`<b>🚲 Cimetière Militaire Allemand</b><br>Croisement Rue du Pont d'Achelles / Rue de la Ménegatte<br><small>km 7.4 — Début autorisé pour les vélos d'assistance</small>`).addTo(leafletMap);
-
-  // Ravitaillements — sans triangle École Jean Monnet, simple pastille pour tous
-  const RAVI_LIEUX = [
-    {name:"L'Hallobeau",      lat:50.69981,lon:2.78171,color:"#1D9E75",passages:"km 8.3 · 40.4 · 72.5"},
-    {name:"La Croix-du-Bac", lat:50.68594,lon:2.8037, color:"#1D9E75",passages:"km 12.9 · 45.0 · 77.2"},
-    {name:"École Jean Monnet",lat:50.68185,lon:2.76714,color:"#7F77DD",passages:"km 19.0 · 51.2 · 83.3 — Croisement boucles"},
-    {name:"Le Doulieu",       lat:50.68169,lon:2.73159,color:"#EF9F27",passages:"km 25.9 · 58.0 · 90.1"},
-    {name:"La Blanche",       lat:50.70083,lon:2.77945,color:"#EF9F27",passages:"km 30.0 · 62.1 · 94.3"},
-    {name:"Salle des Sports", lat:50.70065,lon:2.77803,color:"#7F77DD",passages:"km 35.7 · 67.9 — Ravit. principal"},
+  L.marker([50.70065,2.77803],{icon:mkIcon(`<div style="background:#555;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.4)">S</div>`,[22,22])}).bindPopup('<b>🏁 Départ / Start · Arrivée / Finish</b><br>Centre de Steenwerck · 05:00').addTo(leafletMap);
+  L.marker([50.69928,2.79296],{icon:mkIcon(`<div style="background:#C47B00;color:white;border-radius:7px;padding:3px 7px;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.35);white-space:nowrap">🚲</div>`,[32,26],[16,13])}).bindPopup(`<b>🚲 Cimetière Militaire Allemand / German Military Cemetery</b><br>km 7.4 — Rue du Pont d'Achelles / Rue de la Ménegatte<br><small>Cycling assistant joins here · no bottle exchange</small>`).addTo(leafletMap);
+  const RAVI_LIEUX=[
+    {name:"L'Hallobeau",lat:50.69981,lon:2.78171,color:"#1D9E75",info:"km 8.3 · 40.4 · 72.5"},
+    {name:"La Croix-du-Bac",lat:50.68594,lon:2.8037,color:"#1D9E75",info:"km 12.9 · 45.0 · 77.2"},
+    {name:"École Jean Monnet",lat:50.68185,lon:2.76714,color:"#7F77DD",info:"km 19.0 · 51.2 · 83.3 — 🔀 Bottle handoff / Échange gourde"},
+    {name:"Le Doulieu",lat:50.68169,lon:2.73159,color:"#EF9F27",info:"km 25.9 · 58.0 · 90.1"},
+    {name:"La Blanche",lat:50.70083,lon:2.77945,color:"#EF9F27",info:"km 30.0 · 62.1 · 94.3"},
+    {name:"Salle des Sports",lat:50.70065,lon:2.77803,color:"#7F77DD",info:"km 35.7 · 67.9 — 🔀 Bottle handoff / Échange gourde"},
   ];
-  RAVI_LIEUX.forEach(r=>{
-    // Tous en pastille ronde, pas de triangle
-    const html=`<div style="background:${r.color};border-radius:50%;width:13px;height:13px;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`;
-    L.marker([r.lat,r.lon],{icon:mkIcon(html,[13,13])})
-      .bindPopup(`<b>🥤 ${r.name}</b><br><small>${r.passages}</small>`).addTo(leafletMap);
-  });
-
-  // Marqueur position coureur (rouge, se déplace avec le slider)
-  posMarker=L.marker([50.70065,2.77803],{
-    icon:mkIcon(`<div style="background:#e63946;border-radius:50%;width:16px;height:16px;border:3px solid white;box-shadow:0 0 0 2px #e63946,0 2px 6px rgba(0,0,0,.4)"></div>`,[16,16]),
-    zIndexOffset:1000
-  }).addTo(leafletMap);
-
+  RAVI_LIEUX.forEach(r=>{L.marker([r.lat,r.lon],{icon:mkIcon(`<div style="background:${r.color};border-radius:50%;width:13px;height:13px;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,[13,13])}).bindPopup(`<b>${r.name}</b><br><small>${r.info}</small>`).addTo(leafletMap)});
+  posMarker=L.marker([50.70065,2.77803],{icon:mkIcon(`<div style="background:#e63946;border-radius:50%;width:16px;height:16px;border:3px solid white;box-shadow:0 0 0 2px #e63946,0 2px 6px rgba(0,0,0,.4)"></div>`,[16,16]),zIndexOffset:1000}).addTo(leafletMap);
   fitAll();
 }
-
 function fitAll(){if(leafletMap)leafletMap.fitBounds(L.latLngBounds([...GPX_DEPART,...GPX_VERTE,...GPX_ORANGE]),{padding:[20,20]})}
 function toggleLayer(name,btn){btn.classList.toggle('active');if(!leafletMap)return;if(leafletMap.hasLayer(mapLayers[name]))leafletMap.removeLayer(mapLayers[name]);else leafletMap.addLayer(mapLayers[name])}
 
 // ============================================================
-// COMPUTE & TABLES
+// COMPUTE
 // ============================================================
 function compute(){
   const{start,pace,fade,fadeStart}=getParams();
@@ -408,16 +638,13 @@ function compute(){
   document.getElementById('s-pace').textContent=fmtPace(total/100)+'/km';
   document.getElementById('s-finish').textContent=minToTime(start+total);
   highlightPreset();updateFadeInfo();
-
   const tbody=document.getElementById('passage-body');tbody.innerHTML='';
   let prevKm=0,prevMin=0;
   SORTED.forEach(r=>{
     const cum=calcPassage(r.km,pace,fade,fadeStart);
     const segK=r.km-prevKm,segM=cum-prevMin,segP=segK>0?segM/segK:0;
-    const timeCell=r.km===0
-      ?`<td>—</td><td style="font-weight:600">${minToTime(start)}</td><td>—</td>`
-      :`<td>${fmtDur(cum)}</td><td style="font-weight:600">${minToTime(start+cum)}</td><td style="color:#aaa">${fmtPace(segP)}</td>`;
-    tbody.innerHTML+=`<tr class="${rowClass(r)}"><td>${triFor(r)}${badgeFor(r)} ${r.name}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td>${timeCell}</tr>`;
+    const timeCell=r.km===0?`<td>—</td><td style="font-weight:600">${minToTime(start)}</td><td>—</td>`:`<td>${fmtDur(cum)}</td><td style="font-weight:600">${minToTime(start+cum)}</td><td style="color:#aaa">${fmtPace(segP)}</td>`;
+    tbody.innerHTML+=`<tr class="${rowClass(r)}"><td>${triFor(r)}${badgeFor(r)} ${getName(r)}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td>${timeCell}</tr>`;
     prevKm=r.km;prevMin=cum;
   });
   updateMapTable();updateNutriTable();updateSlider();
@@ -430,24 +657,40 @@ function updateMapTable(){
   SORTED.forEach(r=>{
     const cum=calcPassage(r.km,pace,fade,fadeStart);const delta=cum-prevMin;
     let tc='';
-    if(r.type==='start')tc=`<span class="badge b0">Circuit départ</span>`;
-    else if(r.type==='velo')tc=`<span class="badge-velo">🚲 Vélos autorisés dès ici</span>`;
-    else if(r.type==='finish')tc=`<span class="badge b3">Arrivée</span>`;
-    else if(r.isCross)tc=`<span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg><span style="font-size:11px;color:#534AB7;font-weight:600">Croisement</span></span>`;
+    const lang=currentLang;
+    if(r.type==='start')tc=`<span class="badge b0">${lang==='fr'?'Circuit départ':'Start loop'}</span>`;
+    else if(r.type==='velo')tc=`<span class="badge-velo">🚲 ${lang==='fr'?'Assistante rejoint':'Assistant joins'}</span>`;
+    else if(r.type==='finish')tc=`<span class="badge b3">${lang==='fr'?'Arrivée':'Finish'}</span>`;
+    else if(r.isCross)tc=`<span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg><span style="font-size:11px;color:#534AB7;font-weight:600">${lang==='fr'?'Échange gourde':'Bottle handoff'}</span></span>`;
     else{const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';tc=`<span class="badge ${lc}">${r.loop}</span>`;}
     const t=r.km===0?minToTime(start):minToTime(start+cum);
     const d=r.km===0?'—':'+'+fmtDur(delta);
-    tbody.innerHTML+=`<tr class="${rowClass(r)}"><td>${r.name}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td><td>${tc}</td><td style="font-weight:600">${t}</td><td style="color:#aaa">${d}</td></tr>`;
+    const rc=r.isCross?'handoff-row':rowClass(r);
+    tbody.innerHTML+=`<tr class="${rc}"><td>${getName(r)}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td><td>${tc}</td><td style="font-weight:600">${t}</td><td style="color:#aaa">${d}</td></tr>`;
     prevMin=cum;
   });
 }
 
 function updateNutriTable(){
   const{start,pace,fade,fadeStart}=getParams();
-  const tbody=document.getElementById('nutri-body');tbody.innerHTML='';
-  RAVI_POINTS.forEach((r,i)=>{
+  const lang=currentLang;
+  const actions=NUTRI_ACTIONS[lang];
+  const tbodyFr=document.getElementById('nutri-body-fr');
+  const tbodyEn=document.getElementById('nutri-body-en');
+  if(tbodyFr)tbodyFr.innerHTML='';
+  if(tbodyEn)tbodyEn.innerHTML='';
+  SORTED.forEach(r=>{
     const cum=calcPassage(r.km,pace,fade,fadeStart);
-    tbody.innerHTML+=`<tr class="${r.isCross?'crossover-row':''}"><td style="font-size:12px">${r.isCross?'🔀 ':''}${r.name}</td><td>${r.km.toFixed(1)}</td><td style="font-weight:600">${minToTime(start+cum)}</td><td style="font-size:12px;color:#888">${NUTRI_NOTES[i]||''}</td></tr>`;
+    const t=r.km===0?minToTime(start):minToTime(start+cum);
+    const kmKey=Object.keys(actions).find(k=>Math.abs(parseFloat(k)-r.km)<0.01);
+    const actionFr=(NUTRI_ACTIONS.fr[kmKey]||'—');
+    const actionEn=(NUTRI_ACTIONS.en[kmKey]||'—');
+    const rc=r.isCross?'handoff-row':rowClass(r);
+    const color=r.isCross?'#534AB7':'#555';
+    const rowFr=`<tr class="${rc}"><td>${getName(r)}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td><td style="font-weight:600">${t}</td><td style="font-size:12px;color:${color}">${actionFr}</td></tr>`;
+    const rowEn=`<tr class="${rc}"><td>${typeof r.name==='object'?r.name.en:r.name}</td><td>${r.km===0?'0':r.km.toFixed(1)}</td><td style="font-weight:600">${t}</td><td style="font-size:12px;color:${color}">${actionEn}</td></tr>`;
+    if(tbodyFr)tbodyFr.innerHTML+=rowFr;
+    if(tbodyEn)tbodyEn.innerHTML+=rowEn;
   });
 }
 
@@ -462,8 +705,8 @@ function updateSlider(){
   tt.textContent='km '+km.toFixed(1)+' → '+arr;
   tt.style.left=Math.max(5,Math.min(93,km))+'%';
   const next=SORTED.find(r=>r.km>km);
-  document.getElementById('sl-next').textContent=next?(next.type==='velo'?'🚲 ':next.isCross?'🔀 ':'')+next.name+' (km '+next.km.toFixed(1)+')':'Arrivée !';
-  if(posMarker){const[lat,lon]=latLonAtKm(km);posMarker.setLatLng([lat,lon]);}
+  document.getElementById('sl-next').textContent=next?(next.type==='velo'?'🚲 ':next.isCross?'🔀 ':'')+getName(next)+' (km '+next.km.toFixed(1)+')':'Arrivée / Finish';
+  if(posMarker){const[lat,lon]=latLonAtKm(km);posMarker.setLatLng([lat,lon])}
 }
 
 function showTab(name,event){
