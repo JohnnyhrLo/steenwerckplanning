@@ -590,12 +590,12 @@ function updateFadeInfo(){
 
 function getName(r){return typeof r.name==='object'?r.name[currentLang]:r.name}
 function rowClass(r){return r.type==='velo'?'velo-row':r.type==='start'?'depart-row':r.isCross?'crossover-row':''}
-function badgeFor(r){
-  if(r.type==='start')return`<span class="badge b0">${currentLang==='fr'?'Circuit départ':'Start loop'}</span>`;
-  if(r.type==='velo')return`<span class="badge-velo">🚲 ${currentLang==='fr'?'Vélos autorisés':'Bikes allowed'}</span>`;
-  if(r.type==='finish')return`<span class="badge b3">${currentLang==='fr'?'Arrivée':'Finish'}</span>`;
-  const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
-  return`<span class="badge ${lc}">${r.loop} T${r.tour}</span>`;
+function badgeFor(r) {
+  if (r.type === 'start') return `<span class="badge b0">${currentLang === 'fr' ? 'Circuit départ' : 'Start loop'}</span>`;
+  if (r.type === 'velo') return `<span class="badge-velo">🚲 ${currentLang === 'fr' ? 'Vélos autorisés' : 'Bikes allowed'}</span>`;
+  if (r.type === 'finish') return `<span class="badge b3">${currentLang === 'fr' ? 'Arrivée' : 'Finish'}</span>`;
+  const lc = r.loop === 'B1' ? 'b1' : r.loop === 'B2' ? 'b2' : 'b3';
+  return `<span class="badge ${lc}">${r.loop} T${r.tour}</span>`;
 }
 function triFor(r){return r.isCross?`<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`:''}
 
