@@ -258,7 +258,7 @@ body.lang-en .legend .en-inline{display:inline !important}
         <div class="metric blue"><div class="lbl">Sodium / heure</div><div class="val">~445 mg/h</div></div>
         <div class="metric"><div class="lbl">Magnésium / heure</div><div class="val">~145 mg/h</div></div>
       </div>
-      <div class="info-box">☀️ <strong>Course de jour</strong> — Départ 05h00, arrivée estimée ~13h15. Vigilance sur la <strong>montée des températures</strong> (8°C au départ → ~20°C à l'arrivée) : les besoins en électrolytes augmentent sur les dernières boucles.</div>
+      <div class="info-box">☀️ <strong>Course de jour</strong> — Départ <span id="nutri-start-fr">05h00</span>, arrivée estimée ~<strong><span id="nutri-finish-fr">—</span></strong>. Vigilance sur la <strong>montée des températures</strong> (8°C au départ → ~20°C à l'arrivée) : les besoins en électrolytes augmentent sur les dernières boucles.</div>
 
       <div class="section-title">🚲 Logistique — Assistant vélo</div>
       <div class="nutri-card card-purple">
@@ -366,7 +366,7 @@ body.lang-en .legend .en-inline{display:inline !important}
         <div class="metric blue"><div class="lbl">Sodium / hour</div><div class="val">~445 mg/h</div></div>
         <div class="metric"><div class="lbl">Magnesium / hour</div><div class="val">~145 mg/h</div></div>
       </div>
-      <div class="info-box">☀️ <strong>Daytime race</strong> — Start 05:00, estimated finish ~13:15. Watch for <strong>rising temperatures</strong> (8°C at start → ~20°C at finish): electrolyte needs increase over the final loops.</div>
+      <div class="info-box">☀️ <strong>Daytime race</strong> — Start <span id="nutri-start-en">05:00</span>, estimated finish ~<strong><span id="nutri-finish-en">—</span></strong>. Watch for <strong>rising temperatures</strong> (8°C at start → ~20°C at finish): electrolyte needs increase over the final loops.</div>
 
       <div class="section-title">🚲 Logistics — Cycling assistant</div>
       <div class="nutri-card card-purple">
@@ -656,6 +656,18 @@ function compute(){
   document.getElementById('s-time').textContent=fmtDur(total);
   document.getElementById('s-pace').textContent=fmtPace(total/100)+'/km';
   document.getElementById('s-finish').textContent=minToTime(start+total);
+  // Update nutrition info-box finish times (FR + EN)
+  const finishTime = minToTime(start+total);
+  const startTimeFmt = minToTime(start);
+  const startFR = String(Math.floor(timeToMin(document.getElementById('start-time').value)/60)).padStart(2,'0')+'h'+String(timeToMin(document.getElementById('start-time').value)%60).padStart(2,'0');
+  const elFR = document.getElementById('nutri-finish-fr');
+  const elEN = document.getElementById('nutri-finish-en');
+  const elSFR = document.getElementById('nutri-start-fr');
+  const elSEN = document.getElementById('nutri-start-en');
+  if(elFR) elFR.textContent = finishTime;
+  if(elEN) elEN.textContent = finishTime;
+  if(elSFR) elSFR.textContent = startFR;
+  if(elSEN) elSEN.textContent = startTimeFmt;
   highlightPreset();updateFadeInfo();
   const tbody=document.getElementById('passage-body');tbody.innerHTML='';
   let prevKm=0,prevMin=0;
