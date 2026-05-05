@@ -622,13 +622,23 @@ function initMap(){
   function mkIcon(html,size,anchor){return L.divIcon({className:'',html,iconSize:size,iconAnchor:anchor||[size[0]/2,size[1]/2]})}
   L.marker([50.70065,2.77803],{icon:mkIcon(`<div style="background:#555;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.4)">S</div>`,[22,22])}).bindPopup('<b>🏁 Départ / Start · Arrivée / Finish</b><br>Centre de Steenwerck · 05:00').addTo(leafletMap);
   L.marker([50.69928,2.79296],{icon:mkIcon(`<div style="background:#C47B00;color:white;border-radius:7px;padding:3px 7px;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.35);white-space:nowrap">🚲</div>`,[32,26],[16,13])}).bindPopup(`<b>🚲 Cimetière Militaire Allemand / German Military Cemetery</b><br>km 7.4 — Rue du Pont d'Achelles / Rue de la Ménegatte<br><small>Cycling assistant joins here · no bottle exchange</small>`).addTo(leafletMap);
+
+  // Point d'échange gourde unique (Option B) — triangle violet
+  L.marker([50.700443,2.780078],{
+    icon:mkIcon(
+      `<div style="width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:22px solid #7F77DD;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))"></div>`,
+      [24,22],[12,22]
+    )
+  }).bindPopup(
+    `<b>🔀 Point d'échange gourde / Bottle handoff</b><br><small>km 19.0 · 35.7 · 51.2 · 67.9 · 83.3<br>Ton assistante t'attend ici à chaque croisement de boucle.<br>Your assistant waits here at each loop crossover.</small>`
+  ).addTo(leafletMap);
   const RAVI_LIEUX=[
-    {name:"L'Hallobeau",lat:50.69981,lon:2.78171,color:"#1D9E75",info:"km 8.3 · 40.4 · 72.5"},
-    {name:"La Croix-du-Bac",lat:50.68594,lon:2.8037,color:"#1D9E75",info:"km 12.9 · 45.0 · 77.2"},
-    {name:"École Jean Monnet",lat:50.68185,lon:2.76714,color:"#7F77DD",info:"km 19.0 · 51.2 · 83.3 — 🔀 Bottle handoff / Échange gourde"},
-    {name:"Le Doulieu",lat:50.68169,lon:2.73159,color:"#EF9F27",info:"km 25.9 · 58.0 · 90.1"},
-    {name:"La Blanche",lat:50.70083,lon:2.77945,color:"#EF9F27",info:"km 30.0 · 62.1 · 94.3"},
-    {name:"Salle des Sports",lat:50.70065,lon:2.77803,color:"#7F77DD",info:"km 35.7 · 67.9 — 🔀 Bottle handoff / Échange gourde"},
+    {name:"L'Hallobeau",      lat:50.69344, lon:2.80062, color:"#1D9E75", info:"km 8.3 · 40.4 · 72.5"},
+    {name:"La Croix-du-Bac", lat:50.67588, lon:2.79073, color:"#1D9E75", info:"km 12.9 · 45.0 · 77.2"},
+    {name:"École Jean Monnet",lat:50.69981, lon:2.78171, color:"#7F77DD", info:"km 19.0 · 51.2 · 83.3 — 🔀 Bottle handoff / Échange gourde"},
+    {name:"Le Doulieu",       lat:50.68154, lon:2.72003, color:"#EF9F27", info:"km 25.9 · 58.0 · 90.1"},
+    {name:"La Blanche",       lat:50.70769, lon:2.73987, color:"#EF9F27", info:"km 30.0 · 62.1 · 94.3"},
+    {name:"Salle des Sports", lat:50.70083, lon:2.77945, color:"#7F77DD", info:"km 35.7 · 67.9 — 🔀 Bottle handoff / Échange gourde"},
   ];
   RAVI_LIEUX.forEach(r=>{L.marker([r.lat,r.lon],{icon:mkIcon(`<div style="background:${r.color};border-radius:50%;width:13px;height:13px;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,[13,13])}).bindPopup(`<b>${r.name}</b><br><small>${r.info}</small>`).addTo(leafletMap)});
   posMarker=L.marker([50.70065,2.77803],{icon:mkIcon(`<div style="background:#e63946;border-radius:50%;width:16px;height:16px;border:3px solid white;box-shadow:0 0 0 2px #e63946,0 2px 6px rgba(0,0,0,.4)"></div>`,[16,16]),zIndexOffset:1000}).addTo(leafletMap);
