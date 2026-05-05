@@ -79,10 +79,12 @@ tr:hover td{background:#fafafa}
 #parcours-map{height:340px;border-radius:10px;overflow:hidden;border:1px solid #e5e5e5;margin-bottom:14px}
 .map-controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
 .map-ctrl-btn{font-size:11px;font-weight:500;padding:4px 10px;border-radius:14px;cursor:pointer;border:1.5px solid;background:#fff;transition:all .15s}
-.map-ctrl-btn.active{color:#fff}
-.map-ctrl-btn.b-depart{border-color:#888;color:#888}.map-ctrl-btn.b-depart.active{background:#888}
-.map-ctrl-btn.b-verte{border-color:#1D9E75;color:#1D9E75}.map-ctrl-btn.b-verte.active{background:#1D9E75}
-.map-ctrl-btn.b-orange{border-color:#EF9F27;color:#EF9F27}.map-ctrl-btn.b-orange.active{background:#EF9F27}
+.map-ctrl-btn.b-depart{border-color:#888;color:#888}
+.map-ctrl-btn.b-verte{border-color:#1D9E75;color:#1D9E75}
+.map-ctrl-btn.b-orange{border-color:#EF9F27;color:#EF9F27}
+.map-ctrl-btn.b-depart.active{background:#888;color:#fff}
+.map-ctrl-btn.b-verte.active{background:#1D9E75;color:#fff}
+.map-ctrl-btn.b-orange.active{background:#EF9F27;color:#fff}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;margin:10px 0 6px;align-items:center;color:#666}
 .legend span{display:flex;align-items:center;gap:5px}
 /* Hide/show language content */
@@ -91,8 +93,15 @@ body.lang-en .fr{display:none}
 body.lang-en .en{display:block}
 body.lang-en .fr-inline{display:none}
 body.lang-en .en-inline{display:inline}
-.en-inline{display:none}
-.fr-inline{display:inline}
+.en-inline{display:none !important}
+.fr-inline{display:inline !important}
+body.lang-en .fr-inline{display:none !important}
+body.lang-en .en-inline{display:inline !important}
+/* Fix legend spans: force correct display inside flex containers */
+.legend .fr-inline,.legend .en-inline{display:none !important}
+.legend .fr-inline{display:inline !important}
+body.lang-en .legend .fr-inline{display:none !important}
+body.lang-en .legend .en-inline{display:inline !important}
 </style>
 </head>
 <body>
@@ -249,7 +258,7 @@ body.lang-en .en-inline{display:inline}
         <div class="metric blue"><div class="lbl">Sodium / heure</div><div class="val">~445 mg/h</div></div>
         <div class="metric"><div class="lbl">Magnésium / heure</div><div class="val">~145 mg/h</div></div>
       </div>
-      <div class="info-box">☀️ <strong>Course de jour</strong> — Départ 05h00. Vigilance sur la <strong>montée des températures</strong> (8°C au départ → ~20°C à l'arrivée) : les besoins en électrolytes augmentent sur les dernières boucles.</div>
+      <div class="info-box">☀️ <strong>Course de jour</strong> — Départ 05h00, arrivée estimée ~13h15. Vigilance sur la <strong>montée des températures</strong> (8°C au départ → ~20°C à l'arrivée) : les besoins en électrolytes augmentent sur les dernières boucles.</div>
 
       <div class="section-title">🚲 Logistique — Assistant vélo</div>
       <div class="nutri-card card-purple">
@@ -357,12 +366,12 @@ body.lang-en .en-inline{display:inline}
         <div class="metric blue"><div class="lbl">Sodium / hour</div><div class="val">~445 mg/h</div></div>
         <div class="metric"><div class="lbl">Magnesium / hour</div><div class="val">~145 mg/h</div></div>
       </div>
-      <div class="info-box">☀️ <strong>Daytime race</strong> — Start 05:00. Watch for <strong>rising temperatures</strong> (8°C at start → ~20°C at finish): electrolyte needs increase over the final loops.</div>
+      <div class="info-box">☀️ <strong>Daytime race</strong> — Start 05:00, estimated finish ~13:15. Watch for <strong>rising temperatures</strong> (8°C at start → ~20°C at finish): electrolyte needs increase over the final loops.</div>
 
       <div class="section-title">🚲 Logistics — Cycling assistant</div>
       <div class="nutri-card card-purple">
         <h4>Meeting points for your assistant</h4>
-        <div class="nutri-row"><span class="lbl"><strong>km 7.4</strong> — Cimetière Militaire Allemand</span><span class="val">Join the course · no bottle exchange</span></div>
+        <div class="nutri-row"><span class="lbl"><strong>km 7.4</strong> — German Military Cemetery</span><span class="val">Join the course · no bottle exchange</span></div>
         <div class="nutri-row"><span class="lbl"><strong>km 19.0</strong> — École Jean Monnet 🔀</span><span class="val">Hand over B2 + gel · collect empty B1</span></div>
         <div class="nutri-row"><span class="lbl"><strong>km 35.7</strong> — Salle des Sports 🔀</span><span class="val">Hand over B3 + gel · collect empty B2</span></div>
         <div class="nutri-row"><span class="lbl"><strong>km 51.2</strong> — École Jean Monnet 🔀</span><span class="val">Hand over B4 + gel · collect empty B3</span></div>
@@ -497,7 +506,7 @@ function latLonAtKm(km){
 const ALL_POINTS=[
   {name:{fr:"Départ",en:"Start"},km:0,loop:"Dép",tour:0,color:"#555",type:"start",isCross:false},
   {name:{fr:"Fin circuit départ",en:"End of start loop"},km:3.578,loop:"Dép",tour:0,color:"#555",type:"start",isCross:false},
-  {name:{fr:"Cimetière Militaire Allemand",en:"Cimetière Militaire Allemand"},km:7.4,loop:"Dép",tour:0,color:"#C47B00",type:"velo",isCross:false},
+  {name:{fr:"Cimetière Militaire Allemand",en:"German Military Cemetery"},km:7.4,loop:"Dép",tour:0,color:"#C47B00",type:"velo",isCross:false},
   {name:{fr:"L'Hallobeau",en:"L'Hallobeau"},km:8.262,loop:"B1",tour:1,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"La Croix-du-Bac",en:"La Croix-du-Bac"},km:12.895,loop:"B1",tour:1,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"École Jean Monnet",en:"École Jean Monnet"},km:19.047,loop:"B1",tour:1,color:"#7F77DD",type:"ravi",isCross:true},
@@ -590,12 +599,12 @@ function updateFadeInfo(){
 
 function getName(r){return typeof r.name==='object'?r.name[currentLang]:r.name}
 function rowClass(r){return r.type==='velo'?'velo-row':r.type==='start'?'depart-row':r.isCross?'crossover-row':''}
-function badgeFor(r) {
-  if (r.type === 'start') return `<span class="badge b0">${currentLang === 'fr' ? 'Circuit départ' : 'Start loop'}</span>`;
-  if (r.type === 'velo') return `<span class="badge-velo">🚲 ${currentLang === 'fr' ? 'Vélos autorisés' : 'Bikes allowed'}</span>`;
-  if (r.type === 'finish') return `<span class="badge b3">${currentLang === 'fr' ? 'Arrivée' : 'Finish'}</span>`;
-  const lc = r.loop === 'B1' ? 'b1' : r.loop === 'B2' ? 'b2' : 'b3';
-  return `<span class="badge ${lc}">${r.loop} T${r.tour}</span>`;
+function badgeFor(r){
+  if(r.type==='start')return`<span class="badge b0">${currentLang==='fr'?'Circuit départ':'Start loop'}</span>`;
+  if(r.type==='velo')return`<span class="badge-velo">🚲 ${currentLang==='fr'?'Vélos autorisés':'Bikes allowed'}</span>`;
+  if(r.type==='finish')return`<span class="badge b3">${currentLang==='fr'?'Arrivée':'Finish'}</span>`;
+  const lc=r.loop==='B1'?'b1':r.loop==='B2'?'b2':'b3';
+  return`<span class="badge ${lc}">${r.loop} T${r.tour}</span>`;
 }
 function triFor(r){return r.isCross?`<svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle;margin-right:3px"><polygon points="5,0.5 9.5,9.5 0.5,9.5" fill="#7F77DD"/></svg>`:''}
 
@@ -612,7 +621,7 @@ function initMap(){
   addArrows(GPX_VERTE,'#1D9E75');addArrows(GPX_ORANGE,'#EF9F27');
   function mkIcon(html,size,anchor){return L.divIcon({className:'',html,iconSize:size,iconAnchor:anchor||[size[0]/2,size[1]/2]})}
   L.marker([50.70065,2.77803],{icon:mkIcon(`<div style="background:#555;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.4)">S</div>`,[22,22])}).bindPopup('<b>🏁 Départ / Start · Arrivée / Finish</b><br>Centre de Steenwerck · 05:00').addTo(leafletMap);
-  L.marker([50.69928,2.79296],{icon:mkIcon(`<div style="background:#C47B00;color:white;border-radius:7px;padding:3px 7px;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.35);white-space:nowrap">🚲</div>`,[32,26],[16,13])}).bindPopup(`<b>🚲 Cimetière Militaire Allemand</b><br>km 7.4 — Rue du Pont d'Achelles / Rue de la Ménegatte<br><small>Cycling assistant joins here · no bottle exchange</small>`).addTo(leafletMap);
+  L.marker([50.69928,2.79296],{icon:mkIcon(`<div style="background:#C47B00;color:white;border-radius:7px;padding:3px 7px;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.35);white-space:nowrap">🚲</div>`,[32,26],[16,13])}).bindPopup(`<b>🚲 Cimetière Militaire Allemand / German Military Cemetery</b><br>km 7.4 — Rue du Pont d'Achelles / Rue de la Ménegatte<br><small>Cycling assistant joins here · no bottle exchange</small>`).addTo(leafletMap);
   const RAVI_LIEUX=[
     {name:"L'Hallobeau",lat:50.69981,lon:2.78171,color:"#1D9E75",info:"km 8.3 · 40.4 · 72.5"},
     {name:"La Croix-du-Bac",lat:50.68594,lon:2.8037,color:"#1D9E75",info:"km 12.9 · 45.0 · 77.2"},
