@@ -805,6 +805,7 @@ function showTab(name,event){
   if(event&&event.target)event.target.classList.add('active');
   if(name==='carte'){initMap();setTimeout(()=>{if(leafletMap)leafletMap.invalidateSize()},100)}
   if(name==='suivi'){updateSuivi();}
+  try{localStorage.setItem('steenwerck_tab',name);}catch(e){}
 }
 
 document.getElementById('start-time').oninput=compute;
@@ -1022,6 +1023,14 @@ function updateSuivi() {
 
 // Load saved speeds on startup
 loadFromStorage();
+// Restore last active tab
+try {
+  const savedTab = localStorage.getItem('steenwerck_tab');
+  if (savedTab && document.getElementById('tab-'+savedTab)) {
+    const btn = document.querySelector('.tab[onclick*=\''+savedTab+'\']');
+    showTab(savedTab, btn ? {target: btn} : {});
+  }
+} catch(e) {}
 
 updateSuivi();
 </script>
