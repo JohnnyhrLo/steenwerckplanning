@@ -638,9 +638,23 @@ const PRESETS=[{mn:4,sc:30},{mn:4,sc:35},{mn:4,sc:40},{mn:4,sc:45},{mn:4,sc:50},
 
 function getPace(){return(parseInt(document.getElementById('pace-min').value)||4)+(parseInt(document.getElementById('pace-sec').value)||35)/60}
 function timeToMin(t){const[h,m]=t.split(':').map(Number);return h*60+m}
-function minToTime(m){const d=((m%1440)+1440)%1440;return String(Math.floor(d/60)).padStart(2,'0')+':'+String(Math.round(d%60)).padStart(2,'0')}
-function fmtDur(m){return Math.floor(m/60)+'h'+String(Math.round(m%60)).padStart(2,'0')}
-function fmtPace(p){const mn=Math.floor(p),s=Math.round((p-mn)*60);return mn+"'"+String(s).padStart(2,'0')+'"'}
+function minToTime(m){
+  const d=((m%1440)+1440)%1440;
+  let h=Math.floor(d/60), mn=Math.round(d%60);
+  if(mn>=60){h+=1;mn=0;}
+  if(h>=24)h=0;
+  return String(h).padStart(2,'0')+':'+String(mn).padStart(2,'0');
+}
+function fmtDur(m){
+  let h=Math.floor(m/60), mn=Math.round(m%60);
+  if(mn>=60){h+=1;mn=0;}
+  return h+'h'+String(mn).padStart(2,'0');
+}
+function fmtPace(p){
+  let mn=Math.floor(p), s=Math.round((p-mn)*60);
+  if(s>=60){mn+=1;s=0;}
+  return mn+"'"+String(s).padStart(2,'0')+'"';
+}
 function calcPassage(km,pace,fade,fadeStart){const f=fade/100,fs=Math.min(fadeStart,km);const t1=pace*Math.min(km,fs);if(km<=fs)return t1;const rem=100-fs,x=km-fs;return t1+pace*(x+f*x*x/(2*(rem||1)))}
 function getParams(){return{start:timeToMin(document.getElementById('start-time').value),pace:getPace(),fade:parseFloat(document.getElementById('fade').value)||0,fadeStart:parseFloat(document.getElementById('fade-start').value)||0}}
 function highlightPreset(){const mn=parseInt(document.getElementById('pace-min').value)||0,sc=parseInt(document.getElementById('pace-sec').value)||0;document.querySelectorAll('.preset-btn').forEach((b,i)=>b.classList.toggle('active-preset',PRESETS[i].mn===mn&&PRESETS[i].sc===sc))}
