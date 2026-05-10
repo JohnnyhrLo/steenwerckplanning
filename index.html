@@ -97,7 +97,29 @@ body.lang-en .en-inline{display:inline}
 .fr-inline{display:inline !important}
 body.lang-en .fr-inline{display:none !important}
 body.lang-en .en-inline{display:inline !important}
-/* Fix legend spans: force correct display inside flex containers */
+.suivi-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:0}
+.suivi-table th{font-size:11px;font-weight:600;color:#fff;text-align:center;padding:8px 6px;border:1px solid rgba(255,255,255,.2)}
+.suivi-table td{padding:7px 6px;border:1px solid #e8e8e8;text-align:center;vertical-align:middle}
+.suivi-table .col-name{text-align:left;font-weight:500;white-space:nowrap}
+.suivi-header-t1{background:#1D9E75}.suivi-header-t2{background:#2563C4}.suivi-header-t3{background:#9333EA}
+.suivi-row-pred td{background:#f9f9f9;color:#555}
+.suivi-row-real td{background:#fff}
+.suivi-row-real.has-data td{background:#f0faf5}
+.speed-input{width:62px;font-size:13px;border:1px solid #ddd;border-radius:5px;padding:3px 6px;text-align:center;background:#fff}
+.speed-input:focus{outline:none;border-color:#1D9E75;background:#f0faf5}
+.speed-input.filled{border-color:#1D9E75;background:#e8f7f0;font-weight:600;color:#085041}
+.pred-time{font-weight:600;color:#111}
+.pred-time.updated{color:#2563C4}
+.finish-banner{background:#f0faf5;border:1.5px solid #1D9E75;border-radius:10px;padding:14px;margin-bottom:14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.finish-banner .fb-item{text-align:center;flex:1;min-width:100px}
+.finish-banner .fb-val{font-size:22px;font-weight:700;color:#085041}
+.finish-banner .fb-lbl{font-size:11px;color:#888;margin-top:2px}
+.suivi-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;margin:10px 0;color:#666;align-items:center}
+.suivi-legend span{display:flex;align-items:center;gap:5px}
+.reset-btn{font-size:12px;padding:5px 12px;border-radius:7px;cursor:pointer;border:1px solid #e63946;background:#fff;color:#e63946;font-weight:500;transition:all .15s;margin-left:auto}
+.reset-btn:hover{background:#e63946;color:#fff}
+.suivi-updated td{background:#EEF4FF}
+/* Fix legend spans: force correct display inside flex containers *//* Fix legend spans: force correct display inside flex containers */
 .legend .fr-inline,.legend .en-inline{display:none !important}
 .legend .fr-inline{display:inline !important}
 body.lang-en .legend .fr-inline{display:none !important}
@@ -127,6 +149,9 @@ body.lang-en .legend .en-inline{display:inline !important}
     </button>
     <button class="tab" onclick="showTab('nutrition',event)">
       <span class="fr-inline">🍌 Nutrition</span><span class="en-inline">🍌 Nutrition</span>
+    </button>
+    <button class="tab" onclick="showTab('suivi',event)">
+      <span class="fr-inline">📡 Suivi live</span><span class="en-inline">📡 Live tracking</span>
     </button>
   </div>
 
@@ -460,9 +485,41 @@ body.lang-en .legend .en-inline{display:inline !important}
       </table>
     </div>
   </div>
+
+  <!-- SUIVI LIVE -->
+  <div id="tab-suivi" class="panel">
+
+    <div class="finish-banner">
+      <div class="fb-item"><div class="fb-val" id="sv-finish">—</div><div class="fb-lbl fr-inline">Arrivée estimée</div><div class="fb-lbl en-inline">Est. finish</div></div>
+      <div class="fb-item"><div class="fb-val" id="sv-total">—</div><div class="fb-lbl fr-inline">Temps total estimé</div><div class="fb-lbl en-inline">Est. total time</div></div>
+      <div class="fb-item"><div class="fb-val" id="sv-pace">—</div><div class="fb-lbl fr-inline">Allure moy. actuelle</div><div class="fb-lbl en-inline">Current avg pace</div></div>
+    </div>
+
+    <div class="suivi-legend">
+      <span><span style="display:inline-block;width:12px;height:12px;background:#f0faf5;border:1px solid #1D9E75;border-radius:2px"></span><span class="fr-inline">Vitesse saisie + prédictions mises à jour</span><span class="en-inline">Speed entered + updated predictions</span></span>
+      <span><span style="color:#888;font-size:11px">→ <span class="fr-inline">Entrer la vitesse (km/h) et appuyer sur Entrée</span><span class="en-inline">Enter speed (km/h) and press Enter</span></span></span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th><span class="fr-inline">Point</span><span class="en-inline">Checkpoint</span></th>
+          <th>Km</th>
+          <th><span class="fr-inline">Temps cumulé</span><span class="en-inline">Elapsed</span></th>
+          <th><span class="fr-inline">Heure passage</span><span class="en-inline">Est. time</span></th>
+          <th><span class="fr-inline">Allure locale</span><span class="en-inline">Seg. pace</span></th>
+          <th><span class="fr-inline">Vitesse réelle (km/h)</span><span class="en-inline">Real speed (km/h)</span></th>
+        </tr>
+      </thead>
+      <tbody id="suivi-tbody"></tbody>
+    </table>
+  </div>
 </div>
 
-<script>
+<script>// Stored real speeds: key → km/h
+let realSpeeds = {};
+
+
 // ============================================================
 // LANGUAGE
 // ============================================================
@@ -510,19 +567,19 @@ const ALL_POINTS=[
   {name:{fr:"L'Hallobeau",en:"L'Hallobeau"},km:8.262,loop:"B1",tour:1,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"La Croix-du-Bac",en:"La Croix-du-Bac"},km:12.895,loop:"B1",tour:1,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"École Jean Monnet",en:"École Jean Monnet"},km:19.047,loop:"B1",tour:1,color:"#7F77DD",type:"ravi",isCross:true},
-  {name:{fr:"Le Doulieu",en:"Le Doulieu"},km:25.857,loop:"B2",tour:1,color:"#EF9F27",type:"ravi",isCross:false},
+  {name:{fr:"Salle du Pérou / Le Doulieu",en:"Salle du Pérou / Le Doulieu"},km:25.857,loop:"B2",tour:1,color:"#EF9F27",type:"ravi",isCross:false},
   {name:{fr:"La Blanche",en:"La Blanche"},km:29.988,loop:"B2",tour:1,color:"#EF9F27",type:"ravi",isCross:false},
   {name:{fr:"Salle des Sports",en:"Salle des Sports"},km:35.719,loop:"B2",tour:1,color:"#7F77DD",type:"ravi",isCross:true},
   {name:{fr:"L'Hallobeau",en:"L'Hallobeau"},km:40.403,loop:"B1",tour:2,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"La Croix-du-Bac",en:"La Croix-du-Bac"},km:45.035,loop:"B1",tour:2,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"École Jean Monnet",en:"École Jean Monnet"},km:51.187,loop:"B1",tour:2,color:"#7F77DD",type:"ravi",isCross:true},
-  {name:{fr:"Le Doulieu",en:"Le Doulieu"},km:57.998,loop:"B2",tour:2,color:"#EF9F27",type:"ravi",isCross:false},
+  {name:{fr:"Salle du Pérou / Le Doulieu",en:"Salle du Pérou / Le Doulieu"},km:57.998,loop:"B2",tour:2,color:"#EF9F27",type:"ravi",isCross:false},
   {name:{fr:"La Blanche",en:"La Blanche"},km:62.128,loop:"B2",tour:2,color:"#EF9F27",type:"ravi",isCross:false},
   {name:{fr:"Salle des Sports",en:"Salle des Sports"},km:67.859,loop:"B2",tour:2,color:"#7F77DD",type:"ravi",isCross:true},
   {name:{fr:"L'Hallobeau",en:"L'Hallobeau"},km:72.543,loop:"B1",tour:3,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"La Croix-du-Bac",en:"La Croix-du-Bac"},km:77.176,loop:"B1",tour:3,color:"#1D9E75",type:"ravi",isCross:false},
   {name:{fr:"École Jean Monnet",en:"École Jean Monnet"},km:83.328,loop:"B1",tour:3,color:"#7F77DD",type:"ravi",isCross:true},
-  {name:{fr:"Le Doulieu",en:"Le Doulieu"},km:90.138,loop:"B2",tour:3,color:"#EF9F27",type:"ravi",isCross:false},
+  {name:{fr:"Salle du Pérou / Le Doulieu",en:"Salle du Pérou / Le Doulieu"},km:90.138,loop:"B2",tour:3,color:"#EF9F27",type:"ravi",isCross:false},
   {name:{fr:"La Blanche",en:"La Blanche"},km:94.269,loop:"B2",tour:3,color:"#EF9F27",type:"ravi",isCross:false},
   {name:{fr:"ARRIVÉE",en:"FINISH"},km:100.0,loop:"Fin",tour:3,color:"#378ADD",type:"finish",isCross:false},
 ];
@@ -636,7 +693,7 @@ function initMap(){
     {name:"L'Hallobeau",      lat:50.69344, lon:2.80062, color:"#1D9E75", info:"km 8.3 · 40.4 · 72.5"},
     {name:"La Croix-du-Bac", lat:50.67588, lon:2.79073, color:"#1D9E75", info:"km 12.9 · 45.0 · 77.2"},
     {name:"École Jean Monnet",lat:50.69981, lon:2.78171, color:"#7F77DD", info:"km 19.0 · 51.2 · 83.3 — 🔀 Bottle handoff / Échange gourde"},
-    {name:"Le Doulieu",       lat:50.68154, lon:2.72003, color:"#EF9F27", info:"km 25.9 · 58.0 · 90.1"},
+    {name:"Salle du Pérou / Le Doulieu",       lat:50.68154, lon:2.72003, color:"#EF9F27", info:"km 25.9 · 58.0 · 90.1"},
     {name:"La Blanche",       lat:50.70769, lon:2.73987, color:"#EF9F27", info:"km 30.0 · 62.1 · 94.3"},
     {name:"Salle des Sports", lat:50.70083, lon:2.77945, color:"#7F77DD", info:"km 35.7 · 67.9 — 🔀 Bottle handoff / Échange gourde"},
   ];
@@ -679,6 +736,7 @@ function compute(){
     prevKm=r.km;prevMin=cum;
   });
   updateMapTable();updateNutriTable();updateSlider();
+  setTimeout(()=>{if(typeof updateSuivi==='function'&&typeof realSpeeds!=='undefined')updateSuivi();},0);
 }
 
 function updateMapTable(){
@@ -746,6 +804,7 @@ function showTab(name,event){
   document.getElementById('tab-'+name).classList.add('active');
   if(event&&event.target)event.target.classList.add('active');
   if(name==='carte'){initMap();setTimeout(()=>{if(leafletMap)leafletMap.invalidateSize()},100)}
+  if(name==='suivi'){updateSuivi();}
 }
 
 document.getElementById('start-time').oninput=compute;
@@ -756,6 +815,213 @@ document.getElementById('pace-sec').oninput=()=>{highlightPreset();compute()};
 document.getElementById('pace-sec').onblur=()=>{const v=parseInt(document.getElementById('pace-sec').value)||0;document.getElementById('pace-sec').value=String(Math.min(59,v)).padStart(2,'0')};
 
 compute();
+
+// ============================================================
+// SUIVI LIVE
+// ============================================================
+
+const TRACKED_KMS = [12.895, 19.047, 25.857, 29.988, 35.719,
+                     45.035, 51.187, 57.998, 62.128, 67.859,
+                     77.176, 83.328, 90.138, 94.269, 100.0];
+
+function isTracked(r) {
+  return TRACKED_KMS.some(k => Math.abs(k - r.km) < 0.01);
+}
+
+// ---- Persistence ----
+function saveToStorage() {
+  try { localStorage.setItem('steenwerck_speeds', JSON.stringify(realSpeeds)); } catch(e) {}
+}
+function loadFromStorage() {
+  try {
+    const d = localStorage.getItem('steenwerck_speeds');
+    if (d) realSpeeds = JSON.parse(d);
+  } catch(e) {}
+}
+
+function onSpeedEnter(km, evt) {
+  if (evt.key === 'Enter' || evt.type === 'blur') {
+    const inp = evt.target;
+    const raw = inp.value.replace(',', '.').trim();
+    const val = parseFloat(raw);
+    const key = km.toFixed(3);
+    if (!isNaN(val) && val > 0 && val < 40) {
+      realSpeeds[key] = val;
+      inp.value = val.toFixed(1);
+      inp.style.borderColor = '#1D9E75';
+      inp.style.background = '#f0faf5';
+      inp.style.fontWeight = '600';
+      inp.style.color = '#085041';
+    } else if (raw === '') {
+      delete realSpeeds[key];
+      inp.style.borderColor = '#ddd';
+      inp.style.background = '#fff';
+      inp.style.fontWeight = '400';
+      inp.style.color = '#333';
+    }
+    saveToStorage();
+    updateSuivi();
+  }
+}
+
+function getSpeedForKm(km) {
+  return realSpeeds[km.toFixed(3)];
+}
+
+// Predict arrival time at any km using real speeds (forward AND backward)
+function predictArrival(targetKm) {
+  const { start, pace, fade, fadeStart } = getParams();
+
+  // All ravi checkpoints sorted, including km=0
+  const checkpoints = [
+    { km: 0 },
+    ...SORTED.filter(r => r.type === 'ravi' || r.type === 'finish')
+  ].sort((a, b) => a.km - b.km);
+
+  // Find the segment containing targetKm
+  // Build time at each checkpoint using real speeds where available
+  // For each segment [prev → curr]:
+  //   if real speed known at curr → use it
+  //   else if real speed known somewhere after curr (retroactive) → use that for segments before it
+  //   else extrapolate from last known real speed before
+  //   else use chrono model
+
+  // Step 1: collect all known real speeds
+  const knownKms = Object.keys(realSpeeds).map(parseFloat).sort((a,b)=>a-b);
+
+  // Find first known km
+  const firstKnownKm = knownKms.length > 0 ? knownKms[0] : null;
+
+  let t = start;
+  let prevKm = 0;
+
+  for (let i = 1; i < checkpoints.length; i++) {
+    const cp = checkpoints[i];
+    if (cp.km > targetKm) break;
+
+    const segKm = cp.km - prevKm;
+    const spd = getSpeedForKm(cp.km);
+
+    if (spd && spd > 0) {
+      // Real speed at this checkpoint endpoint → use for this segment
+      t += (segKm / spd) * 60;
+    } else if (firstKnownKm !== null && cp.km <= firstKnownKm) {
+      // This segment is BEFORE the first known speed
+      // Retroactive: use the first known speed to back-calculate
+      const firstSpd = realSpeeds[firstKnownKm.toFixed(3)];
+      t += (segKm / firstSpd) * 60;
+    } else {
+      // After some real data but no real speed here → use last known speed
+      let lastSpd = null;
+      for (const k of knownKms) {
+        if (k <= cp.km) lastSpd = realSpeeds[k.toFixed(3)];
+      }
+      if (lastSpd) {
+        t += (segKm / lastSpd) * 60;
+      } else {
+        t += calcPassage(cp.km, pace, fade, fadeStart) - calcPassage(prevKm, pace, fade, fadeStart);
+      }
+    }
+    prevKm = cp.km;
+  }
+
+  // Handle case where targetKm is not exactly a checkpoint
+  if (prevKm < targetKm) {
+    const segKm = targetKm - prevKm;
+    let lastSpd = null;
+    for (const k of knownKms) {
+      if (k <= prevKm) lastSpd = realSpeeds[k.toFixed(3)];
+    }
+    if (lastSpd) t += (segKm / lastSpd) * 60;
+    else t += calcPassage(targetKm, pace, fade, fadeStart) - calcPassage(prevKm, pace, fade, fadeStart);
+  }
+
+  return t;
+}
+
+function updateSuivi() {
+  const { start, pace, fade, fadeStart } = getParams();
+  const knownKms = Object.keys(realSpeeds).map(parseFloat).sort((a,b)=>a-b);
+  const hasAnyReal = knownKms.length > 0;
+
+  // Banner
+  const finTime = predictArrival(100);
+  document.getElementById('sv-finish').textContent = minToTime(finTime);
+  document.getElementById('sv-total').textContent = fmtDur(finTime - start);
+
+  const lastKnownKm = hasAnyReal ? knownKms[knownKms.length-1] : null;
+  if (lastKnownKm !== null) {
+    const spd = realSpeeds[lastKnownKm.toFixed(3)];
+    document.getElementById('sv-pace').textContent = fmtPace(60 / spd) + '/km';
+  } else {
+    document.getElementById('sv-pace').textContent = fmtPace(calcPassage(100,pace,fade,fadeStart)/100) + '/km';
+  }
+
+  // Rebuild table — save existing inputs first
+  const tbody = document.getElementById('suivi-tbody');
+  const savedInputs = {};
+  tbody.querySelectorAll('input[data-km]').forEach(inp => { savedInputs[inp.dataset.km] = inp.value; });
+  tbody.innerHTML = '';
+
+  let prevKm = 0, prevPredMin = start;
+
+  SORTED.forEach(r => {
+    const predTime = r.km === 0 ? start : predictArrival(r.km);
+    const predStr = minToTime(predTime);
+    const elapsed = r.km === 0 ? '—' : fmtDur(predTime - start);
+
+    const segKm = r.km - prevKm;
+    const segMin = r.km === 0 ? 0 : predTime - prevPredMin;
+    const segPace = (r.km > 0 && segKm > 0 && segMin > 0) ? fmtPace(segMin / segKm) : '—';
+
+    const realSpd = getSpeedForKm(r.km);
+    // Is this row updated by real data (retroactive or forward)?
+    const isRetro = hasAnyReal && !realSpd && r.km > 0 && knownKms[0] > r.km;
+    const isFwd   = hasAnyReal && !realSpd && r.km > 0 && !isRetro;
+    const isUpdated = isRetro || isFwd;
+
+    const rc = rowClass(r);
+    const timeStyle = realSpd
+      ? 'font-weight:600;color:#085041'
+      : isUpdated ? 'font-weight:600;color:#2563C4'
+      : 'font-weight:600';
+    const updMark = isUpdated
+      ? ` <span style="color:#2563C4;font-size:10px" title="${isRetro ? 'rétroactif' : 'extrapolé'}">↻</span>`
+      : '';
+
+    const timeCell = r.km === 0
+      ? `<td>—</td><td style="${timeStyle}">${predStr}</td><td>—</td>`
+      : `<td>${elapsed}</td><td style="${timeStyle}">${predStr}${updMark}</td><td style="color:#aaa">${segPace}</td>`;
+
+    let speedCell = '<td></td>';
+    if (isTracked(r)) {
+      const kmKey = r.km.toFixed(3);
+      const savedVal = savedInputs[kmKey] !== undefined ? savedInputs[kmKey] : (realSpd ? realSpd.toFixed(1) : '');
+      const modelSpd = (segKm > 0 && segMin > 0) ? (segKm / segMin * 60).toFixed(1) : '';
+      const bColor = realSpd ? '#1D9E75' : '#ddd';
+      const bg     = realSpd ? '#f0faf5' : '#fff';
+      const fw     = realSpd ? '600' : '400';
+      const fc     = realSpd ? '#085041' : '#333';
+      speedCell = `<td><input type="text" inputmode="decimal" data-km="${kmKey}"
+        value="${savedVal}" placeholder="${modelSpd}"
+        onkeydown="onSpeedEnter(${r.km},event)"
+        onblur="onSpeedEnter(${r.km},event)"
+        style="width:72px;font-size:13px;border:1px solid ${bColor};border-radius:5px;padding:4px 6px;text-align:center;background:${bg};font-weight:${fw};color:${fc}" /></td>`;
+    }
+
+    tbody.innerHTML += `<tr class="${isUpdated ? '' : rc}" style="${isRetro ? 'background:#FFF8E6' : isFwd ? 'background:#EEF4FF' : ''}">
+      <td>${triFor(r)}${badgeFor(r)} ${getName(r)}</td>
+      <td>${r.km === 0 ? '0' : r.km.toFixed(1)}</td>
+      ${timeCell}
+      ${speedCell}
+    </tr>`;
+
+    if (r.km > 0) { prevKm = r.km; prevPredMin = predTime; }
+  });
+}
+
+// Load saved speeds on startup
+loadFromStorage();
+
+updateSuivi();
 </script>
-</body>
-</html>
